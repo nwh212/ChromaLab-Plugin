@@ -77,8 +77,8 @@ pub const LAB_PERCENTILES: [f64; NL] = [0.0, 0.03, 0.1, 0.3, 1.0, 3.0];
 pub const NL: usize = 6;
 /// The default ends: indices into [`LAB_PERCENTILES`] for the dense end (→ black) and the thin end
 /// (→ white).
-pub const LAB_DENSE_I: i64 = 2;
-pub const LAB_THIN_I: i64 = 1;
+pub const LAB_DENSE_I: i64 = 1;
+pub const LAB_THIN_I: i64 = 2;
 
 impl Analysis {
     pub fn to_json(&self) -> Value {
@@ -419,6 +419,9 @@ pub fn analyze_with(pixel: impl Fn(usize) -> Option<[f32; 3]>, w: usize, h: usiz
         }
     }
     let negative = below.map(|b| b as f64 / read.max(1) as f64);
+    // the Lab method measures everything inside the border buffer, as its references do (a
+    // strip's rebate or a dark frame edge in the measured area sets their black point too)
+    let whole_grid = grid.clone();
     // bare light (sprocket holes, gaps in the film holder) inside the measured area would set the
     // black point far below the film: drop it before measuring
     exclude_bare_light(&mut grid);
@@ -514,7 +517,7 @@ pub fn analyze_with(pixel: impl Fn(usize) -> Option<[f32; 3]>, w: usize, h: usiz
     // the Lab method's statistics: every measured sample in ProPhoto curve space
     let mut es: Vec<[f32; 3]> = Vec::with_capacity(grid.len());
     let mut e_sum = [0f64; 3];
-    for d in grid.iter().filter(|d| d[0].is_finite()) {
+    for d in whole_grid.iter().filter(|d| d[0].is_finite()) {
         let pp = mat3(&TO_PP, [10f32.powf(-d[0]), 10f32.powf(-d[1]), 10f32.powf(-d[2])]);
         let e = [lab_encode(pp[0]), lab_encode(pp[1]), lab_encode(pp[2])];
         for c in 0..3 {

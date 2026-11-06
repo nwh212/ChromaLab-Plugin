@@ -35,15 +35,16 @@ pub(crate) const LEVELS_CONTRAST: f32 = 0.4;
 
 /// The Lab method's bend: `gamma = exp(A + B · (mean_c − lum) + C · shadows)`, from the inverted
 /// channel's mean against the frame's luminance mean (0..1, curve-encoded) and where the frame's
-/// shadows sit (the luminance's 10th percentile, [`LAB_SHADOW_I`] into `pv_lum`); fitted to the
-/// reference conversions.
-pub(crate) const LAB_A: f32 = 0.05;
-pub(crate) const LAB_B: f32 = 2.5;
-pub(crate) const LAB_C: f32 = 0.76;
+/// shadows sit (the luminance's 10th percentile, [`LAB_SHADOW_I`] into `pv_lum`). `exp(A)` = 0.91
+/// is the bend of a channel that needs no correction (the references give it to five channels);
+/// the frame term only ever darkens. Fitted to the reference conversions.
+pub(crate) const LAB_A: f32 = -0.094;
+pub(crate) const LAB_B: f32 = 2.25;
+pub(crate) const LAB_C: f32 = 0.87;
 pub(crate) const LAB_SHADOW_I: usize = 1;
 /// …and a fixed gentle S on top of the bend (the references all carry one): `t − S · sin(2πt)`,
 /// which lowers the quarter-tones and lifts the three-quarter-tones by `S`.
-pub(crate) const LAB_S: f32 = 0.0;
+pub(crate) const LAB_S: f32 = 0.03;
 
 /// Auto exposure: the linear light a frame's median brightness should reach, and the most it is
 /// lifted, in stops.
@@ -191,7 +192,8 @@ pub(crate) fn plan(p: &Params) -> Plan {
     let offset = if bw { [0.0; 3] } else { [temp / 400.0, -tint / 400.0, -temp / 400.0] };
     let sat = if bw { 0.0 } else { (1.0 + (p.pre_saturation - 3.0) * 0.15) * st.sat * p.profile.sat };
     // the shared range keeps the layers' own saturation: half the cross-talk correction suits it
-    let crosstalk = if bw { 0.0 } else { st.crosstalk * if cube { 0.5 } else { 1.0 } };
+    // (the Lab method's references apply no dye correction: it keeps the stock's other tweaks)
+    let crosstalk = if bw || lab { 0.0 } else { st.crosstalk * if cube { 0.5 } else { 1.0 } };
     let mut pr = p.profile;
     // t in the cube-root domain needs a steeper power to reach the same light; the Lab
     // method's t is gamma-encoded light, so Standard's power becomes that gamma
@@ -238,7 +240,8 @@ pub(crate) fn plan(p: &Params) -> Plan {
             return (aa * lc / (lc + pp)).clamp(0.0, 1.0);
         }
         let t = fade + t.clamp(0.0, T_MAX) * (1.0 - fade);
-        let l = shoulder(t.powf(power));
+        // (the Lab method clips at white, as its references do, instead of rolling off)
+        let l = if lab { t.clamp(0.0, 1.0).powf(power) } else { shoulder(t.powf(power)) };
         if fade_s == 0.0 && glow_s == 0.0 {
             return l;
         }

@@ -225,6 +225,14 @@ fn convert_like_the_host(px: &[f32], w: usize, h: usize, mut json: Value) -> Vec
             [0, 1, 2].map(|c| r2(an.hi[c][3])),
             an.vmean.map(|g| (g * 1000.0).round() / 1000.0)
         );
+        let r3 = |v: f32| (v * 1000.0).round() / 1000.0;
+        eprintln!(
+            "    lab: x0(0.03%) {:?} x1(0.1%) {:?} e-mean {:?} lum p5/p10/p25/p50/mean {:?}",
+            [0, 1, 2].map(|c| r3(an.pv_lo[c][1])),
+            [0, 1, 2].map(|c| r3(an.pv_hi[c][2])),
+            an.pv_mean.map(r3),
+            an.pv_lum.map(r3)
+        );
     }
     json["_analysis"] = an.to_json();
     let mut out = px.to_vec();

@@ -5,15 +5,15 @@ Measurements made with one version can need **Measure** again in a later one; th
 levels of 255 (see the README).
 
 ## 0.12.0 (Measure again, for whole-strip measurements)
-- **A new method, Lab** (Method ▸ Lab), built from how the reference conversions are made (their
-  exports carry the developer's own settings: a straight two-point curve per channel, then a
-  per-channel bend): each channel is inverted on its own between its thin end (0.03 %, to white)
-  and its dense end (0.1 %, to black) in a gamma-encoded wide-gamut space (ProPhoto primaries),
-  then bent by a gamma of its own, from the channel's mean against the frame's luminance and from
-  where the frame's shadows sit. The ends match the references within a few levels on every
-  channel; the bend is a fit from five frames that still misses on some, so Shared range stays
-  the default (reference error over the seven frames: Lab 22.1, Shared range 22.0; over the six
-  without the scanner-border frame: 17.7 and 16.3). Measure again after installing.
+- **A new default method, Lab**, built from how the reference conversions are made (their exports
+  carry the developer's own settings: a straight two-point curve per channel, then a per-channel
+  bend): each channel is inverted on its own between its thin end (0.1 %, to white) and its dense
+  end (0.03 %, to black) in a gamma-encoded wide-gamut space (ProPhoto primaries), then bent by a
+  gamma of its own (from the channel's mean against the frame's luminance and from where the
+  frame's shadows sit) under a fixed gentle S. It measures everything inside the border buffer,
+  as the references do. Reference error over the seven frames: Shared range 22.0, Lab
+  Lab 14.3 (the scanner-border frame 56 → 17: those references measured the border too). The previous default stays as Method ▸ Shared range. Measure again after
+  installing.
 - **A third method, Levels** (Method ▸ Levels), to compare: each channel's density normalised
   between its own 0.1 % thin and 1 % dense ends, 2.2 log10 units of scene across that range, and a
   print curve that pins scene grey to 0.18 and scene white to 0.95 (exponent 1.45; Contrast scales
