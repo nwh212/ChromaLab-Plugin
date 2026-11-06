@@ -23,6 +23,16 @@ pub(crate) const CUBE_BALANCE_I: usize = 8;
 /// How much steeper than a profile's own power the cube-root domain's `t` is turned into light.
 pub(crate) const CUBE_POWER: f32 = 1.3;
 
+/// The Levels method (the converter datasheet): the thin end's clip percentile (0.1 %) and the
+/// dense end's (1 %) as indices into [`PERCENTILES`], the scene range the density range stands
+/// for (log10 units), the print curve's exponent, and how much the Contrast slider (±50) scales
+/// it (±0.4 at the ends).
+pub(crate) const LEVELS_BLACK_I: i64 = 1;
+pub(crate) const LEVELS_WHITE_I: i64 = 4;
+pub(crate) const LEVELS_RANGE: f32 = 2.2;
+pub(crate) const LEVELS_EXPONENT: f32 = 1.45;
+pub(crate) const LEVELS_CONTRAST: f32 = 0.4;
+
 /// Auto exposure: the linear light a frame's median brightness should reach, and the most it is
 /// lifted, in stops.
 pub(crate) const AUTO_MID: f32 = 0.18;
@@ -66,7 +76,8 @@ pub(crate) fn plan(p: &Params) -> Plan {
     let mut scale = [1.0; 3];
     // where the frame's median brightness lands in `t` (before the flip), for auto exposure
     let mut mid = 0.5;
-    let cube = !bw && !flip && !p.per_channel;
+    let levels = !bw && !flip && p.levels;
+    let cube = !bw && !flip && !p.per_channel && !levels;
     let mut mul = [1.0; 3];
     if bw {
         let (thin, dense) = (a.lo[3][thin_i], a.hi[3][dense_i].max(a.lo[3][thin_i] + 0.05));
@@ -108,6 +119,17 @@ pub(crate) fn plan(p: &Params) -> Plan {
             };
         }
         mid = (black(1) - v(1, a.dmid[1])) / range(1);
+    } else if levels {
+        // each channel between its own 0.1 % thin and 1 % dense ends (the clips move them one
+        // percentile step), so the mask and the layers' differing contrast cancel; `t` is the
+        // normalised density, 0 at the thin end (black), 1 at the dense end (white)
+        let (bi, wi) = (clip_index(p.black_clip, LEVELS_BLACK_I), clip_index(p.white_clip, LEVELS_WHITE_I));
+        for c in 0..3 {
+            let (thin, dense) = (a.lo[c][bi], a.hi[c][wi].max(a.lo[c][bi] + 0.05));
+            origin[c] = thin;
+            scale[c] = 1.0 / (dense - thin);
+        }
+        mid = (a.dmid[1] - a.lo[1][bi]) * scale[1];
     } else if p.wb == Wb::Color {
         for c in 0..3 {
             let (thin, dense) = (a.lo[c][thin_i], a.hi[c][dense_i].max(a.lo[c][thin_i] + 0.05));
@@ -167,11 +189,31 @@ pub(crate) fn plan(p: &Params) -> Plan {
         params.exposure += stops;
         params.soft_highs |= stops > 0.0;
     }
-    let tone = Lut::new(-0.6, 1.6, 2200, move |t| tone(t, &params, contrast, &pr));
+    let (levels_c, levels_exposure) = ((p.contrast * LEVELS_CONTRAST).mul_add(1.0 / 50.0, 1.0) * LEVELS_EXPONENT, params.exposure);
+    let tone = if levels {
+        let mut flat = params.clone();
+        flat.exposure = 0.0;
+        let pr = Profile { power: 1.0, gamma: 1.0, lift: 0.0, slopes: [1.0; 3], sat: pr.sat, ..pr };
+        Lut::new(-0.6, 1.6, 2200, move |t| tone(t, &flat, 0.0, &pr))
+    } else {
+        Lut::new(-0.6, 1.6, 2200, move |t| tone(t, &params, contrast, &pr))
+    };
     // the profile's and the stock's lift (in t); the Fade and Glow sliders act on the display values below
     let fade = pr.lift + st.fade / 2.0;
     let (fade_s, glow_s) = ((p.fade / 50.0).clamp(-1.0, 1.0), (p.glow / 50.0).clamp(-1.0, 1.0));
     let linear = Lut::new(0.0, T_MAX, 1300, move |t| {
+        if levels {
+            // the datasheet's print curve: L = 10^((x - 1) · range) stops of scene light, then
+            // y = A · L^c / (L^c + p), which pins scene grey 0.18 to 0.18 and scene white to 0.95
+            let x = fade + t.clamp(0.0, T_MAX) * (1.0 - fade);
+            let l = 10f32.powf((x - 1.0) * LEVELS_RANGE) * 2f32.powf(levels_exposure);
+            let c = levels_c.clamp(1.02, 3.0);
+            let q = 0.18f32.powf(c);
+            let pp = (0.95 - 0.18) * q / (0.18 - 0.95 * q);
+            let aa = 0.95 * (1.0 + pp);
+            let lc = l.powf(c);
+            return (aa * lc / (lc + pp)).clamp(0.0, 1.0);
+        }
         let t = fade + t.clamp(0.0, T_MAX) * (1.0 - fade);
         let l = shoulder(t.powf(power));
         if fade_s == 0.0 && glow_s == 0.0 {

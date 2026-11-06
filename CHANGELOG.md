@@ -14,6 +14,12 @@ levels of 255 (see the README).
   scanner border that set its reference's white) 22.6 → 16.3. Mid-tones come out darker and
   warmer than in 0.11: a corridor and a fountain frame that were washed out and cool are now
   close (32 → 9 and 28 → 23).
+- **A third method, Levels** (Method ▸ Levels), to compare: each channel's density normalised
+  between its own 0.1 % thin and 1 % dense ends, 2.2 log10 units of scene across that range, and a
+  print curve that pins scene grey to 0.18 and scene white to 0.95 (exponent 1.45; Contrast scales
+  it, Exposure shifts the scene). White and Black clip move the two ends a percentile step. As
+  specified it renders much darker than the references (44 against the seven frames); it is here
+  to be tried, not the default.
 - **Scans that ran out of range are handled**: a channel the scanner clipped (its shadows piled at
   white, or its highlights at black; an 8-bit flatbed scan of a dense negative often clips blue)
   no longer takes green's range, which made the whole frame blue and flat. Measure notes the clip

@@ -45,6 +45,10 @@ pub struct Params {
     /// The 0.9 method for colour negatives: each layer stretched to its own range, balanced by
     /// edge contrast (`method` = "Per channel").
     pub per_channel: bool,
+    /// The Levels method (`method` = "Levels"): each channel's density normalised between its
+    /// 0.1 % thin and 1 % dense ends, 2.2 log10 units of scene across that range, through a
+    /// print curve that pins mid grey and white (the converter datasheet's pipeline).
+    pub levels: bool,
     pub auto_exposure: bool,
     pub white_clip: i64,
     pub black_clip: i64,
@@ -97,6 +101,7 @@ impl Params {
             soft_lows: flag("softLows"),
             show_border: flag("showBorder"),
             per_channel: s("method") == "Per channel",
+            levels: s("method") == "Levels",
             auto_exposure: flag("autoExposure"),
             white_clip: int("whiteClip"),
             black_clip: int("blackClip"),

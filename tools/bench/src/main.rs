@@ -50,6 +50,7 @@ fn golden_params() -> Vec<Value> {
     vec![
         json!({}),
         json!({"method": "Per channel"}),
+        json!({"method": "Levels"}),
         json!({"filmType": "B&W Negative"}),
         json!({"filmType": "Positive (Slide)"}),
         json!({"stock": "Creative: Golden Hour"}),

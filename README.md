@@ -89,7 +89,7 @@ To change ChromaLab, see [DEVELOPING.md](DEVELOPING.md): where things are, the r
 
 | Group | Parameters |
 |---|---|
-| Convert | Type (Color Negative, B&W Negative, Positive), Method (Shared range, Per channel), Film stock / look, Pre-saturation 1–5, Border buffer %, Show border buffer |
+| Convert | Type (Color Negative, B&W Negative, Positive), Method (Shared range, Per channel, Levels), Film stock / look, Pre-saturation 1–5, Border buffer %, Show border buffer |
 | Tone | Tone profile, Exposure, Brightness, Contrast, Lights, Darks, Whites, Blacks, Glow, Fade, Soft highs, Soft lows, Auto exposure, White clip, Black clip |
 | Colour | WB (Auto-Neutral, Auto-Color, Auto-Warm, Auto-Cool, None), Temp, Tint |
 
