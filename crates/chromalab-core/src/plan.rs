@@ -33,6 +33,18 @@ pub(crate) const LEVELS_RANGE: f32 = 2.2;
 pub(crate) const LEVELS_EXPONENT: f32 = 1.45;
 pub(crate) const LEVELS_CONTRAST: f32 = 0.4;
 
+/// The Lab method's bend: `gamma = exp(A + B · (mean_c − lum) + C · shadows)`, from the inverted
+/// channel's mean against the frame's luminance mean (0..1, curve-encoded) and where the frame's
+/// shadows sit (the luminance's 10th percentile, [`LAB_SHADOW_I`] into `pv_lum`); fitted to the
+/// reference conversions.
+pub(crate) const LAB_A: f32 = 0.05;
+pub(crate) const LAB_B: f32 = 2.5;
+pub(crate) const LAB_C: f32 = 0.76;
+pub(crate) const LAB_SHADOW_I: usize = 1;
+/// …and a fixed gentle S on top of the bend (the references all carry one): `t − S · sin(2πt)`,
+/// which lowers the quarter-tones and lifts the three-quarter-tones by `S`.
+pub(crate) const LAB_S: f32 = 0.0;
+
 /// Auto exposure: the linear light a frame's median brightness should reach, and the most it is
 /// lifted, in stops.
 pub(crate) const AUTO_MID: f32 = 0.18;
@@ -63,6 +75,9 @@ pub(crate) struct Plan {
     pub(crate) tone: Lut,
     /// `t` (after tone, tint and fade) → linear light.
     pub(crate) linear: Lut,
+    /// The Lab method: per channel, ProPhoto curve-space value → `t`; the output is then turned
+    /// back from ProPhoto to the source's primaries.
+    pub(crate) lab: Option<[Lut; 3]>,
 }
 
 pub(crate) fn plan(p: &Params) -> Plan {
@@ -77,7 +92,8 @@ pub(crate) fn plan(p: &Params) -> Plan {
     // where the frame's median brightness lands in `t` (before the flip), for auto exposure
     let mut mid = 0.5;
     let levels = !bw && !flip && p.levels;
-    let cube = !bw && !flip && !p.per_channel && !levels;
+    let lab = !bw && !flip && p.lab;
+    let cube = !bw && !flip && !p.per_channel && !levels && !lab;
     let mut mul = [1.0; 3];
     if bw {
         let (thin, dense) = (a.lo[3][thin_i], a.hi[3][dense_i].max(a.lo[3][thin_i] + 0.05));
@@ -119,6 +135,10 @@ pub(crate) fn plan(p: &Params) -> Plan {
             };
         }
         mid = (black(1) - v(1, a.dmid[1])) / range(1);
+    } else if lab {
+        // see `lab_luts`: origin and scale are unused, the per-channel tables do the inversion
+        let (x0, x1) = lab_ends(&a, p, 1);
+        mid = lab_lined(&a, 1, x0, x1).0;
     } else if levels {
         // each channel between its own 0.1 % thin and 1 % dense ends (the clips move them one
         // percentile step), so the mask and the layers' differing contrast cancel; `t` is the
@@ -173,9 +193,12 @@ pub(crate) fn plan(p: &Params) -> Plan {
     // the shared range keeps the layers' own saturation: half the cross-talk correction suits it
     let crosstalk = if bw { 0.0 } else { st.crosstalk * if cube { 0.5 } else { 1.0 } };
     let mut pr = p.profile;
-    // t in the cube-root domain needs a steeper power to reach the same light
+    // t in the cube-root domain needs a steeper power to reach the same light; the Lab
+    // method's t is gamma-encoded light, so Standard's power becomes that gamma
     if cube {
         pr.power *= knob("POWER", CUBE_POWER);
+    } else if lab {
+        pr.power *= lab_gamma() / PROFILES[0].power;
     }
     let power = pr.power;
     let contrast = p.contrast + st.contrast;
@@ -226,8 +249,51 @@ pub(crate) fn plan(p: &Params) -> Plan {
     let highlights = st.highlights;
     let tinted = !bw && shadows.iter().chain(highlights.iter()).any(|v| *v != 0.0);
     let hue_sat = (!bw && st.hue_sat != [1.0; 6]).then_some(st.hue_sat);
+    let lab = lab.then(|| lab_luts(&a, p));
     let cube = cube.then(|| Lut::new(D_MIN, D_MAX, 4400, cube_root_of));
-    Plan { origin, scale, flip, bw, offset, sat, crosstalk, hue_sat, shadows, highlights, tinted, cube, mul, tone, linear }
+    Plan { origin, scale, flip, bw, offset, sat, crosstalk, hue_sat, shadows, highlights, tinted, cube, mul, tone, linear, lab }
+}
+
+/// The Lab method's ends of channel `c`: its dense end (→ black, `x0`) and thin end (→ white,
+/// `x1`), the clip sliders moving each a percentile step along [`LAB_PERCENTILES`].
+pub(crate) fn lab_ends(a: &Analysis, p: &Params, c: usize) -> (f32, f32) {
+    let di = (knob("LAB_DENSE_I", LAB_DENSE_I as f32) as i64 + p.white_clip).clamp(0, NL as i64 - 1) as usize;
+    let ti = (knob("LAB_THIN_I", LAB_THIN_I as f32) as i64 + p.black_clip).clamp(0, NL as i64 - 1) as usize;
+    let x0 = a.pv_lo.get(c).and_then(|v| v.get(di)).copied().unwrap_or(0.0);
+    let x1 = a.pv_hi.get(c).and_then(|v| v.get(ti)).copied().unwrap_or(1.0).max(x0 + 0.01);
+    (x0, x1)
+}
+
+/// The inverted channel `c`'s mean (0..1 curve-encoded, 1 = white) between the ends `x0`, `x1`.
+pub(crate) fn lab_lined(a: &Analysis, c: usize, x0: f32, x1: f32) -> (f32, f32) {
+    let m = ((x1 - a.pv_mean.get(c).copied().unwrap_or(0.5)) / (x1 - x0).max(0.01)).clamp(0.0, 1.0);
+    (m, m)
+}
+
+/// The Lab method's per-channel tables: curve-space value `e` (0..1) → `t`. Each channel is
+/// inverted between its own ends, then bent by its gamma: a channel brighter than the frame's
+/// luminance is darkened, a darker one lifted (the frame's cast), and a bright frame is darkened
+/// overall.
+pub(crate) fn lab_luts(a: &Analysis, p: &Params) -> [Lut; 3] {
+    let (ka, kb, kc) = (knob("LAB_A", LAB_A), knob("LAB_B", LAB_B), knob("LAB_C", LAB_C));
+    let ends = [0, 1, 2].map(|c| lab_ends(a, p, c));
+    let mean = [0, 1, 2].map(|c| lab_lined(a, c, ends[c].0, ends[c].1).0);
+    let lum = 0.2126 * mean[0] + 0.7152 * mean[1] + 0.0722 * mean[2];
+    let shadows = a.pv_lum.get(knob("LAB_SHADOW_I", LAB_SHADOW_I as f32) as usize).copied().unwrap_or(0.1);
+    let balance = match p.wb {
+        Wb::None => 0.0,
+        Wb::Color => 1.5,
+        _ => 1.0,
+    };
+    [0, 1, 2].map(|c| {
+        let g = (ka + balance * kb * (mean[c] - lum) + kc * shadows).exp().clamp(0.3, 4.0);
+        let (lo, hi) = ends[c];
+        let ks = knob("LAB_S", LAB_S);
+        Lut::new(0.0, 1.0, 1024, move |e| {
+            let t = ((hi - e) / (hi - lo)).clamp(0.0, 1.0).powf(g);
+            (t - ks * (std::f32::consts::TAU * t).sin()).clamp(0.0, 1.0)
+        })
+    })
 }
 
 /// The saturation factor for the hue of `t` (an RGB triple around its mean), from six sectors

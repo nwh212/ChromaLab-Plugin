@@ -33,7 +33,18 @@ pub(crate) fn convert_with(px: &mut [f32], pl: &Plan, log: &FastLog) {
             d = [(d[0] + d[1] + d[2]) / 3.0; 3];
         }
         let mut t = [0.0f32; 3];
+        if let Some(luts) = &pl.lab {
+            // in ProPhoto, curve-encoded; the light comes back to the source's primaries below
+            let lin = [c[0], c[1], c[2]].map(|v| if v.is_finite() { v.max(0.0) } else { 0.0 });
+            let pp = mat3(&TO_PP, lin);
+            for k in 0..3 {
+                t[k] = luts[k].get(lab_encode(pp[k]));
+            }
+        }
         for k in 0..3 {
+            if pl.lab.is_some() {
+                break;
+            }
             t[k] = match &pl.cube {
                 Some(cube) => (pl.origin[k] - pl.mul[k] * cube.get(d[k])) * pl.scale[k],
                 None => {
@@ -69,6 +80,14 @@ pub(crate) fn convert_with(px: &mut [f32], pl: &Plan, log: &FastLog) {
         }
         for k in 0..3 {
             c[k] = pl.linear.get(o[k]);
+        }
+        if pl.lab.is_some() {
+            // (a wide-gamut colour outside the source's primaries is clipped, as a developer's
+            // export clips it)
+            let rgb = mat3(&FROM_PP, [c[0], c[1], c[2]]);
+            for k in 0..3 {
+                c[k] = rgb[k].clamp(0.0, 1.0);
+            }
         }
     }
 }

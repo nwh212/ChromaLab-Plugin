@@ -49,6 +49,10 @@ pub struct Params {
     /// 0.1 % thin and 1 % dense ends, 2.2 log10 units of scene across that range, through a
     /// print curve that pins mid grey and white (the converter datasheet's pipeline).
     pub levels: bool,
+    /// The Lab method (`method` = "Lab"): each channel inverted between its own ends
+    /// in a gamma-encoded wide-gamut space and bent by its own gamma, as a raw developer's
+    /// per-channel curves do; fitted to reference conversions.
+    pub lab: bool,
     pub auto_exposure: bool,
     pub white_clip: i64,
     pub black_clip: i64,
@@ -102,6 +106,7 @@ impl Params {
             show_border: flag("showBorder"),
             per_channel: s("method") == "Per channel",
             levels: s("method") == "Levels",
+            lab: s("method") == "Lab",
             auto_exposure: flag("autoExposure"),
             white_clip: int("whiteClip"),
             black_clip: int("blackClip"),

@@ -17,6 +17,31 @@ pub(crate) fn knob(_name: &str, default: f32) -> f32 {
     default
 }
 
+/// Linear sRGB primaries → linear ProPhoto RGB (D65 → D50 by Bradford), and back: the Lab method
+/// inverts each channel in a wide-gamut space, as a raw developer's curves do.
+pub(crate) const TO_PP: [[f32; 3]; 3] =
+    [[0.529_290_8, 0.330_431_6, 0.140_277_6], [0.098_369_7, 0.873_428_2, 0.028_202_1], [0.016_869_6, 0.117_735_7, 0.865_394_7]];
+pub(crate) const FROM_PP: [[f32; 3]; 3] =
+    [[2.034_366_9, -0.727_343_4, -0.306_985_6], [-0.228_811_9, 1.231_727_6, -0.002_911_5], [-0.008_527_3, -0.153_387_5, 1.161_921_8]];
+
+pub(crate) fn mat3(m: &[[f32; 3]; 3], v: [f32; 3]) -> [f32; 3] {
+    [
+        m[0][0] * v[0] + m[0][1] * v[1] + m[0][2] * v[2],
+        m[1][0] * v[0] + m[1][1] * v[1] + m[1][2] * v[2],
+        m[2][0] * v[0] + m[2][1] * v[1] + m[2][2] * v[2],
+    ]
+}
+
+/// The Lab method's curve space: linear ProPhoto 0..1 → 0..1 with this gamma (a raw developer's
+/// point curves act on a gamma-encoded image).
+pub(crate) fn lab_gamma() -> f32 {
+    knob("LAB_GAMMA", 2.2)
+}
+
+pub(crate) fn lab_encode(l: f32) -> f32 {
+    l.clamp(0.0, 1.0).powf(1.0 / lab_gamma())
+}
+
 pub(crate) fn cube_root_of(d: f32) -> f32 {
     10f32.powf(-d / knob("DOMAIN", 3.0))
 }

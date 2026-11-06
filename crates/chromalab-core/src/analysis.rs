@@ -11,7 +11,7 @@ pub const NP: usize = 11;
 pub(crate) const BASE_I: usize = 1;
 
 /// The analysis format; an older measurement is ignored (the photo is measured again).
-pub(crate) const ANALYSIS_VERSION: i64 = 8;
+pub(crate) const ANALYSIS_VERSION: i64 = 11;
 
 /// Density histogram range and resolution.
 pub(crate) const D_MIN: f32 = -0.5;
@@ -61,14 +61,31 @@ pub struct Analysis {
     /// …and where green is at its thinnest 1 % (its shadows): the black a channel clipped at its
     /// thin end takes.
     pub at_green_black: [f32; 3],
+    /// For the Lab method, over the measured samples in ProPhoto curve space (0..1, see
+    /// [`crate::math::lab_encode`]): per channel, the value at each of [`LAB_PERCENTILES`] from
+    /// the thin end (`pv_hi`, bright) and the dense end (`pv_lo`, dark), and the mean; and, with
+    /// each channel inverted between its default ends, the luminance's 5th, 10th, 25th and 50th
+    /// percentiles and mean (`pv_lum`).
+    pub pv_lo: [[f32; NL]; 3],
+    pub pv_hi: [[f32; NL]; 3],
+    pub pv_mean: [f32; 3],
+    pub pv_lum: [f32; 5],
 }
+
+/// The Lab method's percentiles (in %) at each end of a channel's curve-space histogram.
+pub const LAB_PERCENTILES: [f64; NL] = [0.0, 0.03, 0.1, 0.3, 1.0, 3.0];
+pub const NL: usize = 6;
+/// The default ends: indices into [`LAB_PERCENTILES`] for the dense end (→ black) and the thin end
+/// (→ white).
+pub const LAB_DENSE_I: i64 = 2;
+pub const LAB_THIN_I: i64 = 1;
 
 impl Analysis {
     pub fn to_json(&self) -> Value {
         json!({"version": ANALYSIS_VERSION, "percentiles": PERCENTILES, "lo": self.lo, "hi": self.hi,
                "gain": self.gain, "lumLo": self.lum_lo, "lumHi": self.lum_hi, "geLo": self.ge_lo, "lumMid": self.lum_mid, "hlRef": self.hl_ref,
                "vmean": self.vmean, "dmid": self.dmid, "measured": self.measured, "borderBuffer": self.border,
-               "clipped": self.clipped, "atGreenWhite": self.at_green_white, "atGreenBlack": self.at_green_black})
+               "clipped": self.clipped, "atGreenWhite": self.at_green_white, "atGreenBlack": self.at_green_black, "pvLo": self.pv_lo, "pvHi": self.pv_hi, "pvMean": self.pv_mean, "pvLum": self.pv_lum})
     }
 
     pub fn from_json(v: &Value) -> Option<Analysis> {
@@ -83,6 +100,10 @@ impl Analysis {
             }
             (a.len() == N).then_some(out)
         }
+        let table3 = |t: &Value| -> Option<[[f32; NL]; 3]> {
+            let a = t.as_array()?;
+            Some([floats(a.first()?)?, floats(a.get(1)?)?, floats(a.get(2)?)?])
+        };
         let table = |k: &str| -> Option<[[f32; NP]; 4]> {
             let a = v.get(k)?.as_array()?;
             Some([floats(a.first()?)?, floats(a.get(1)?)?, floats(a.get(2)?)?, floats(a.get(3)?)?])
@@ -110,6 +131,10 @@ impl Analysis {
             clipped: v.get("clipped").and_then(|c| serde_json::from_value(c.clone()).ok()).unwrap_or_default(),
             at_green_white: v.get("atGreenWhite").and_then(floats).unwrap_or([2.1; 3]),
             at_green_black: v.get("atGreenBlack").and_then(floats).unwrap_or([0.1; 3]),
+            pv_lo: table3(v.get("pvLo")?)?,
+            pv_hi: table3(v.get("pvHi")?)?,
+            pv_mean: floats(v.get("pvMean")?)?,
+            pv_lum: floats(v.get("pvLum")?)?,
         })
     }
 
@@ -132,6 +157,10 @@ impl Analysis {
             clipped: [[false; 2]; 3],
             at_green_white: [2.1; 3],
             at_green_black: [0.1; 3],
+            pv_lo: [[0.0; NL]; 3],
+            pv_hi: [[1.0; NL]; 3],
+            pv_mean: [0.5; 3],
+            pv_lum: [0.05, 0.1, 0.25, 0.5, 0.5],
         }
     }
 }
@@ -482,6 +511,43 @@ pub fn analyze_with(pixel: impl Fn(usize) -> Option<[f32; 3]>, w: usize, h: usiz
     a.measured = [gw as u32, gh as u32, step as u32];
     a.border = Some(p.border);
     a.clipped = clipped_channels(&grid, brightest, negative);
+    // the Lab method's statistics: every measured sample in ProPhoto curve space
+    let mut es: Vec<[f32; 3]> = Vec::with_capacity(grid.len());
+    let mut e_sum = [0f64; 3];
+    for d in grid.iter().filter(|d| d[0].is_finite()) {
+        let pp = mat3(&TO_PP, [10f32.powf(-d[0]), 10f32.powf(-d[1]), 10f32.powf(-d[2])]);
+        let e = [lab_encode(pp[0]), lab_encode(pp[1]), lab_encode(pp[2])];
+        for c in 0..3 {
+            e_sum[c] += f64::from(e[c]);
+        }
+        es.push(e);
+    }
+    if !es.is_empty() {
+        let n = es.len();
+        for c in 0..3 {
+            let mut v: Vec<f32> = es.iter().map(|e| e[c]).collect();
+            v.sort_by(f32::total_cmp);
+            let at = |frac: f64| v.get(((frac * n as f64) as usize).min(n - 1)).copied().unwrap_or(0.5);
+            for (i, pct) in LAB_PERCENTILES.iter().enumerate() {
+                a.pv_lo[c][i] = at(pct / 100.0);
+                a.pv_hi[c][i] = at(1.0 - pct / 100.0 - 1e-9);
+            }
+            a.pv_mean[c] = (e_sum[c] / n as f64) as f32;
+        }
+        // the inverted luminance with the default ends
+        let (x0, x1) = ([0, 1, 2].map(|c| a.pv_lo[c][LAB_DENSE_I as usize]), [0, 1, 2].map(|c| a.pv_hi[c][LAB_THIN_I as usize]));
+        let mut lum: Vec<f32> = es
+            .iter()
+            .map(|e| {
+                let l = [0, 1, 2].map(|c| ((x1[c] - e[c]) / (x1[c] - x0[c]).max(0.01)).clamp(0.0, 1.0));
+                0.2126 * l[0] + 0.7152 * l[1] + 0.0722 * l[2]
+            })
+            .collect();
+        let mean = lum.iter().map(|v| f64::from(*v)).sum::<f64>() / n as f64;
+        lum.sort_by(f32::total_cmp);
+        let at = |frac: f64| lum.get(((frac * n as f64) as usize).min(n - 1)).copied().unwrap_or(0.5);
+        a.pv_lum = [at(0.05), at(0.10), at(0.25), at(0.50), mean as f32];
+    }
     // where the other channels sit at green's white and black
     let (gw_d, gb_d) = (hists[1].at(1.0 - 0.005), hists[1].at(0.01));
     let mut at_w: Vec<Hist> = (0..3).map(|_| Hist::new()).collect();

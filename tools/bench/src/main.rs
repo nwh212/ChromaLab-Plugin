@@ -49,6 +49,7 @@ struct Frame {
 fn golden_params() -> Vec<Value> {
     vec![
         json!({}),
+        json!({"method": "Shared range"}),
         json!({"method": "Per channel"}),
         json!({"method": "Levels"}),
         json!({"filmType": "B&W Negative"}),

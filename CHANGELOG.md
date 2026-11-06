@@ -5,15 +5,15 @@ Measurements made with one version can need **Measure** again in a later one; th
 levels of 255 (see the README).
 
 ## 0.12.0 (Measure again, for whole-strip measurements)
-- **Refitted to seven whole, uncropped scans** converted the same way (flatbed TIFFs, a scanner
-  DNG and a camera raw, each with the reference exported as a 16-bit TIFF; the earlier reference
-  set mixed crops, border buffers and screenshots). The shared range now puts black at the 2 %
-  thin end and white at the 0.1 % dense end (both were nearer the middle), gives red more and blue
-  a little less contrast than green, and turns the balanced samples into light a touch more
-  steeply. Reference error over those seven frames 28.4 → 22.0; six of them (one is dulled by a
-  scanner border that set its reference's white) 22.6 → 16.3. Mid-tones come out darker and
-  warmer than in 0.11: a corridor and a fountain frame that were washed out and cool are now
-  close (32 → 9 and 28 → 23).
+- **A new method, Lab** (Method ▸ Lab), built from how the reference conversions are made (their
+  exports carry the developer's own settings: a straight two-point curve per channel, then a
+  per-channel bend): each channel is inverted on its own between its thin end (0.03 %, to white)
+  and its dense end (0.1 %, to black) in a gamma-encoded wide-gamut space (ProPhoto primaries),
+  then bent by a gamma of its own, from the channel's mean against the frame's luminance and from
+  where the frame's shadows sit. The ends match the references within a few levels on every
+  channel; the bend is a fit from five frames that still misses on some, so Shared range stays
+  the default (reference error over the seven frames: Lab 22.1, Shared range 22.0; over the six
+  without the scanner-border frame: 17.7 and 16.3). Measure again after installing.
 - **A third method, Levels** (Method ▸ Levels), to compare: each channel's density normalised
   between its own 0.1 % thin and 1 % dense ends, 2.2 log10 units of scene across that range, and a
   print curve that pins scene grey to 0.18 and scene white to 0.95 (exponent 1.45; Contrast scales

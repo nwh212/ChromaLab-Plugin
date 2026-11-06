@@ -14,7 +14,7 @@ fn camera_layers() -> [f32; 3] {
             let mut gamma = gamma;
             gamma[c] = g;
             let mut px = negative_with(w, h, gamma);
-            let p = measured(&px, w, h, json!({"stock": "None (as scanned)"}));
+            let p = measured(&px, w, h, json!({"stock": "None (as scanned)", "method": "Shared range"}));
             convert(&mut px, &p);
             let i = ((h / 2) * w + w / 2) * 3;
             px[i + c] - px[i + 1]
@@ -71,6 +71,7 @@ fn a_grey_negative_comes_out_neutral_and_increasing_in_every_wb_mode() {
         ("Shared range", "Auto-Neutral", camera_layers()),
         ("Shared range", "Auto-Color", [0.65; 3]),
         ("Per channel", "Auto-Neutral", [0.6, 0.65, 0.7]),
+        ("Lab", "Auto-Neutral", [0.6, 0.65, 0.7]),
     ];
     for (method, wb, gamma) in cases {
         let mut px = negative_with(w, h, gamma);
@@ -103,7 +104,9 @@ fn a_small_saturated_object_doesnt_tint_the_neutrals() {
             px[(y * w + x) * 3] = 10f32.powf(-3.0);
         }
     }
-    let p = measured(&px, w, h, json!({"stock": "None (as scanned)"}));
+    // (the shared range: Lab inverts each channel between its own ends, as the reference
+    // conversions do, so a patch that extends one channel's range does tint it)
+    let p = measured(&px, w, h, json!({"stock": "None (as scanned)", "method": "Shared range"}));
     convert(&mut px, &p);
     let c = &px[(60 * w + 100) * 3..(60 * w + 100) * 3 + 3];
     assert!(spread(c) < 0.03, "mid grey tinted: {c:?}");

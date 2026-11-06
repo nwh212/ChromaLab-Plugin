@@ -89,7 +89,7 @@ To change ChromaLab, see [DEVELOPING.md](DEVELOPING.md): where things are, the r
 
 | Group | Parameters |
 |---|---|
-| Convert | Type (Color Negative, B&W Negative, Positive), Method (Shared range, Per channel, Levels), Film stock / look, Pre-saturation 1–5, Border buffer %, Show border buffer |
+| Convert | Type (Color Negative, B&W Negative, Positive), Method (Shared range, Lab, Per channel, Levels), Film stock / look, Pre-saturation 1–5, Border buffer %, Show border buffer |
 | Tone | Tone profile, Exposure, Brightness, Contrast, Lights, Darks, Whites, Blacks, Glow, Fade, Soft highs, Soft lows, Auto exposure, White clip, Black clip |
 | Colour | WB (Auto-Neutral, Auto-Color, Auto-Warm, Auto-Cool, None), Temp, Tint |
 
@@ -103,12 +103,19 @@ them aren't known, so the scale may change.
 **Auto exposure** (off by default) lifts a dark frame's median brightness toward mid grey, by at most
 2 stops, never darker, and rolls the highlights off so a bright sky doesn't clip. It needs a measurement.
 
-**Method** (colour negatives). *Shared range* (the default, since 0.10) gives the three dye layers
-the same contrast and balances them by their offsets, as one film's layers respond alike: blue skies
-stay blue, greens stay green, and colours keep their saturation instead of being stretched.
-*Per channel* is the method of 0.9 and earlier: each layer stretched to its own range, balanced by
-the edges in the frame. It suits some indoor and portrait frames better (warmer, closer to a lab's
-look on those) but can oversaturate and tint frames dominated by one colour.
+**Method** (colour negatives). *Lab* (new in 0.12) works the way the reference conversions are
+made: each channel is inverted on its own between its thin end (to white) and its dense end (to
+black) in a gamma-encoded wide-gamut space (ProPhoto primaries, as a raw developer's curves act),
+then bent by a gamma of its own: a channel brighter than the frame's luminance is darkened, a
+darker one lifted, and a frame whose shadows sit high is darkened overall. Its ends match the
+references within a few levels; its bends are a fit that still misses on some frames (it scores a
+little behind Shared range on the reference set), so it is offered beside the default. *Shared range* (the default
+since 0.10) gives the three dye layers the same contrast and balances them by their offsets,
+as one film's layers respond alike: blue skies stay blue, greens stay green, and colours keep their
+saturation instead of being stretched. *Per channel* is the method of 0.9 and earlier: each layer
+stretched to its own range in density, balanced by the edges in the frame. *Levels* is the
+converter datasheet's pipeline (per-channel density levels, 2.2 log10 units of scene across the
+range, a print curve that pins grey and white).
 
 **WB modes.** *Auto-Neutral* (the default) removes the mask and balances the channels: with Shared
 range, half of the remaining difference between the channels' averages; with Per channel, from the
