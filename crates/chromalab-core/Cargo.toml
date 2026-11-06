@@ -12,3 +12,7 @@ serde_json = "1"
 
 [build-dependencies]
 toml = "0.8"
+
+[features]
+# the bench reads the conversion's tuning constants from the environment (CHROMALAB_TUNE_*)
+tuning = []

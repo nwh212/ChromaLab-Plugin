@@ -5,6 +5,20 @@ Measurements made with one version can need **Measure** again in a later one; th
 levels of 255 (see the README).
 
 ## 0.12.0 (Measure again, for whole-strip measurements)
+- **Refitted to seven whole, uncropped scans** converted the same way (flatbed TIFFs, a scanner
+  DNG and a camera raw, each with the reference exported as a 16-bit TIFF; the earlier reference
+  set mixed crops, border buffers and screenshots). The shared range now puts black at the 2 %
+  thin end and white at the 0.1 % dense end (both were nearer the middle), gives red more and blue
+  a little less contrast than green, and turns the balanced samples into light a touch more
+  steeply. Reference error over those seven frames 28.4 → 22.0; six of them (one is dulled by a
+  scanner border that set its reference's white) 22.6 → 16.3. Mid-tones come out darker and
+  warmer than in 0.11: a corridor and a fountain frame that were washed out and cool are now
+  close (32 → 9 and 28 → 23).
+- **Scans that ran out of range are handled**: a channel the scanner clipped (its shadows piled at
+  white, or its highlights at black; an 8-bit flatbed scan of a dense negative often clips blue)
+  no longer takes green's range, which made the whole frame blue and flat. Measure notes the clip
+  (`clipped` in the measurement) and the conversion takes that channel's end from where it sits
+  at green's black or white instead. A portrait against a red car: 44 → 18.
 - **ChromaNeg is now ChromaLab.** Only the name changes: the plug-in keeps its ID, so installing
   ChromaLab replaces ChromaNeg, and photos converted with ChromaNeg keep their settings and
   measurements (their Plug-in Filters row may still say "ChromaNeg" until the filter is added again).

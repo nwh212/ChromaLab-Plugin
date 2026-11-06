@@ -7,19 +7,21 @@ use crate::{analysis::*, math::*, params::*, presets::*};
 /// [`PERCENTILES`].
 pub(crate) const WHITE_I: i64 = 8;
 pub(crate) const BLACK_I: i64 = 7;
-/// Colour negatives (the cube-root domain): black at 1 % from the thin end, white at 0.5 % from the
-/// dense end, each channel normalised at 5 % from its thin end, and this share of the remaining
-/// difference between the channels' averages balanced; fitted to reference conversions.
-pub(crate) const CUBE_BLACK_I: i64 = 4;
+/// Colour negatives (the cube-root domain): black at 2 % from the thin end, white at 0.1 % from
+/// the dense end, each channel normalised at 5 % from its thin end, and this share of the
+/// remaining difference between the channels' averages balanced; fitted to the reference
+/// conversions of seven whole, uncropped scans (flatbed TIFFs, a scanner DNG, a camera raw).
+pub(crate) const CUBE_BLACK_I: i64 = 6;
+pub(crate) const CUBE_WHITE_I: i64 = 1;
 pub(crate) const CUBE_AVERAGE: f32 = 0.5;
-/// Red's contrast relative to the other channels in the cube-root domain. Camera captures came
-/// out short of red in their brighter parts (golden leaves pale cyan, skin cool): fitted to the
-/// reference conversions, it helps warm and indoor scenes most and costs a blue-sky frame a little.
-const CUBE_RED_GAIN: f32 = 1.1;
-pub(crate) const CUBE_WHITE_I: i64 = 3;
+/// Red's and blue's contrast relative to green in the cube-root domain, fitted to the same
+/// references: red came out short in the brighter parts (skin cool, golden leaves pale), blue
+/// a little strong.
+pub(crate) const CUBE_RED_GAIN: f32 = 1.3;
+pub(crate) const CUBE_BLUE_GAIN: f32 = 0.9;
 pub(crate) const CUBE_BALANCE_I: usize = 8;
 /// How much steeper than a profile's own power the cube-root domain's `t` is turned into light.
-pub(crate) const CUBE_POWER: f32 = 1.25;
+pub(crate) const CUBE_POWER: f32 = 1.3;
 
 /// Auto exposure: the linear light a frame's median brightness should reach, and the most it is
 /// lifted, in stops.
@@ -74,20 +76,35 @@ pub(crate) fn plan(p: &Params) -> Plan {
         // each channel divided by its own thin end (the mask removed: a grey's channels then
         // agree), then in the cube-root domain (bright samples high): black at green's thin end,
         // white at its dense end, every channel the same range, so the layers keep their contrast
+        let (k_avg, k_red, k_blue) = (knob("AVERAGE", CUBE_AVERAGE), knob("RED_GAIN", CUBE_RED_GAIN), knob("BLUE_GAIN", CUBE_BLUE_GAIN));
+        let (k_black_i, k_white_i) = (knob("BLACK_I", CUBE_BLACK_I as f32) as i64, knob("WHITE_I", CUBE_WHITE_I as f32) as i64);
         let refd = |c: usize| a.lo[c][CUBE_BALANCE_I];
         mul = [0, 1, 2].map(|c| 1.0 / cube_root_of(refd(c)));
         let v = |c: usize, d: f32| cube_root_of(d - refd(c));
-        let (bi, wi) = (clip_index(p.black_clip, CUBE_BLACK_I), clip_index(p.white_clip, CUBE_WHITE_I));
+        let (bi, wi) = (clip_index(p.black_clip, k_black_i), clip_index(p.white_clip, k_white_i));
         let black = |c: usize| v(c, a.lo[c][bi]);
         let range = |c: usize| (black(c) - v(c, a.hi[c][wi])).max(0.01);
         // and half of what remains between the channels' averages (a cast of the frame) balanced
         let average = |c: usize| a.vmean[c] * mul[c] - a.vmean[1] * mul[1];
+        let gain = |c: usize| match c {
+            0 => k_red,
+            2 => k_blue,
+            _ => 1.0,
+        };
         for c in 0..3 {
             (origin[c], scale[c]) = match p.wb {
                 // each channel to its own black and white
                 Wb::Color => (black(c), 1.0 / range(c)),
                 Wb::None => (black(1), 1.0 / range(1)),
-                _ => (black(1) + CUBE_AVERAGE * average(c), if c == 0 { CUBE_RED_GAIN } else { 1.0 } / range(1)),
+                _ => {
+                    let [thin_clip, dense_clip] = a.clipped.get(c).copied().unwrap_or_default();
+                    // a channel the scan clipped has no detail past the clip: that end is where the
+                    // channel sits at green's own black (its shadows clipped) or white (its
+                    // highlights clipped), not green's range carried over
+                    let o = if thin_clip { v(c, a.at_green_black[c]) } else { black(1) + k_avg * average(c) };
+                    let r = if dense_clip { (o - v(c, a.at_green_white[c])).max(0.01) } else { range(1) };
+                    (o, gain(c) / r)
+                }
             };
         }
         mid = (black(1) - v(1, a.dmid[1])) / range(1);
@@ -136,7 +153,7 @@ pub(crate) fn plan(p: &Params) -> Plan {
     let mut pr = p.profile;
     // t in the cube-root domain needs a steeper power to reach the same light
     if cube {
-        pr.power *= CUBE_POWER;
+        pr.power *= knob("POWER", CUBE_POWER);
     }
     let power = pr.power;
     let contrast = p.contrast + st.contrast;

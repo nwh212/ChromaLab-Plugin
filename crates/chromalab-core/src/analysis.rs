@@ -11,7 +11,7 @@ pub const NP: usize = 11;
 pub(crate) const BASE_I: usize = 1;
 
 /// The analysis format; an older measurement is ignored (the photo is measured again).
-pub(crate) const ANALYSIS_VERSION: i64 = 7;
+pub(crate) const ANALYSIS_VERSION: i64 = 8;
 
 /// Density histogram range and resolution.
 pub(crate) const D_MIN: f32 = -0.5;
@@ -50,13 +50,25 @@ pub struct Analysis {
     /// The border buffer it was measured with (`None` from before 0.9.2): the border preview hides
     /// once this matches the setting, so a measured photo exports without it.
     pub border: Option<f32>,
+    /// Per channel, whether the scan clipped it at the thin end (piled at the scanner's
+    /// brightest value: the picture's shadows) and at the dense end (piled at black: its
+    /// highlights). Such a channel has no detail past the clip, so the conversion takes that
+    /// end from the channel itself instead of from green. `false` from before 0.12.
+    pub clipped: [[bool; 2]; 3],
+    /// Per channel, the median density where green is at its densest 0.5 % (the picture's
+    /// highlights by green): the white a channel clipped at its dense end takes.
+    pub at_green_white: [f32; 3],
+    /// …and where green is at its thinnest 1 % (its shadows): the black a channel clipped at its
+    /// thin end takes.
+    pub at_green_black: [f32; 3],
 }
 
 impl Analysis {
     pub fn to_json(&self) -> Value {
         json!({"version": ANALYSIS_VERSION, "percentiles": PERCENTILES, "lo": self.lo, "hi": self.hi,
                "gain": self.gain, "lumLo": self.lum_lo, "lumHi": self.lum_hi, "geLo": self.ge_lo, "lumMid": self.lum_mid, "hlRef": self.hl_ref,
-               "vmean": self.vmean, "dmid": self.dmid, "measured": self.measured, "borderBuffer": self.border})
+               "vmean": self.vmean, "dmid": self.dmid, "measured": self.measured, "borderBuffer": self.border,
+               "clipped": self.clipped, "atGreenWhite": self.at_green_white, "atGreenBlack": self.at_green_black})
     }
 
     pub fn from_json(v: &Value) -> Option<Analysis> {
@@ -95,6 +107,9 @@ impl Analysis {
             dmid: floats(v.get("dmid")?)?,
             measured: v.get("measured").and_then(|m| serde_json::from_value(m.clone()).ok()).unwrap_or_default(),
             border: v.get("borderBuffer").and_then(Value::as_f64).filter(|f| f.is_finite()).map(|f| f as f32),
+            clipped: v.get("clipped").and_then(|c| serde_json::from_value(c.clone()).ok()).unwrap_or_default(),
+            at_green_white: v.get("atGreenWhite").and_then(floats).unwrap_or([2.1; 3]),
+            at_green_black: v.get("atGreenBlack").and_then(floats).unwrap_or([0.1; 3]),
         })
     }
 
@@ -114,6 +129,9 @@ impl Analysis {
             dmid: [1.1; 3],
             measured: [0; 3],
             border: None,
+            clipped: [[false; 2]; 3],
+            at_green_white: [2.1; 3],
+            at_green_black: [0.1; 3],
         }
     }
 }
@@ -305,6 +323,41 @@ pub(crate) fn exclude_strip_edges(grid: &mut [[f32; 3]], gw: usize, gh: usize) {
     }
 }
 
+/// A channel counts as clipped at the thin end when its brightest value is white (within
+/// [`CLIP_WHITE`] of 1.0: a file's ceiling; the host's resampling may overshoot it a little) and
+/// at least [`CLIP_SHARE_WHITE`] of the measured samples are that bright. A raw file isn't capped
+/// at 1.0, so its brightest values (bare light, highlights) lie well above it.
+pub(crate) const CLIP_WHITE: (f32, f32) = (0.995, 1.01);
+pub(crate) const CLIP_SHARE_WHITE: f64 = 0.03;
+/// …and at the dense end when at least [`CLIP_SHARE_BLACK`] of the samples are within
+/// [`CLIP_NEAR_BLACK`] (linear) of black, with hardly any below zero (at most
+/// [`CLIP_NEGATIVE_RATIO`] of those): a file clipped at black stops at zero, while a raw file's
+/// darkest samples are noise spread around zero.
+pub(crate) const CLIP_SHARE_BLACK: f64 = 0.015;
+pub(crate) const CLIP_NEAR_BLACK: f32 = 2e-4;
+pub(crate) const CLIP_NEGATIVE_RATIO: f64 = 0.1;
+
+/// Which channels of the measured samples (densities) are clipped, at the thin and dense ends.
+/// `brightest[c]` and `negative[c]` are channel `c`'s brightest linear value and the share of its
+/// samples below zero.
+pub(crate) fn clipped_channels(grid: &[[f32; 3]], brightest: [f32; 3], negative: [f64; 3]) -> [[bool; 2]; 3] {
+    let mut out = [[false; 2]; 3];
+    let n = grid.iter().filter(|d| d[0].is_finite()).count();
+    if n == 0 {
+        return out;
+    }
+    let (white_d, black_d) = (-CLIP_WHITE.0.log10(), -CLIP_NEAR_BLACK.log10());
+    for (c, o) in out.iter_mut().enumerate() {
+        let share = |f: &dyn Fn(f32) -> bool| grid.iter().filter(|d| d[0].is_finite() && f(d[c])).count() as f64 / n as f64;
+        let top = brightest.get(c).copied().unwrap_or(0.0);
+        let thin = (CLIP_WHITE.0..=CLIP_WHITE.1).contains(&top) && share(&|v| v <= white_d) >= CLIP_SHARE_WHITE;
+        let near_black = share(&|v| v >= black_d);
+        let dense = near_black >= CLIP_SHARE_BLACK && negative.get(c).copied().unwrap_or(1.0) <= CLIP_NEGATIVE_RATIO * near_black;
+        *o = [thin, dense];
+    }
+    out
+}
+
 /// Measures `px` (interleaved linear RGB, `w × h`, the whole uncropped photo) inside the border buffer.
 pub fn analyze(px: &[f32], w: usize, h: usize, p: &Params) -> Analysis {
     analyze_with(|i| px.get(i * 3..i * 3 + 3).map(|c| [c[0], c[1], c[2]]), w, h, p)
@@ -321,12 +374,22 @@ pub fn analyze_with(pixel: impl Fn(usize) -> Option<[f32; 3]>, w: usize, h: usiz
     let (gw, gh) = ((x1 - x0).div_ceil(step), (y1 - y0).div_ceil(step));
     let log = FastLog::new();
     let mut grid: Vec<[f32; 3]> = Vec::with_capacity(gw * gh);
+    // for the clip check: each channel's brightest value and how many samples lie below zero
+    let (mut brightest, mut below, mut read) = ([f32::NEG_INFINITY; 3], [0u64; 3], 0u64);
     for gy in 0..gh {
         for gx in 0..gw {
-            let d = pixel((y0 + gy * step) * w + x0 + gx * step).map(|c| [log.density(c[0]), log.density(c[1]), log.density(c[2])]);
-            grid.push(d.unwrap_or([f32::NAN; 3]));
+            let px = pixel((y0 + gy * step) * w + x0 + gx * step);
+            if let Some(c) = px {
+                read += 1;
+                for k in 0..3 {
+                    brightest[k] = brightest[k].max(c[k]);
+                    below[k] += u64::from(c[k] < 0.0);
+                }
+            }
+            grid.push(px.map(|c| [log.density(c[0]), log.density(c[1]), log.density(c[2])]).unwrap_or([f32::NAN; 3]));
         }
     }
+    let negative = below.map(|b| b as f64 / read.max(1) as f64);
     // bare light (sprocket holes, gaps in the film holder) inside the measured area would set the
     // black point far below the film: drop it before measuring
     exclude_bare_light(&mut grid);
@@ -418,5 +481,28 @@ pub fn analyze_with(pixel: impl Fn(usize) -> Option<[f32; 3]>, w: usize, h: usiz
     }
     a.measured = [gw as u32, gh as u32, step as u32];
     a.border = Some(p.border);
+    a.clipped = clipped_channels(&grid, brightest, negative);
+    // where the other channels sit at green's white and black
+    let (gw_d, gb_d) = (hists[1].at(1.0 - 0.005), hists[1].at(0.01));
+    let mut at_w: Vec<Hist> = (0..3).map(|_| Hist::new()).collect();
+    let mut at_b: Vec<Hist> = (0..3).map(|_| Hist::new()).collect();
+    for d in grid.iter().filter(|d| d[0].is_finite()) {
+        for c in 0..3 {
+            if d[1] >= gw_d {
+                at_w[c].add(d[c]);
+            }
+            if d[1] <= gb_d {
+                at_b[c].add(d[c]);
+            }
+        }
+    }
+    for c in 0..3 {
+        if at_w[c].count > 0 {
+            a.at_green_white[c] = at_w[c].at(0.5);
+        }
+        if at_b[c].count > 0 {
+            a.at_green_black[c] = at_b[c].at(0.5);
+        }
+    }
     a
 }

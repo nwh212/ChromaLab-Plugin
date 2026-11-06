@@ -51,6 +51,20 @@ cargo run --release -p bench -- REFS --save               # keep these scores as
 cargo run --release -p bench -- REFS --sheet sheet.png    # reference | ChromaLab, side by side
 ```
 
+`--out FOLDER` writes each frame's conversion and reference as PNGs (for other tools), and a frame
+can carry its own `params = { borderBuffer = 25 }` in `refs.toml`; scores count only the measured
+area (inside the border buffer). A reference set should be **consistent**: whole, uncropped
+scans, the same border buffer in the reference conversion and here, and the reference exported as
+a 16-bit TIFF (a screenshot's tone depends on the viewer).
+
+**Tuning:** the bench is built with the `tuning` feature of `chromalab-core`, under which the
+shared range's constants can be overridden from the environment without rebuilding:
+`CHROMALAB_TUNE_POWER`, `_BLACK_I`, `_WHITE_I` (indices into `PERCENTILES`), `_AVERAGE`,
+`_RED_GAIN`, `_BLUE_GAIN` and `_DOMAIN` (the root the samples are balanced in; 3 = cube root).
+`CHROMALAB_TUNE_AVERAGE=0.75 cargo run --release -p bench -- REFS` scores one value; a
+coordinate descent over all of them takes a few minutes. In the plug-in itself the constants are
+fixed (the feature is off).
+
 **Refactoring** (a change that must not alter any result): `--golden save` before, `--golden check`
 after. It compares the exact output of every frame under sixteen settings (both methods, B&W,
 slides, every WB mode, a spread of looks, stocks, profiles and sliders).

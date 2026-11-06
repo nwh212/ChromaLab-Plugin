@@ -6,8 +6,19 @@ pub(crate) const FLOOR: f32 = 1e-6;
 /// The cube root of the linear sample whose density is `d`: the domain colour negatives are
 /// balanced and mapped in. Each channel gets the same range there and its own offset, as dye layers
 /// of one film respond alike; stretching each channel to its own range oversaturates.
+/// With the `tuning` feature (the bench), a constant can be overridden from the environment
+/// (`CHROMALAB_TUNE_<NAME>`) to sweep it without rebuilding; otherwise it is itself.
+#[cfg(feature = "tuning")]
+pub(crate) fn knob(name: &str, default: f32) -> f32 {
+    std::env::var(format!("CHROMALAB_TUNE_{name}")).ok().and_then(|v| v.parse().ok()).unwrap_or(default)
+}
+#[cfg(not(feature = "tuning"))]
+pub(crate) fn knob(_name: &str, default: f32) -> f32 {
+    default
+}
+
 pub(crate) fn cube_root_of(d: f32) -> f32 {
-    10f32.powf(-d / 3.0)
+    10f32.powf(-d / knob("DOMAIN", 3.0))
 }
 
 pub(crate) fn bell(t: f32, centre: f32, width: f32) -> f32 {

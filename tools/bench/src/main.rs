@@ -78,19 +78,20 @@ fn run() -> Result<(), String> {
     let args: Vec<String> = std::env::args().skip(1).collect();
     let mut dir = None;
     let mut params = json!({});
-    let (mut save, mut sheet, mut golden) = (false, None, None);
+    let (mut save, mut sheet, mut golden, mut out) = (false, None, None, None);
     let mut it = args.iter();
     while let Some(a) = it.next() {
         match a.as_str() {
             "--save" => save = true,
             "--sheet" => sheet = Some(it.next().ok_or("--sheet needs a file")?.clone()),
+            "--out" => out = Some(PathBuf::from(it.next().ok_or("--out needs a folder")?)),
             "--golden" => golden = Some(it.next().ok_or("--golden needs save or check")?.clone()),
             s if s.starts_with('{') => params = serde_json::from_str(s).map_err(|e| format!("settings: {e}"))?,
             s if dir.is_none() => dir = Some(PathBuf::from(s)),
             s => return Err(format!("unexpected argument {s:?}")),
         }
     }
-    let dir = dir.ok_or("usage: bench REFS_DIR ['{settings}'] [--save] [--sheet out.png] [--golden save|check]")?;
+    let dir = dir.ok_or("usage: bench REFS_DIR ['{settings}'] [--save] [--sheet out.png] [--out folder] [--golden save|check]")?;
     let frames = read_set(&dir)?;
     if let Some(mode) = golden {
         return run_golden(&dir, &frames, &mode);
@@ -102,11 +103,24 @@ fn run() -> Result<(), String> {
     for f in &frames {
         let (ours, w, h) = render(f, &params)?;
         let reference = load_reference(f, &ours, w, h)?;
-        let (mae, bias) = score(&ours, &reference);
+        let border = params.get("borderBuffer").or(f.params.get("borderBuffer")).and_then(Value::as_f64).unwrap_or(3.0);
+        let (mae, bias) = score(&ours, &reference, w, h, border);
         total += mae;
         let was = baseline[&f.label].as_f64().map(|b| format!("  ({:+.1})", mae - b)).unwrap_or_default();
         println!("{:<34} {mae:5.1}{was:<9} bias R {:+6.1} G {:+6.1} B {:+6.1}", f.label, bias[0], bias[1], bias[2]);
         scores.insert(f.label.clone(), json!((mae * 100.0).round() / 100.0));
+        if let Some(dir) = &out {
+            // ours and the reference as compared (the crop, at the reference's size), for other tools
+            std::fs::create_dir_all(dir).map_err(|e| e.to_string())?;
+            let slug: String = f.label.chars().take_while(|c| *c != ':').collect();
+            for (name, px) in [("ours", &ours), ("ref", &reference)] {
+                let mut img = RgbImage::new(w as u32, h as u32);
+                for (i, p) in img.pixels_mut().enumerate() {
+                    *p = image::Rgb([0, 1, 2].map(|c| px.get(i * 3 + c).copied().unwrap_or(0.0).round().clamp(0.0, 255.0) as u8));
+                }
+                img.save(dir.join(format!("{slug}-{name}.png"))).map_err(|e| e.to_string())?;
+            }
+        }
         if sheet.is_some() {
             pairs.push((reference, ours, w, h));
         }
@@ -198,6 +212,18 @@ fn convert_like_the_host(px: &[f32], w: usize, h: usize, mut json: Value) -> Vec
         .flat_map(|i| px[i..i + 3].to_vec())
         .collect();
     let an = analyze(&small, sw, sh, &Params::from_json(&json));
+    if std::env::var("BENCH_SHOW_ANALYSIS").is_ok() {
+        let r2 = |v: f32| (v * 100.0).round() / 100.0;
+        eprintln!(
+            "    gain {:?} clipped {:?} base {:?} black1% {:?} white0.5% {:?} vmean {:?}",
+            an.gain.map(r2),
+            an.clipped,
+            [0, 1, 2].map(|c| r2(an.lo[c][1])),
+            [0, 1, 2].map(|c| r2(an.lo[c][4])),
+            [0, 1, 2].map(|c| r2(an.hi[c][3])),
+            an.vmean.map(|g| (g * 1000.0).round() / 1000.0)
+        );
+    }
     json["_analysis"] = an.to_json();
     let mut out = px.to_vec();
     convert(&mut out, &Params::from_json(&json));
@@ -263,15 +289,25 @@ fn correlation(a: &[f32], b: &[f32]) -> f64 {
     cov / (va * vb).sqrt().max(1e-9)
 }
 
-/// Mean absolute difference and the mean signed difference per channel, in levels of 255.
-fn score(ours: &[f32], reference: &[f32]) -> (f64, [f64; 3]) {
-    let n = (ours.len().min(reference.len()) / 3).max(1) as f64;
-    let (mut mae, mut bias) = (0.0, [0.0; 3]);
-    for (i, (a, b)) in ours.iter().zip(reference).enumerate() {
-        let d = f64::from(a.round() - b);
-        mae += d.abs();
-        bias[i % 3] += d;
+/// Mean absolute difference and the mean signed difference per channel, in levels of 255, over
+/// the measured area (inside `border` % of the frame each side: the picture, not a strip's rebate).
+fn score(ours: &[f32], reference: &[f32], w: usize, h: usize, border: f64) -> (f64, [f64; 3]) {
+    let inset = |n: usize| ((n as f64 * border / 100.0) as usize).min(n.saturating_sub(1) / 2);
+    let (ix, iy) = (inset(w), inset(h));
+    let (mut mae, mut bias, mut n) = (0.0f64, [0.0f64; 3], 0.0f64);
+    for y in iy..h.saturating_sub(iy) {
+        for x in ix..w.saturating_sub(ix) {
+            let i = (y * w + x) * 3;
+            for (c, bias) in bias.iter_mut().enumerate() {
+                let (Some(a), Some(b)) = (ours.get(i + c), reference.get(i + c)) else { continue };
+                let d = f64::from(a.round() - b);
+                mae += d.abs();
+                *bias += d;
+            }
+            n += 1.0;
+        }
     }
+    let n = n.max(1.0);
     (mae / (n * 3.0), bias.map(|b| b / n))
 }
 
@@ -322,7 +358,17 @@ fn run_golden(dir: &Path, frames: &[Frame], mode: &str) -> Result<(), String> {
             if differ.is_empty() {
                 println!("all {} outputs bit-identical to the saved ones", hashes.len());
             } else {
-                return Err(format!("{} of {} outputs differ, e.g. {:?}", differ.len(), hashes.len(), &differ[..differ.len().min(5)]));
+                // per frame: how many of its outputs differ
+                let mut by_frame: Vec<(String, usize)> = Vec::new();
+                for k in &differ {
+                    let frame = k.rsplit_once(" #").map_or(k.as_str(), |(f, _)| f).to_string();
+                    match by_frame.iter_mut().find(|(f, _)| *f == frame) {
+                        Some((_, n)) => *n += 1,
+                        None => by_frame.push((frame, 1)),
+                    }
+                }
+                let list: Vec<String> = by_frame.iter().map(|(f, n)| format!("{f}: {n}")).collect();
+                return Err(format!("{} of {} outputs differ ({})", differ.len(), hashes.len(), list.join("; ")));
             }
         }
         m => return Err(format!("--golden {m}: use save or check")),

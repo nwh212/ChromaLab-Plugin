@@ -8,7 +8,7 @@ license = "MIT"
 publish = false
 
 [dependencies]
-chromalab-core = { path = "../../crates/chromalab-core" }
+chromalab-core = { path = "../../crates/chromalab-core", features = ["tuning"] }
 image = { version = "0.25", default-features = false, features = ["png", "webp", "jpeg"] }
 serde_json = "1"
 toml = "0.8"

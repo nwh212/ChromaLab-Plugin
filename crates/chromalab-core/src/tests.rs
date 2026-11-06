@@ -3,24 +3,30 @@
 use crate::{analysis::*, convert::*, math::*, overlay::*, params::*, plan::*, presets::*};
 use serde_json::{Value, json};
 
-/// The dye layers' contrast in a synthetic camera scan: red reads weaker than green and blue (as
-/// the shared range's red gain, fitted to real scans, assumes), so much weaker that mid grey comes
-/// out neutral (found by bisection); the others alike.
+/// The dye layers' contrast in a synthetic camera scan: red reads weaker and blue stronger than
+/// green (as the shared range's red and blue gains, fitted to real scans, assume), by just so
+/// much that mid grey comes out neutral (found by bisection, one channel at a time).
 fn camera_layers() -> [f32; 3] {
     let (w, h) = (200, 40);
-    let red_minus_green = |g: f32| {
-        let mut px = negative_with(w, h, [g, 0.65, 0.65]);
-        let p = measured(&px, w, h, json!({"stock": "None (as scanned)"}));
-        convert(&mut px, &p);
-        let i = ((h / 2) * w + w / 2) * 3;
-        px[i] - px[i + 1]
-    };
-    let (mut lo, mut hi) = (0.3f32, 0.65f32);
-    for _ in 0..30 {
-        let mid = 0.5 * (lo + hi);
-        if red_minus_green(mid) > 0.0 { hi = mid } else { lo = mid }
+    let mut gamma = [0.65f32; 3];
+    for c in [0, 2] {
+        let minus_green = |g: f32, gamma: [f32; 3]| {
+            let mut gamma = gamma;
+            gamma[c] = g;
+            let mut px = negative_with(w, h, gamma);
+            let p = measured(&px, w, h, json!({"stock": "None (as scanned)"}));
+            convert(&mut px, &p);
+            let i = ((h / 2) * w + w / 2) * 3;
+            px[i + c] - px[i + 1]
+        };
+        let (mut lo, mut hi) = (0.3f32, 1.2f32);
+        for _ in 0..30 {
+            let mid = 0.5 * (lo + hi);
+            if minus_green(mid, gamma) > 0.0 { hi = mid } else { lo = mid }
+        }
+        gamma[c] = 0.5 * (lo + hi);
     }
-    [0.5 * (lo + hi), 0.65, 0.65]
+    gamma
 }
 
 /// A synthetic colour negative: an orange mask (per-channel base density) plus a scene whose
@@ -73,8 +79,13 @@ fn a_grey_negative_comes_out_neutral_and_increasing_in_every_wb_mode() {
         convert(&mut px, &p);
         let row = &px[(h / 2) * w * 3..(h / 2 + 1) * w * 3];
         let mut last = -1.0;
-        for c in row.as_chunks::<3>().0.iter().skip(w / 20 + 1).take(w - w / 10 - 2) {
-            assert!(spread(c) < 0.02, "{wb}: not neutral: {c:?}");
+        let picture = row.as_chunks::<3>().0.iter().skip(w / 20 + 1).take(w - w / 10 - 2);
+        let n = picture.len();
+        for (i, c) in picture.enumerate() {
+            // the shared range gives red and blue their fitted contrast relative to green, so a
+            // synthetic layer of one contrast is balanced at mid grey and drifts toward the ends
+            let middle = (n / 5..n * 4 / 5).contains(&i);
+            assert!(spread(c) < if middle { 0.06 } else { 0.12 }, "{wb}: not neutral at {i} of {n}: {c:?}");
             assert!(c[1] >= last - 1e-3, "{wb}: not monotonic");
             last = c[1];
         }
@@ -350,4 +361,43 @@ fn a_slide_keeps_its_orientation() {
     let p = measured(&px, w, h, json!({"filmType": "Positive (Slide)", "borderBuffer": 0}));
     convert(&mut px, &p);
     assert!(px[3] > px[(w - 2) * 3]);
+}
+
+#[test]
+fn a_scan_clipped_at_either_end_is_flagged_and_its_highlights_stay_near_neutral() {
+    let (w, h) = (200, 40);
+    let clean = negative(w, h);
+    let measure = |px: &[f32]| analyze(px, w, h, &Params::from_json(&json!({"borderBuffer": 0})));
+    assert_eq!(measure(&clean).clipped, [[false; 2]; 3], "an unclipped scan is never flagged");
+    // a scanner that ran out of range: red exposed so far that its thinnest samples pile at white
+    // (1.0), blue's densest cut off at black
+    let red_gain = 1.25 / clean.chunks(3).map(|c| c[0]).fold(0.0, f32::max);
+    let blue_cut = {
+        let mut b: Vec<f32> = clean.chunks(3).map(|c| c[2]).collect();
+        b.sort_by(f32::total_cmp);
+        b[b.len() / 5]
+    };
+    let mut clipped = clean.clone();
+    for c in clipped.chunks_mut(3) {
+        c[0] = (c[0] * red_gain).min(1.0);
+        c[2] = (c[2] - blue_cut).max(0.0);
+    }
+    let a = measure(&clipped);
+    assert_eq!(a.clipped, [[true, false], [false, false], [false, true]], "{:?}", a.clipped);
+    // a raw file's noise runs below zero: its densest samples are noise, not a clip
+    let mut noisy = clipped.clone();
+    for (i, c) in noisy.chunks_mut(3).enumerate() {
+        if c[2] == 0.0 {
+            c[2] = if i % 2 == 0 { -1e-4 } else { 0.0 };
+        }
+    }
+    assert!(!measure(&noisy).clipped[2][1], "raw noise below zero isn't a clip");
+    // the grey ramp's highlights (its densest end) don't turn blue
+    let mut p = Params::from_json(&json!({"borderBuffer": 0}));
+    p.analysis = Some(a);
+    let mut px = clipped.clone();
+    convert(&mut px, &p);
+    let i = ((h / 2) * w + w * 9 / 10) * 3;
+    let (g, b) = (srgb_encode(px[i + 1]), srgb_encode(px[i + 2]));
+    assert!((b - g).abs() < 0.12, "highlight green {g} blue {b}");
 }
