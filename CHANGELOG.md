@@ -20,6 +20,11 @@ levels of 255 (see the README).
   out thin, uniform film base and small, very dense patches along the edges of the measured area;
   what's inside the picture always counts. Two Fuji 400 frames measured as whole strips (border
   buffer 17): reference error 44.0 → 16.0 and 27.2 → 15.5. **Measure again** on photos measured that way.
+- **Checked with Chromaforge 26.45**: the same conversion as in 26.43 (tones and colours within one
+  level on average; only fine detail differs, from the app's own sharpening and resizing). The menu
+  sections and the raw-file tone fix ChromaLab asks for are in the app since 26.43.6; the README's
+  install steps follow the current app (*Install from File…*, drag and drop, `chromaforge-cli`).
+  The Plug-in Manager now shows an author.
 
 ## 0.11.0
 - **Looks merged into the Film stock menu** (now "Film stock / look"): the stocks, by brand, then

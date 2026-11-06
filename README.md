@@ -16,29 +16,30 @@ ChromaNeg keep working.
 ## Download and install
 
 1. Download `chromalab-<version>.wasm` from [Releases](../../releases).
-2. In the app: File ▸ Plug-ins ▸ Plug-in Manager… ▸ Install…, and pick the file
-   (or `lightcraft-classic-cli commands plugin.install '{"path": "…/chromalab-<version>.wasm"}'`).
+2. In the app: File ▸ Plug-ins ▸ Plug-in Manager… ▸ *Install from File…*, or drop the `.wasm` file on
+   the app's window (or `chromaforge-cli commands plugin.install '{"path": "…/chromalab-<version>.wasm"}'`).
+   It's listed under *Pixel Filters* in the Plug-in Manager.
 3. Installing a newer version replaces the old one (same plug-in id); press **Measure** again on photos
    measured with an older version when its notes say the measurement format changed.
 
-**Compatibility:** Chromaforge v26.43 or newer with pixel-filter plug-ins.
+**Compatibility:** Chromaforge v26.43.6 or newer (checked with v26.45). Older versions with
+pixel-filter plug-ins still run it, without the features below.
 
 **App features ChromaLab asks for** (in its manifest; an app without them still runs it):
-- **Measuring inside the crop** (`"analyzeArea": "crop"`): the border buffer applies inside your
-  crop. In the app since [emmertex/lightcraft-classic#444](https://github.com/emmertex/lightcraft-classic/pull/444);
-  older versions measure the whole uncropped photo, and on a cropped photo the *Show border buffer*
-  overlay then doesn't match what's measured.
-- **No second tone curve on raw files** (`"baseTone": "neutral"`): the app tones a raw after the
-  Source stage with the camera's own curve (or its default raw curve), which on top of ChromaLab's
-  conversion adds contrast and saturation and moves the brightness. ChromaLab asks the app to show
-  its result as it is. That's on the `plugin-base-tone` branch of
-  [nwh212/chromaforge-plugins](https://github.com/nwh212/chromaforge-plugins/tree/plugin-base-tone)
-  and offered upstream; until an app release has it, raw captures (camera RAWs, raw DNGs) come out
-  more contrasty than intended. TIFF and JPEG scans aren't affected.
-- **Menu sections** (`"groups"` on the Film stock / look menu): the stocks by brand and the creative
-  looks as collapsible sections. That's on the `plugin-choice-groups` branch of
-  [nwh212/chromaforge-plugins](https://github.com/nwh212/chromaforge-plugins/tree/plugin-choice-groups)
-  and offered upstream; until then the menu is one list, in the same order.
+- **Measuring inside the crop** (`"analyzeArea": "crop"`, since v26.43): the border buffer applies
+  inside your crop. Older versions measure the whole uncropped photo, and on a cropped photo the
+  *Show border buffer* overlay then doesn't match what's measured.
+- **No second tone curve on raw files** (`"baseTone": "neutral"`, since v26.43.6): without it the
+  app tones a raw after the Source stage with the camera's own curve, which on top of ChromaLab's
+  conversion adds contrast and saturation and moves the brightness. On older versions raw captures
+  (camera RAWs, raw DNGs) come out more contrasty than intended; TIFF and JPEG scans aren't affected.
+- **Menu sections** (`"groups"` on the Film stock / look menu, since v26.43.6): the stocks by brand
+  and the creative looks as collapsible sections. On older versions the menu is one list, in the
+  same order.
+
+The app's develop sliders (Exposure, Contrast, Whites, Blacks, the tone curve, Color Grading…)
+still apply on top of ChromaLab's result, and the app's Auto tone and auto masks see the converted
+picture, not the negative.
 
 ## Build from source
 
