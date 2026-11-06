@@ -18,11 +18,33 @@ use chromalab_core::{BorderOverlay, Converter, PROFILES, Params, STOCKS, analyze
 /// looks) and profiles are filled in from the code by [`manifest`].
 const TEMPLATE: &str = include_str!("../manifest.json");
 
+/// `text` as a JSON string literal (an SVG document holds quotes and newlines).
+fn json_string(text: &str) -> String {
+    let mut out = String::with_capacity(text.len() + 2);
+    out.push('"');
+    for c in text.chars() {
+        match c {
+            '"' => out.push_str("\\\""),
+            '\\' => out.push_str("\\\\"),
+            '\n' => out.push_str("\\n"),
+            '\r' => {}
+            '\t' => out.push_str("\\t"),
+            c if (c as u32) < 0x20 => out.push_str(&format!("\\u{:04x}", c as u32)),
+            c => out.push(c),
+        }
+    }
+    out.push('"');
+    out
+}
+
 /// The manifest the host reads.
 pub fn manifest() -> String {
     let names = |n: Vec<&str>| serde_json::Value::from(n).to_string();
     TEMPLATE
         .replace("\"@version\"", &format!("\"{}\"", env!("CARGO_PKG_VERSION")))
+        .replace("\"@icon\"", &json_string(include_str!("../../../brand/icon.svg")))
+        .replace("\"@header_dark\"", &json_string(include_str!("../../../brand/logo-dark.svg")))
+        .replace("\"@header_light\"", &json_string(include_str!("../../../brand/logo-light.svg")))
         .replace("\"@stocks\"", &names(STOCKS.iter().map(|s| s.name).collect()))
         .replace("\"@stock_groups\"", &names(STOCKS.iter().map(|s| s.group).collect()))
         .replace("\"@profiles\"", &names(PROFILES.iter().map(|p| p.name).collect()))

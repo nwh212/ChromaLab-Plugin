@@ -7,6 +7,7 @@
 | `crates/chromalab-core/presets.toml` | tone profiles, film stocks and creative looks, as data |
 | `crates/chromalab-core/src/` | the conversion: `params.rs` (what the host sends), `analysis.rs` (Measure), `plan.rs` (how each sample becomes light: methods, balance, tone), `convert.rs`, `overlay.rs`, `math.rs` (tables and curves), `tests.rs` |
 | `crates/pixel-filter` | plug-in plumbing shared by every pixel filter |
+| `brand/` | the logo and icon (original work, MIT): the wordmark for dark and light backgrounds (the plug-in's header picture), the square icon with and without its plate (the plug-in's icon); the plug-in embeds them from here |
 | `plugins/chromalab` | the plug-in: `manifest.json` and the ABI exports (thin) |
 | `tools/bench` | scores ChromaLab against reference conversions |
 | `tools/dump-source` | turns a scan into the bench's input (builds the whole app, so it isn't in the workspace) |

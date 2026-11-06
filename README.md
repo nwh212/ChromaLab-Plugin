@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="brand/logo-dark.svg">
+    <img alt="ChromaLab" src="brand/logo-light.svg" width="520">
+  </picture>
+</p>
+
 # ChromaLab
 
 Film negative conversion for [Chromaforge](https://github.com/emmertex/lightcraft-classic) ("the app"

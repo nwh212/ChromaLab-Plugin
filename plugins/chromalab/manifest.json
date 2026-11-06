@@ -8,6 +8,8 @@
   "baseTone": "neutral",
   "description": "Converts film negatives and slides. Add it to a photo, set Type and Border buffer, then press Measure. Measure again after changing Border buffer.",
   "author": "nwh212",
+  "icon": "@icon",
+  "header": {"dark": "@header_dark", "light": "@header_light"},
   "overlap": 0,
   "params": {
     "filmType":     {"type": "choice", "label": "Type", "options": ["Color Negative", "B&W Negative", "Positive (Slide)"], "default": "Color Negative"},

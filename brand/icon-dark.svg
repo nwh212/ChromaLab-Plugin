@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="512" height="512">
+<title>ChromaLab</title>
+<defs>
+<linearGradient id="spectrum" gradientUnits="userSpaceOnUse" x1="66" y1="212" x2="190" y2="88">
+<stop offset="0" stop-color="#ff4d6d"/><stop offset="0.3" stop-color="#ff9a3c"/><stop offset="0.55" stop-color="#ffd23f"/>
+<stop offset="0.78" stop-color="#3bceac"/><stop offset="1" stop-color="#4d8dff"/></linearGradient>
+<mask id="holes" maskUnits="userSpaceOnUse"><rect x="0" y="0" width="256" height="256" fill="white"/><g fill="black"><rect x="34.0" y="82" width="7" height="10" rx="2"/><rect x="61.0" y="82" width="7" height="10" rx="2"/><rect x="34.0" y="101" width="7" height="10" rx="2"/><rect x="61.0" y="101" width="7" height="10" rx="2"/><rect x="34.0" y="120" width="7" height="10" rx="2"/><rect x="61.0" y="120" width="7" height="10" rx="2"/><rect x="34.0" y="48" width="7" height="10" rx="2"/></g></mask>
+</defs>
+<rect x="8" y="8" width="240" height="240" rx="52" fill="#1b1d22"/>
+<g fill="none" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+<path d="M29.0,150 L29.00,150.00 L30.56,157.81 L32.73,165.37 L35.48,172.64 L38.77,179.57 L42.57,186.12 L46.84,192.25 L51.53,197.94 L56.61,203.15 L62.03,207.86 L67.73,212.05 L73.68,215.70 L79.82,218.81 L86.10,221.36 L92.49,223.36 L98.91,224.79 L105.34,225.68 L111.72,226.03 L118.01,225.85 L124.17,225.15 L130.15,223.97 L135.92,222.32 L141.44,220.23 L146.68,217.72 L151.60,214.84 L146.81,201.68 A55.0,55.0 0 0 1 73.0,150 V76 Q73.0,70 70.0,66 L57.0,35 Q55.0,28 49.0,28 H38.0 Q29.0,28 29.0,37 Z" fill="#ffb03a" stroke="none" mask="url(#holes)"/>
+<circle cx="128" cy="150" r="62" stroke="url(#spectrum)"/>
+<circle cx="128" cy="150" r="47" stroke="#ffb03a" stroke-width="6.3" opacity="0.8"/>
+<circle cx="128" cy="150" r="35" stroke="#ffb03a" stroke-width="6.3" opacity="0.55"/>
+<circle cx="128" cy="150" r="9" fill="#ffb03a" stroke="none"/>
+</g>
+</svg>
