@@ -14,10 +14,10 @@
   "params": {
     "filmType":     {"type": "choice", "label": "Type", "options": ["Color Negative", "B&W Negative", "Positive (Slide)"], "default": "Color Negative"},
     "method":       {"type": "choice", "label": "Method", "options": ["Lab", "Shared range", "Per channel", "Levels"], "default": "Lab"},
-    "stock":        {"type": "choice", "label": "Film stock / look", "options": "@stocks", "groups": "@stock_groups", "default": "Generic"},
+    "stock":        {"type": "choice", "label": "Stock / look", "options": "@stocks", "groups": "@stock_groups", "default": "Generic"},
     "preSaturation":{"type": "int",    "label": "Pre-saturation", "min": 1, "max": 5, "default": 3},
-    "borderBuffer": {"type": "number", "label": "Border buffer %", "min": 0, "max": 25, "default": 10},
-    "showBorder":   {"type": "bool",   "label": "Show border buffer (until Measure)", "default": false},
+    "borderBuffer": {"type": "number", "label": "Border buffer", "min": 0, "max": 25, "default": 10},
+    "showBorder":   {"type": "bool",   "label": "Show buffer", "default": false},
 
     "toneProfile":  {"type": "choice", "label": "Tone profile", "options": "@profiles", "default": "Standard"},
     "exposure":     {"type": "number", "label": "Exposure",   "min": -5,  "max": 5,   "default": 0},

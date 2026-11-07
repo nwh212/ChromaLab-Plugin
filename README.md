@@ -35,12 +35,12 @@ pixel-filter plug-ins still run it, without the features below.
 **App features ChromaLab asks for** (in its manifest; an app without them still runs it):
 - **Measuring inside the crop** (`"analyzeArea": "crop"`, since v26.43): the border buffer applies
   inside your crop. Older versions measure the whole uncropped photo, and on a cropped photo the
-  *Show border buffer* overlay then doesn't match what's measured.
+  *Show buffer* overlay then doesn't match what's measured.
 - **No second tone curve on raw files** (`"baseTone": "neutral"`, since v26.43.6): without it the
   app tones a raw after the Source stage with the camera's own curve, which on top of ChromaLab's
   conversion adds contrast and saturation and moves the brightness. On older versions raw captures
   (camera RAWs, raw DNGs) come out more contrasty than intended; TIFF and JPEG scans aren't affected.
-- **Menu sections** (`"groups"` on the Film stock / look menu, since v26.43.6): the stocks by brand
+- **Menu sections** (`"groups"` on the Stock / look menu, since v26.43.6): the stocks by brand
   and the creative looks as collapsible sections. On older versions the menu is one list, in the
   same order.
 
@@ -81,11 +81,11 @@ To change ChromaLab, see [DEVELOPING.md](DEVELOPING.md): where things are, the r
 2. In Develop ▸ Plug-in Filters, add **ChromaLab**. It asks for the **Source** stage, so it runs on
    the linear capture before every other develop step.
 3. Crop to the frame if you like, then set **Type** and **Border buffer %**, so the film holder,
-   sprocket holes and edge print lie outside the measured area. Tick **Show border buffer** to see it:
+   sprocket holes and edge print lie outside the measured area. Tick **Show buffer** to see it:
    everything outside the measured area is dimmed in safelight red until you press **Measure** with
    that border buffer, so exports of a measured photo never show it. Then press **Measure**. Until you measure, the filter only inverts the image, and the orange cast
    stays. After changing the crop or the border buffer, press Measure again.
-4. Pick a **Film stock / look** and a **Tone profile**, then fine-tune with the sliders or with the normal develop
+4. Pick a **Stock / look** and a **Tone profile**, then fine-tune with the sliders or with the normal develop
    sliders, which act on the converted positive.
 5. **A whole roll:** select every frame of the roll with the one you set up (stock, border buffer,
    sliders) and press **Apply to N** in the filter's row: the filter and its settings go onto the
