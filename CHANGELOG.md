@@ -4,6 +4,17 @@ Measurements made with one version can need **Measure** again in a later one; th
 "Reference error" is the mean difference from a Negative Lab Pro conversion of the same scan, in
 levels of 255 (see the README).
 
+## 0.12.1 (Measure again)
+- **Lab refitted on a roll of 19 camera scans** converted by the reference at its defaults, on top
+  of the five flatbed frames: its black point now comes from the densest 0.1 % of the measured
+  samples and its white from the brightest 0.1 % of a small box-filtered preview (both within a
+  few levels of the reference's own curve points on every channel), and its bend has the
+  reference's structure: a frame bend that is 0.93 below a luminance mean of 0.5 and rises to 1.36
+  by 0.65 (a bright frame is darkened, a dark one never lifted), and for green and blue a bend
+  relative to red from the channel's mean against red's (the reference's auto white balance in
+  other clothes), under the gentle S every reference curve carries. Reference error: the 19 new
+  frames 10.2 → 6.7, the earlier seven 14.3 → 10.5. **Measure again** after installing.
+
 ## 0.12.0 (Measure again, for whole-strip measurements)
 - **A new default method, Lab**, built from how the reference conversions are made (their exports
   carry the developer's own settings: a straight two-point curve per channel, then a per-channel

@@ -111,12 +111,13 @@ them aren't known, so the scale may change.
 2 stops, never darker, and rolls the highlights off so a bright sky doesn't clip. It needs a measurement.
 
 **Method** (colour negatives). *Lab* (the default since 0.12) works the way the reference
-conversions are made: each channel is inverted on its own between its thin end (to white) and its
-dense end (to black) in a gamma-encoded wide-gamut space (ProPhoto primaries, as a raw developer's
-curves act), then bent by a gamma of its own: a channel brighter than the frame's luminance is
-darkened, a darker one lifted, and a frame whose shadows sit high is darkened overall. It measures
-everything inside the border buffer, as the references do: a dark frame edge or a strip's rebate in
-the measured area sets its black point, so crop them out or use the border buffer. *Shared range* (the default
+conversions are made: each channel is inverted on its own between its dense end (to black) and its
+thin end (to white) in a gamma-encoded wide-gamut space (ProPhoto primaries, as a raw developer's
+curves act), then bent by a gamma of its own: a bright frame is darkened (a dark one never lifted),
+and green and blue are bent relative to red by how their means compare with red's, which is what
+the reference's automatic white balance amounts to. It measures everything inside the border
+buffer, as the references do: a dark frame edge or a strip's rebate in the measured area sets its
+black point, so crop them out or use the border buffer. *Shared range* (the default
 of 0.10 and 0.11) gives the three dye layers the same contrast and balances them by their offsets,
 as one film's layers respond alike: blue skies stay blue, greens stay green, and colours keep their
 saturation instead of being stretched. *Per channel* is the method of 0.9 and earlier: each layer

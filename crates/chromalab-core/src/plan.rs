@@ -33,18 +33,23 @@ pub(crate) const LEVELS_RANGE: f32 = 2.2;
 pub(crate) const LEVELS_EXPONENT: f32 = 1.45;
 pub(crate) const LEVELS_CONTRAST: f32 = 0.4;
 
-/// The Lab method's bend: `gamma = exp(A + B · (mean_c − lum) + C · shadows)`, from the inverted
-/// channel's mean against the frame's luminance mean (0..1, curve-encoded) and where the frame's
-/// shadows sit (the luminance's 10th percentile, [`LAB_SHADOW_I`] into `pv_lum`). `exp(A)` = 0.91
-/// is the bend of a channel that needs no correction (the references give it to five channels);
-/// the frame term only ever darkens. Fitted to the reference conversions.
-pub(crate) const LAB_A: f32 = -0.094;
-pub(crate) const LAB_B: f32 = 2.25;
-pub(crate) const LAB_C: f32 = 0.87;
-pub(crate) const LAB_SHADOW_I: usize = 1;
+/// The Lab method's bend, fitted to 24 reference conversions. The frame's bend: `exp(A)` = 0.93
+/// on a frame whose inverted luminance mean (0..1, curve-encoded) is below `L0`, rising smoothly
+/// to `exp(A + TOP)` = 1.36 at `L1` (the references step from one to the other around there; a
+/// bright frame is darkened, a dark one never lifted). Each other channel's bend relative to red:
+/// `exp(A_c + B_c · (mean_c − mean_R))`: a channel brighter than red is darkened, a darker one
+/// lifted, and green and blue sit a little darker than red at equal means (a warm neutral).
+pub(crate) const LAB_A: f32 = -0.07;
+pub(crate) const LAB_TOP: f32 = 0.38;
+pub(crate) const LAB_L0: f32 = 0.5;
+pub(crate) const LAB_L1: f32 = 0.65;
+pub(crate) const LAB_AG: f32 = 0.086;
+pub(crate) const LAB_BG: f32 = 2.4;
+pub(crate) const LAB_AB: f32 = 0.13;
+pub(crate) const LAB_BB: f32 = 2.5;
 /// …and a fixed gentle S on top of the bend (the references all carry one): `t − S · sin(2πt)`,
 /// which lowers the quarter-tones and lifts the three-quarter-tones by `S`.
-pub(crate) const LAB_S: f32 = 0.03;
+pub(crate) const LAB_S: f32 = 0.015;
 
 /// Auto exposure: the linear light a frame's median brightness should reach, and the most it is
 /// lifted, in stops.
@@ -274,24 +279,28 @@ pub(crate) fn lab_lined(a: &Analysis, c: usize, x0: f32, x1: f32) -> (f32, f32) 
 }
 
 /// The Lab method's per-channel tables: curve-space value `e` (0..1) → `t`. Each channel is
-/// inverted between its own ends, then bent by its gamma: a channel brighter than the frame's
-/// luminance is darkened, a darker one lifted (the frame's cast), and a bright frame is darkened
-/// overall.
+/// inverted between its own ends, then bent by its gamma (see [`LAB_A`]) under the S.
 pub(crate) fn lab_luts(a: &Analysis, p: &Params) -> [Lut; 3] {
-    let (ka, kb, kc) = (knob("LAB_A", LAB_A), knob("LAB_B", LAB_B), knob("LAB_C", LAB_C));
     let ends = [0, 1, 2].map(|c| lab_ends(a, p, c));
     let mean = [0, 1, 2].map(|c| lab_lined(a, c, ends[c].0, ends[c].1).0);
     let lum = 0.2126 * mean[0] + 0.7152 * mean[1] + 0.0722 * mean[2];
-    let shadows = a.pv_lum.get(knob("LAB_SHADOW_I", LAB_SHADOW_I as f32) as usize).copied().unwrap_or(0.1);
+    let (l0, l1) = (knob("LAB_L0", LAB_L0), knob("LAB_L1", LAB_L1));
+    let rise = ((lum - l0) / (l1 - l0).max(1e-3)).clamp(0.0, 1.0);
+    let frame = knob("LAB_A", LAB_A) + knob("LAB_TOP", LAB_TOP) * rise * rise * (3.0 - 2.0 * rise);
     let balance = match p.wb {
         Wb::None => 0.0,
         Wb::Color => 1.5,
         _ => 1.0,
     };
+    let colour = |c: usize| match c {
+        1 => balance * (knob("LAB_AG", LAB_AG) + knob("LAB_BG", LAB_BG) * (mean[1] - mean[0])),
+        2 => balance * (knob("LAB_AB", LAB_AB) + knob("LAB_BB", LAB_BB) * (mean[2] - mean[0])),
+        _ => 0.0,
+    };
+    let ks = knob("LAB_S", LAB_S);
     [0, 1, 2].map(|c| {
-        let g = (ka + balance * kb * (mean[c] - lum) + kc * shadows).exp().clamp(0.3, 4.0);
+        let g = (frame + colour(c)).exp().clamp(0.3, 4.0);
         let (lo, hi) = ends[c];
-        let ks = knob("LAB_S", LAB_S);
         Lut::new(0.0, 1.0, 1024, move |e| {
             let t = ((hi - e) / (hi - lo)).clamp(0.0, 1.0).powf(g);
             (t - ks * (std::f32::consts::TAU * t).sin()).clamp(0.0, 1.0)

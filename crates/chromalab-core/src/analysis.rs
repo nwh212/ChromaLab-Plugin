@@ -11,7 +11,7 @@ pub const NP: usize = 11;
 pub(crate) const BASE_I: usize = 1;
 
 /// The analysis format; an older measurement is ignored (the photo is measured again).
-pub(crate) const ANALYSIS_VERSION: i64 = 11;
+pub(crate) const ANALYSIS_VERSION: i64 = 12;
 
 /// Density histogram range and resolution.
 pub(crate) const D_MIN: f32 = -0.5;
@@ -61,11 +61,12 @@ pub struct Analysis {
     /// …and where green is at its thinnest 1 % (its shadows): the black a channel clipped at its
     /// thin end takes.
     pub at_green_black: [f32; 3],
-    /// For the Lab method, over the measured samples in ProPhoto curve space (0..1, see
-    /// [`crate::math::lab_encode`]): per channel, the value at each of [`LAB_PERCENTILES`] from
-    /// the thin end (`pv_hi`, bright) and the dense end (`pv_lo`, dark), and the mean; and, with
-    /// each channel inverted between its default ends, the luminance's 5th, 10th, 25th and 50th
-    /// percentiles and mean (`pv_lum`).
+    /// For the Lab method, in ProPhoto curve space (0..1, see [`crate::math::lab_encode`]): per
+    /// channel, the value at each of [`LAB_PERCENTILES`] from the dense end (`pv_lo`, dark) over
+    /// every measured sample, and from the thin end (`pv_hi`, bright) over a small box-filtered
+    /// preview (long edge [`PREVIEW_EDGE`] cells: the references take their white from one, so a
+    /// speck doesn't set it); the mean; and, with each channel inverted between its default ends,
+    /// the luminance's 5th, 10th, 25th and 50th percentiles and mean (`pv_lum`).
     pub pv_lo: [[f32; NL]; 3],
     pub pv_hi: [[f32; NL]; 3],
     pub pv_mean: [f32; 3],
@@ -75,10 +76,12 @@ pub struct Analysis {
 /// The Lab method's percentiles (in %) at each end of a channel's curve-space histogram.
 pub const LAB_PERCENTILES: [f64; NL] = [0.0, 0.03, 0.1, 0.3, 1.0, 3.0];
 pub const NL: usize = 6;
-/// The default ends: indices into [`LAB_PERCENTILES`] for the dense end (→ black) and the thin end
-/// (→ white).
-pub const LAB_DENSE_I: i64 = 1;
-pub const LAB_THIN_I: i64 = 2;
+/// The default ends: indices into [`LAB_PERCENTILES`] for the dense end (→ black, 0.1 % of the
+/// samples) and the thin end (→ white, 0.03 % of the preview's cells).
+pub const LAB_DENSE_I: i64 = 2;
+pub const LAB_THIN_I: i64 = 1;
+/// The Lab method's preview: its long edge in cells.
+pub const PREVIEW_EDGE: usize = 256;
 
 impl Analysis {
     pub fn to_json(&self) -> Value {
@@ -514,8 +517,9 @@ pub fn analyze_with(pixel: impl Fn(usize) -> Option<[f32; 3]>, w: usize, h: usiz
     a.measured = [gw as u32, gh as u32, step as u32];
     a.border = Some(p.border);
     a.clipped = clipped_channels(&grid, brightest, negative);
-    // the Lab method's statistics: every measured sample in ProPhoto curve space
-    let mut es: Vec<[f32; 3]> = Vec::with_capacity(grid.len());
+    // the Lab method's statistics: every measured sample in ProPhoto curve space, and a small
+    // box-filtered preview of them for the thin end
+    let mut es: Vec<[f32; 3]> = Vec::with_capacity(whole_grid.len());
     let mut e_sum = [0f64; 3];
     for d in whole_grid.iter().filter(|d| d[0].is_finite()) {
         let pp = mat3(&TO_PP, [10f32.powf(-d[0]), 10f32.powf(-d[1]), 10f32.powf(-d[2])]);
@@ -525,15 +529,39 @@ pub fn analyze_with(pixel: impl Fn(usize) -> Option<[f32; 3]>, w: usize, h: usiz
         }
         es.push(e);
     }
-    if !es.is_empty() {
+    let block = gw.max(gh).div_ceil(PREVIEW_EDGE).max(1);
+    let (pw, ph) = (gw.div_ceil(block), gh.div_ceil(block));
+    let mut preview: Vec<[f32; 3]> = Vec::with_capacity(pw * ph);
+    for py in 0..ph {
+        for px in 0..pw {
+            let (mut sum, mut n) = ([0f32; 3], 0u32);
+            for gy in py * block..((py + 1) * block).min(gh) {
+                for gx in px * block..((px + 1) * block).min(gw) {
+                    if let Some(d) = whole_grid.get(gy * gw + gx).filter(|d| d[0].is_finite()) {
+                        for c in 0..3 {
+                            sum[c] += 10f32.powf(-d[c]);
+                        }
+                        n += 1;
+                    }
+                }
+            }
+            if n > 0 {
+                let pp = mat3(&TO_PP, sum.map(|v| v / n as f32));
+                preview.push([lab_encode(pp[0]), lab_encode(pp[1]), lab_encode(pp[2])]);
+            }
+        }
+    }
+    if !es.is_empty() && !preview.is_empty() {
         let n = es.len();
         for c in 0..3 {
             let mut v: Vec<f32> = es.iter().map(|e| e[c]).collect();
             v.sort_by(f32::total_cmp);
-            let at = |frac: f64| v.get(((frac * n as f64) as usize).min(n - 1)).copied().unwrap_or(0.5);
+            let mut pv: Vec<f32> = preview.iter().map(|e| e[c]).collect();
+            pv.sort_by(f32::total_cmp);
+            let at = |v: &[f32], frac: f64| v.get(((frac * v.len() as f64) as usize).min(v.len() - 1)).copied().unwrap_or(0.5);
             for (i, pct) in LAB_PERCENTILES.iter().enumerate() {
-                a.pv_lo[c][i] = at(pct / 100.0);
-                a.pv_hi[c][i] = at(1.0 - pct / 100.0 - 1e-9);
+                a.pv_lo[c][i] = at(&v, pct / 100.0);
+                a.pv_hi[c][i] = at(&pv, 1.0 - pct / 100.0 - 1e-9);
             }
             a.pv_mean[c] = (e_sum[c] / n as f64) as f32;
         }
