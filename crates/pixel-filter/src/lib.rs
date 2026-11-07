@@ -153,6 +153,44 @@ pub fn analyze(
     }
 }
 
+/// `pc_merge` (the host's roll measurement, ABI v1.1 proposal): `buf` holds `len` bytes of JSON, a
+/// list of `count` measurements `pc_analyze` returned; `combine` gets the parameters and the
+/// list and returns the one measurement of them all (or `None`: 0 to the host).
+#[allow(clippy::too_many_arguments)]
+pub fn merge(
+    buf: i32,
+    len: i32,
+    count: i32,
+    _h: i32,
+    _channels: i32,
+    _format: i32,
+    params: i32,
+    params_len: i32,
+    combine: impl FnOnce(&Value, &[Value]) -> Option<Value>,
+) -> i64 {
+    let Ok(count) = usize::try_from(count) else { return 0 };
+    let json = read_params(params, params_len);
+    let list = with_block(buf, len, |bytes| serde_json::from_slice::<Vec<Value>>(bytes).ok()).flatten();
+    let Some(list) = list.filter(|l| !l.is_empty() && l.len() == count) else { return 0 };
+    match combine(&json, &list) {
+        Some(a) => reply(a.to_string().into_bytes()),
+        None => 0,
+    }
+}
+
+/// Tests of a plug-in: the host's side of a block, written…
+#[doc(hidden)]
+pub fn write_block_for_test(ptr: i32, bytes: &[u8]) {
+    let _ = with_block(ptr, bytes.len() as i32, |b| b.copy_from_slice(bytes));
+}
+
+/// …and a reply ([`reply`]'s `len << 32 | ptr`) read back.
+#[doc(hidden)]
+pub fn read_reply_for_test(packed: i64) -> Vec<u8> {
+    let (ptr, len) = ((packed & 0xffff_ffff) as u32 as usize, (packed >> 32) as usize);
+    REPLIES.with(|r| r.borrow().iter().find(|v| addr(v) as u32 as usize == ptr && v.len() == len).cloned().unwrap_or_default())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -168,6 +206,17 @@ mod tests {
         // a block the host never allocated
         assert_eq!(filter(12345, 12, 1, 1, 3, 32, 0, 0, |_, _| |_: &mut [f32], _| {}), BAD_ARGS);
         assert_eq!(analyze(12345, 12, 1, 1, 3, 32, 0, 0, |_, _, _, _| Some(Value::Null)), 0);
+        assert_eq!(merge(12345, 12, 1, 0, 0, 0, 0, 0, |_, _| Some(Value::Null)), 0);
+        // a list whose length isn't `count`, or that isn't a list, is refused
+        let two = b"[{\"a\":1},{\"a\":2}]";
+        let (p, n) = (alloc(two.len() as i32), two.len() as i32);
+        write_block_for_test(p, two);
+        assert_eq!(merge(p, n, 3, 0, 0, 0, 0, 0, |_, _| Some(Value::Null)), 0);
+        assert_ne!(merge(p, n, 2, 0, 0, 0, 0, 0, |_, l| Some(Value::from(l.len()))), 0);
+        let one = b"{\"a\":1}";
+        let q = alloc(one.len() as i32);
+        write_block_for_test(q, one);
+        assert_eq!(merge(q, one.len() as i32, 1, 0, 0, 0, 0, 0, |_, _| Some(Value::Null)), 0);
         assert_eq!(read_params(-1, 5), Value::Null);
         assert_eq!(alloc(-1), 0);
     }

@@ -12,7 +12,7 @@
 
 #![deny(clippy::unwrap_used, clippy::expect_used, clippy::panic, clippy::unimplemented, clippy::todo, clippy::unreachable)]
 
-use chromalab_core::{BorderOverlay, Converter, PROFILES, Params, STOCKS, analyze_with};
+use chromalab_core::{Analysis, BorderOverlay, Converter, PROFILES, Params, STOCKS, analyze_with};
 
 /// The manifest as written, in dialog order; `@version` and the menus of stocks (with the creative
 /// looks) and profiles are filled in from the code by [`manifest`].
@@ -90,6 +90,18 @@ pub extern "C" fn pc_analyze(buf: i32, len: i32, w: i32, h: i32, channels: i32, 
     })
 }
 
+/// The roll measurement (`pc_merge`, *Measure N Selected as a Roll*): every frame's measurement
+/// folded into one (see [`Analysis::merge`]), so the whole roll is converted alike.
+#[unsafe(no_mangle)]
+#[allow(clippy::too_many_arguments)]
+pub extern "C" fn pc_merge(buf: i32, len: i32, count: i32, h: i32, channels: i32, format: i32, params: i32, params_len: i32) -> i64 {
+    pixel_filter::merge(buf, len, count, h, channels, format, params, params_len, |_, list| {
+        let frames: Vec<Analysis> = list.iter().filter_map(Analysis::from_json).collect();
+        // a frame measured by another version can't join: the roll is measured again
+        (frames.len() == list.len()).then(|| Analysis::merge(&frames)).flatten().map(|a| a.to_json())
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -117,5 +129,42 @@ mod tests {
                 assert!(opts.contains(&spec["default"]), "{k}");
             }
         }
+        // every section names parameters of the manifest, each once
+        let mut placed: Vec<&str> = Vec::new();
+        for sec in m["sections"].as_array().unwrap() {
+            assert!(sec["label"].as_str().is_some_and(|l| !l.is_empty()));
+            for p in sec["params"].as_array().unwrap() {
+                let p = p.as_str().unwrap();
+                assert!(m["params"].get(p).is_some(), "{p} is not a parameter");
+                assert!(!placed.contains(&p), "{p} is in two sections");
+                placed.push(p);
+            }
+        }
+    }
+
+    #[test]
+    fn a_roll_is_one_measurement_of_every_frame() {
+        let dark = Analysis::unmeasured_for_test(0.3, 1.8);
+        let bright = Analysis::unmeasured_for_test(0.1, 2.4);
+        let merged = Analysis::merge(&[dark.clone(), bright.clone()]).unwrap();
+        // the ends are the roll's: the thinnest and the densest any frame reaches
+        for c in 0..3 {
+            assert_eq!(merged.lo[c][0], 0.1);
+            assert_eq!(merged.hi[c][0], 2.4);
+            assert_eq!(merged.pv_mean[c], (dark.pv_mean[c] + bright.pv_mean[c]) / 2.0);
+        }
+        assert!(Analysis::merge(&[]).is_none());
+        // through the ABI: a list of measurements in, one out; a foreign one refused
+        let list = serde_json::Value::Array(vec![dark.to_json(), bright.to_json()]).to_string().into_bytes();
+        let buf = pixel_filter::alloc(list.len() as i32);
+        pixel_filter::write_block_for_test(buf, &list);
+        let packed = pc_merge(buf, list.len() as i32, 2, 0, 0, 0, 0, 0);
+        assert_ne!(packed, 0);
+        let out: Value = serde_json::from_slice(&pixel_filter::read_reply_for_test(packed)).unwrap();
+        assert_eq!(Analysis::from_json(&out).unwrap().hi[1][0], 2.4);
+        let foreign = br#"[{"version":1}]"#;
+        let buf = pixel_filter::alloc(foreign.len() as i32);
+        pixel_filter::write_block_for_test(buf, foreign);
+        assert_eq!(pc_merge(buf, foreign.len() as i32, 1, 0, 0, 0, 0, 0), 0);
     }
 }

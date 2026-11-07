@@ -38,5 +38,10 @@
     "wbMode":       {"type": "choice", "label": "WB", "options": ["Auto-Neutral", "Auto-Color", "Auto-Warm", "Auto-Cool", "None"], "default": "Auto-Neutral"},
     "temp":         {"type": "number", "label": "Temp", "min": -50, "max": 50, "default": 0},
     "tint":         {"type": "number", "label": "Tint", "min": -50, "max": 50, "default": 0}
-  }
+  },
+  "sections": [
+    {"label": "Tone",          "params": ["toneProfile", "exposure", "brightness", "contrast", "lights", "darks", "whites", "blacks", "glow", "fade", "softHighs", "softLows"]},
+    {"label": "Clipping",      "params": ["autoExposure", "whiteClip", "blackClip"], "collapsed": true},
+    {"label": "White balance", "params": ["wbMode", "temp", "tint"]}
+  ]
 }

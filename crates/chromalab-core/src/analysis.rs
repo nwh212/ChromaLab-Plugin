@@ -141,6 +141,65 @@ impl Analysis {
         })
     }
 
+    /// One measurement of a roll: every frame measured alike, from all of them. Each end is the
+    /// roll's end (the thinnest and the densest any frame reaches, so no frame clips and the
+    /// frames keep their differences in exposure), the means are the roll's means (its colour
+    /// balance and brightness, so every frame gets the same bend), a channel counts as clipped
+    /// when any frame clips it, and the border buffer is the first frame's. `None` of an empty list.
+    pub fn merge(frames: &[Analysis]) -> Option<Analysis> {
+        let first = frames.first()?;
+        let n = frames.len() as f32;
+        let mean = |f: &dyn Fn(&Analysis) -> f32| frames.iter().map(f).sum::<f32>() / n;
+        let fold = |f: &dyn Fn(&Analysis) -> f32, pick: fn(f32, f32) -> f32| frames.iter().map(f).reduce(pick).unwrap_or(0.0);
+        let mut out = first.clone();
+        for c in 0..4 {
+            for i in 0..NP {
+                out.lo[c][i] = fold(&|a| a.lo[c][i], f32::min);
+                out.hi[c][i] = fold(&|a| a.hi[c][i], f32::max);
+            }
+        }
+        for i in 0..NP {
+            out.lum_lo[i] = fold(&|a| a.lum_lo[i], f32::min);
+            out.lum_hi[i] = fold(&|a| a.lum_hi[i], f32::max);
+        }
+        for c in 0..3 {
+            out.gain[c] = mean(&|a| a.gain[c]);
+            out.hl_ref[c] = mean(&|a| a.hl_ref[c]);
+            out.vmean[c] = mean(&|a| a.vmean[c]);
+            out.dmid[c] = mean(&|a| a.dmid[c]);
+            out.at_green_white[c] = mean(&|a| a.at_green_white[c]);
+            out.at_green_black[c] = mean(&|a| a.at_green_black[c]);
+            out.pv_mean[c] = mean(&|a| a.pv_mean[c]);
+            out.lum_mid[c] = mean(&|a| a.lum_mid[c]);
+            for i in 0..NP {
+                out.ge_lo[c][i] = fold(&|a| a.ge_lo[c][i], f32::min);
+            }
+            for i in 0..NL {
+                out.pv_lo[c][i] = fold(&|a| a.pv_lo[c][i], f32::min);
+                out.pv_hi[c][i] = fold(&|a| a.pv_hi[c][i], f32::max);
+            }
+            for e in 0..2 {
+                out.clipped[c][e] = frames.iter().any(|a| a.clipped[c][e]);
+            }
+        }
+        for i in 0..5 {
+            out.pv_lum[i] = mean(&|a| a.pv_lum[i]);
+        }
+        out.measured = [first.measured[0], first.measured[1], frames.len().min(u32::MAX as usize) as u32];
+        Some(out)
+    }
+
+    /// A made-up measurement for tests: the unmeasured one with every end at `thin` / `dense`
+    /// and a brightness mean of their middle.
+    #[doc(hidden)]
+    pub fn unmeasured_for_test(thin: f32, dense: f32) -> Analysis {
+        let mut a = Self::unmeasured();
+        a.lo = [[thin; NP]; 4];
+        a.hi = [[dense; NP]; 4];
+        a.pv_mean = [1.0 / (1.0 + dense - thin); 3];
+        a
+    }
+
     /// What we assume before the photo is measured: no mask, two density units of range, no
     /// balance. The result keeps the film's cast, which is the cue to press Measure.
     pub(crate) fn unmeasured() -> Analysis {
