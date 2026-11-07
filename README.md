@@ -87,10 +87,15 @@ To change ChromaLab, see [DEVELOPING.md](DEVELOPING.md): where things are, the r
    stays. After changing the crop or the border buffer, press Measure again.
 4. Pick a **Film stock / look** and a **Tone profile**, then fine-tune with the sliders or with the normal develop
    sliders, which act on the converted positive.
-5. **A whole roll:** set up one frame (Measure, stock, sliders), then Copy and Paste (or Sync) its
-   settings to the other frames. The filter, its settings *and its measurement* go along, so the roll
-   converts consistently, like a lab's roll analysis. A frame that needs its own colour can be
-   measured on its own afterwards (select it, Measure).
+5. **A whole roll:** select every frame of the roll with the one you set up (stock, border buffer,
+   sliders) and press **Apply to N** in the filter's row: the filter and its settings go onto the
+   others. Then, from the **Measure ▾** menu, **Measure N Selected as a Roll**: every frame is
+   measured, and the roll gets one measurement from all of them (its thinnest and densest points,
+   its mean colour and brightness), so every frame is converted alike and keeps its own exposure,
+   like a lab's roll analysis. **Measure N Selected Photos** measures each frame on its own instead.
+   A frame that needs its own colour can be measured on its own afterwards (select it, Measure);
+   the line under the tools says what a photo's measurement is. (In an app without these buttons,
+   Copy and Paste or Sync the settings: the filter, its settings and its measurement go along.)
 
 ## Controls
 

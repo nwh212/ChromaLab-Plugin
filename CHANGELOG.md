@@ -4,6 +4,15 @@ Measurements made with one version can need **Measure** again in a later one; th
 "Reference error" is the mean difference from a Negative Lab Pro conversion of the same scan, in
 levels of 255 (see the README).
 
+## 0.13.0
+- **A roll measured together.** With every frame of a roll selected, the app's *Measure N
+  Selected as a Roll* measures each frame and ChromaLab folds the measurements into one for all
+  of them (the roll's thinnest and densest points, its mean colour and brightness; `pc_merge`),
+  so every frame is converted alike and keeps its own exposure. *Apply to N* puts the filter on
+  the other selected frames first. Needs an app with these buttons; older ones keep working as
+  before.
+- **Controls under headings:** Tone, Clipping (folded) and White balance.
+
 ## 0.12.1 (Measure again)
 - **Lab refitted on a roll of 19 camera scans** converted by the reference at its defaults, on top
   of the five flatbed frames: its black point now comes from the densest 0.1 % of the measured
