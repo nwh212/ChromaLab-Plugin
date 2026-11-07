@@ -4,6 +4,7 @@
   "version": "@version",
   "kind": "filter",
   "stage": "source",
+  "shortcut": "Ctrl+Alt+N",
   "analyzeArea": "crop",
   "baseTone": "neutral",
   "description": "Converts film negatives and slides. Add it to a photo, set Type and Border buffer, then press Measure. Measure again after changing Border buffer.",

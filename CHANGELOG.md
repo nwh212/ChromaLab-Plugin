@@ -12,6 +12,8 @@ levels of 255 (see the README).
   the other selected frames first. Needs an app with these buttons; older ones keep working as
   before.
 - **Controls under headings:** Tone, Clipping (folded) and White balance.
+- **Ctrl+Alt+N** adds ChromaLab to the selected photos, in an app that offers plug-in keys
+  (Help ▸ Keyboard Shortcuts ▸ *Add ChromaLab* to change it).
 
 ## 0.12.1 (Measure again)
 - **Lab refitted on a roll of 19 camera scans** converted by the reference at its defaults, on top

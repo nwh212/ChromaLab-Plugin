@@ -87,6 +87,8 @@ To change ChromaLab, see [DEVELOPING.md](DEVELOPING.md): where things are, the r
    stays. After changing the crop or the border buffer, press Measure again.
 4. Pick a **Stock / look** and a **Tone profile**, then fine-tune with the sliders or with the normal develop
    sliders, which act on the converted positive.
+   (**Ctrl+Alt+N** adds ChromaLab to every selected photo in an app that offers plug-in keys; change
+   it under Help ▸ Keyboard Shortcuts ▸ *Add ChromaLab*.)
 5. **A whole roll:** select every frame of the roll with the one you set up (stock, border buffer,
    sliders) and press **Apply to N** in the filter's row: the filter and its settings go onto the
    others. Then, from the **Measure ▾** menu, **Measure N Selected as a Roll**: every frame is
