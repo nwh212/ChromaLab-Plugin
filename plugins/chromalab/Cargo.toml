@@ -5,7 +5,7 @@ version = "0.12.1"
 edition = "2024"
 rust-version = "1.88"
 license = "MIT"
-repository = "https://github.com/nwh212/ChromaNeg-Plugin"
+repository = "https://github.com/nwh212/ChromaLab-Plugin"
 publish = false
 
 [lib]
