@@ -4,6 +4,12 @@ Measurements made with one version can need **Measure** again in a later one; th
 "Reference error" is the mean difference from a Negative Lab Pro conversion of the same scan, in
 levels of 255 (see the README).
 
+## 0.12.2
+- **Links in the Plug-in Manager:** the About tab shows ChromaLab's homepage, repository, changelog
+  and licence, and a *Report a Problem* button that opens the repository's issues (manifest
+  `homepage`, `repository`, `changelog` and `license`; needs an app with Chromaforge PR #1004,
+  older ones ignore them). No change to the conversion.
+
 ## 0.12.1 (Measure again)
 - **Lab refitted on a roll of 19 camera scans** converted by the reference at its defaults, on top
   of the five flatbed frames: its black point now comes from the densest 0.1 % of the measured
