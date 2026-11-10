@@ -14,6 +14,11 @@ levels of 255 (see the README).
 - **Controls under headings:** Tone, Clipping (folded) and White balance.
 - **Ctrl+Alt+N** adds ChromaLab to the selected photos, in an app that offers plug-in keys
   (Help ▸ Keyboard Shortcuts ▸ *Add ChromaLab* to change it).
+## 0.12.2
+- **Links in the Plug-in Manager:** the About tab shows ChromaLab's homepage, repository, changelog
+  and licence, and a *Report a Problem* button that opens the repository's issues (manifest
+  `homepage`, `repository`, `changelog` and `license`; needs an app with Chromaforge PR #1004,
+  older ones ignore them). No change to the conversion.
 
 ## 0.12.1 (Measure again)
 - **Lab refitted on a roll of 19 camera scans** converted by the reference at its defaults, on top
