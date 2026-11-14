@@ -34,7 +34,8 @@ jobs:
           path: target/wasm32-unknown-unknown/release/chromadust.wasm
 
   release:
-    if: github.event_name == 'release'
+    # (a prerelease carries its own files: nothing is built or attached for it)
+    if: github.event_name == 'release' && !github.event.release.prerelease
     needs: check
     runs-on: ubuntu-latest
     permissions:
