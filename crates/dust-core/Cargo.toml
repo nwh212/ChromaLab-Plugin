@@ -1,0 +1,15 @@
+[package]
+name = "dust-core"
+description = "ChromaDust's dust, hair and spot removal for scanned film, independent of the plug-in ABI"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+license = "MIT"
+publish = false
+
+[dependencies]
+serde_json = "1"
+
+[features]
+# the examples read tuning constants from the environment (CHROMADUST_TUNE_*)
+tuning = []

@@ -82,4 +82,75 @@ slides, every WB mode, a spread of looks, stocks, profiles and sliders).
 
 Add `plugins/<name>` with `crate-type = ["cdylib", "rlib"]`, depend on `pixel-filter`, and write its
 manifest and its five exports as `plugins/chromalab/src/lib.rs` does. Shared maths can go in a crate
-under `crates/`.
+under `crates/`. A filter that reads neighbouring pixels uses `pixel_filter::filter_band` (the
+whole band, overlap margins included) and `alloc_reserving` (scratch memory in proportion).
+
+## ChromaDust (`plugins/chromadust`, `crates/dust-core`)
+
+Dust, hair and spot removal, on the film as scanned (Source stage, above ChromaLab). The method is
+described at the top of `crates/dust-core/src/clean.rs`: a classical detector proposes candidates,
+a small neural network (`src/model.rs`, weights in `model.bin`) decides which are dust, and the
+spots are filled from their surroundings with matching grain. A converted image
+(*Image: Converted negative*) gets the classical detector alone, with its own thresholds.
+
+**The host's limits shape it.** A neighbourhood filter gets bands of about 4 MiB padded by its
+`overlap` (16 here: at 24 a 6000 px wide scan gets 9-row bands), a budget of 4 000 instructions per
+sample, and 60 s for the frame. A filter that goes over is skipped by the app, so the work per band
+must be bounded whatever the sliders say:
+
+- with the network, *Sensitivity* moves its cut and never the candidates' thresholds;
+- a band with more than 10 % candidate pixels raises the bar for a candidate (`CAND_CAP`);
+- the crates build at `opt-level = 3` (workspace `Cargo.toml`): at `"s"` the filter needs about
+  40 % more instructions.
+
+To measure it, run the `.wasm` through the host's own `crates/filters` (wasmi, the default
+`Limits`) on the dustiest frames at the sliders' extremes; at 0.1 the worst band used 85 % of the
+budget at the defaults and 90 % at the extremes. Measure again after any change to `clean.rs`.
+
+**Infrared is the truth.** A scanner's infrared pass (VueScan raw TIFF, "64 bit RGBI"; not DNG,
+which keeps RGB only) shows dust and hair and almost none of the picture.
+
+```sh
+# drop RGBI scans on tools/extract-ir/extract-ir.bat: training/<name>-neg.tif + <name>-ir.tif, 2400 px wide
+cargo build --release -p dust-core --features tuning --example clean
+python tools/dust-bench/prep.py D:/scans/training WORK          # truth maps (and the negatives as .f32)
+python tools/dust-bench/score.py WORK                            # spot recall, precision, F1 per frame
+python tools/dust-bench/score.py WORK --env CHROMADUST_TUNE_CUT=2.5   # with a constant overridden
+python tools/dust-bench/sweep.py WORK --train raw0001,raw0002 --test raw0006,raw0007   # --mode classical for the other set
+```
+
+`prep.py` removes the infrared the dyes themselves cause (dense cyan and magenta absorb a little:
+a per-frame fit on the three colour densities) and the light falloff; what's left is the dust's own
+infrared density. Frames whose truth map still outlines the picture (very dense, brightly lit
+subjects) aren't reliable: look at `WORK/<name>_gt.png` and leave those out. Keep scans and
+conversions outside the repository, as for the reference bench.
+
+**Training the network.** Dump every candidate pixel's features, then train:
+
+```sh
+CHROMADUST_DUMP=WORK/raw0001.cand target/release/examples/clean WORK/raw0001.f32 2400 3571 '{}' x   # per frame
+python tools/dust-bench/train.py WORK --train raw0001,raw0002,... --test raw0006,... --out crates/dust-core/model.bin
+```
+
+`CHROMADUST_MODEL=file` tries a model without rebuilding (the `tuning` feature); a changed feature
+layout (`model.rs`) needs new dumps. Train on a split first to pick the cut on frames the model
+hasn't seen, then on every usable frame for the model that ships. Hairs are a few pixels among the
+specks', so `train.py` counts them ten times (`--hair-weight`); without that the network loses
+hairs the classical detector found.
+
+**What to look at besides the score.** Spot recall and precision can't see three things that
+matter as much:
+
+- *The fill.* Filled pixels must sit level with their surroundings and carry their grain (a test
+  checks both on a synthetic frame; 0.1's leftover on real frames is under 0.005 stops).
+- *Whole hairs.* A hair half removed is still a hair, and counts as "caught" in the spot score.
+  Check the share of each long thin infrared mark inside the mask.
+- *The output itself.* Convert a cleaned frame and look at it at 100 %.
+
+**Is a bigger network better?** Not on this data. A network five times the size, scoring every
+candidate instead of every other one, came out the same on frames neither had seen (spot F1 97.2
+against 97.1, hairs 94 % covered for both), so the plug-in ships the small one. What limits it is
+the training set (eleven frames, one scanner); ask again when there is more.
+
+0.1 on four frames the split model hadn't seen: spot recall 96 %, precision 98 % (F1 97.1); hairs
+94 % covered. The classical detector alone on the same frames: F1 94.7, hairs 92 %.

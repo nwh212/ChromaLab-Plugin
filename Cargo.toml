@@ -8,3 +8,11 @@ opt-level = "s"
 panic = "abort"
 lto = true
 strip = true
+
+# ChromaDust's neighbourhood maths runs within the host's instruction budget only when optimised
+# for speed (inlined, bounds checks hoisted); the rest of the workspace stays optimised for size.
+[profile.release.package.dust-core]
+opt-level = 3
+
+[profile.release.package.chromadust]
+opt-level = 3

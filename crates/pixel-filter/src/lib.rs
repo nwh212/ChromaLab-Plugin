@@ -131,6 +131,49 @@ pub fn filter<F: FnMut(&mut [f32], usize)>(
     if done.is_some() { OK } else { BAD_ARGS }
 }
 
+/// `pc_alloc` for a filter that needs working memory in proportion to the band (a neighbourhood
+/// filter keeps a few planes per pixel): like [`alloc`], and for the pixel block it also reserves
+/// `per_byte` bytes of scratch per byte of the block (at least [`SCRATCH_BYTES`]).
+pub fn alloc_reserving(len: i32, per_byte: usize) -> i32 {
+    if let Ok(n) = usize::try_from(len)
+        && n >= CHUNK_PX
+    {
+        drop(Vec::<u8>::with_capacity(n.saturating_mul(per_byte).max(SCRATCH_BYTES)));
+    }
+    alloc(len)
+}
+
+/// `pc_filter` for a neighbourhood filter (manifest `overlap` > 0) on interleaved RGB `f32`:
+/// `run` gets the parameters, the whole band (the host's `overlap` margins included, edge pixels
+/// repeated at the frame's border) as samples, and its width and height. The band is copied out
+/// and back, once; the host keeps only the band's inside.
+#[allow(clippy::too_many_arguments)]
+pub fn filter_band(
+    buf: i32,
+    len: i32,
+    w: i32,
+    h: i32,
+    channels: i32,
+    format: i32,
+    params: i32,
+    params_len: i32,
+    run: impl FnOnce(&Value, &mut [f32], usize, usize),
+) -> i32 {
+    let Some((bw, bh)) = rgb_args(len, w, h, channels, format) else { return BAD_ARGS };
+    let json = read_params(params, params_len);
+    let n = bw * bh * 12;
+    let done = with_block(buf, len, |bytes| {
+        let Some(bytes) = bytes.get_mut(..n) else { return false };
+        let mut px: Vec<f32> = bytes.as_chunks::<4>().0.iter().map(|c| f32::from_le_bytes(*c)).collect();
+        run(&json, &mut px, bw, bh);
+        for (d, v) in bytes.as_chunks_mut::<4>().0.iter_mut().zip(px.iter()) {
+            *d = v.to_le_bytes();
+        }
+        true
+    });
+    if done == Some(true) { OK } else { BAD_ARGS }
+}
+
 /// `pc_analyze` on interleaved RGB `f32`: `measure` gets the parameters, the image size and a
 /// reader of pixel `i` (`y · w + x`, read in place), and returns the analysis (or `None`).
 #[allow(clippy::too_many_arguments)]
