@@ -51,6 +51,16 @@ pub(crate) const LAB_BB: f32 = 2.5;
 /// which lowers the quarter-tones and lifts the three-quarter-tones by `S`.
 pub(crate) const LAB_S: f32 = 0.015;
 
+/// B&W negatives: black at 0.5 % from the thin end and the dense end's 0.1 % at 0.85 in `t` (just
+/// below white: the references keep the highlights' detail), turned into light 1.1× steeper than
+/// the profile's power; fitted to the reference conversions of six frames scanned twice (a camera
+/// and a film scanner), 12 % border buffer. Before: 3 % / 5 % ends at full range, the midtones
+/// 13-62 levels too light.
+pub(crate) const BW_BLACK_I: i64 = 3;
+pub(crate) const BW_WHITE_I: i64 = 1;
+pub(crate) const BW_POWER: f32 = 1.1;
+pub(crate) const BW_WHITE: f32 = 0.85;
+
 /// Auto exposure: the linear light a frame's median brightness should reach, and the most it is
 /// lifted, in stops.
 pub(crate) const AUTO_MID: f32 = 0.18;
@@ -102,9 +112,13 @@ pub(crate) fn plan(p: &Params) -> Plan {
     let cube = !bw && !flip && !p.per_channel && !levels && !lab;
     let mut mul = [1.0; 3];
     if bw {
+        let (bwb, bww) = (knob("BW_BLACK_I", BW_BLACK_I as f32) as i64, knob("BW_WHITE_I", BW_WHITE_I as f32) as i64);
+        let (thin_i, dense_i) = (clip_index(p.black_clip, bwb), clip_index(p.white_clip, bww));
         let (thin, dense) = (a.lo[3][thin_i], a.hi[3][dense_i].max(a.lo[3][thin_i] + 0.05));
         origin = [thin; 3];
-        scale = [1.0 / (dense - thin); 3];
+        scale = [knob("BW_WHITE", BW_WHITE) / (dense - thin); 3];
+        // (the channels' densities are averaged, so the median is too)
+        mid = ((a.dmid[0] + a.dmid[1] + a.dmid[2]) / 3.0 - thin) * scale[0];
     } else if cube {
         // each channel divided by its own thin end (the mask removed: a grey's channels then
         // agree), then in the cube-root domain (bright samples high): black at green's thin end,
@@ -204,6 +218,8 @@ pub(crate) fn plan(p: &Params) -> Plan {
     // method's t is gamma-encoded light, so Standard's power becomes that gamma
     if cube {
         pr.power *= knob("POWER", CUBE_POWER);
+    } else if bw {
+        pr.power *= knob("BW_POWER", BW_POWER);
     } else if lab {
         pr.power *= lab_gamma() / PROFILES[0].power;
     }

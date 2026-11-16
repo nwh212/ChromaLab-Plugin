@@ -17,11 +17,11 @@
   "header": {"dark": "@header_dark", "light": "@header_light"},
   "overlap": 0,
   "params": {
-    "filmType":     {"type": "choice", "label": "Type", "options": ["Color Negative", "B&W Negative", "Positive (Slide)"], "default": "Color Negative"},
-    "method":       {"type": "choice", "label": "Method", "options": ["Lab", "Shared range", "Per channel", "Levels"], "default": "Lab"},
-    "stock":        {"type": "choice", "label": "Stock / look", "options": "@stocks", "groups": "@stock_groups", "default": "Generic"},
-    "preSaturation":{"type": "int",    "label": "Pre-saturation", "min": 1, "max": 5, "default": 3},
-    "borderBuffer": {"type": "number", "label": "Border buffer", "min": 0, "max": 25, "default": 10},
+    "filmType":     {"type": "choice", "label": "Type", "options": ["Color Negative", "B&W Negative", "Positive (Slide)"], "default": "Color Negative", "remember": true},
+    "method":       {"type": "choice", "label": "Method", "options": ["Lab", "Shared range", "Per channel", "Levels"], "default": "Lab", "remember": true},
+    "stock":        {"type": "choice", "label": "Stock / look", "options": "@stocks", "groups": "@stock_groups", "default": "Generic", "remember": true},
+    "preSaturation":{"type": "int",    "label": "Pre-saturation", "min": 1, "max": 5, "default": 3, "remember": true},
+    "borderBuffer": {"type": "number", "label": "Border buffer", "min": 0, "max": 25, "default": 10, "remember": true},
     "showBorder":   {"type": "bool",   "label": "Show buffer", "default": false},
 
     "toneProfile":  {"type": "choice", "label": "Tone profile", "options": "@profiles", "default": "Standard"},

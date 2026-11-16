@@ -14,6 +14,14 @@ levels of 255 (see the README).
 - **Controls under headings:** Tone, Clipping (folded) and White balance.
 - **Ctrl+Alt+N** adds ChromaLab to the selected photos, in an app that offers plug-in keys
   (Help ▸ Keyboard Shortcuts ▸ *Add ChromaLab* to change it).
+- **B&W negatives refitted** on six frames scanned twice (a camera and a film scanner, 12 % border
+  buffer): black at the thinnest 0.5 % of the measured area instead of 3 %, the densest 0.1 % just
+  below white instead of the densest 5 % at white, and a slightly steeper curve. Midtones were
+  13-62 levels too light and both ends clipped; the reference error falls from 40.9 to 11.7.
+  Already-converted B&W photos change when they render again (no need to Measure again).
+- **Type, Method, Stock / look, Pre-saturation and Border buffer are remembered:** each new copy
+  of ChromaLab starts with what you last set them to, in an app that keeps them (manifest
+  `remember`); older apps start at the defaults as before.
 ## 0.12.2
 - **Links in the Plug-in Manager:** the About tab shows ChromaLab's homepage, repository, changelog
   and licence, and a *Report a Problem* button that opens the repository's issues (manifest
