@@ -1,0 +1,16525 @@
+{
+"about": "Large-mark candidates (dust_core::large::candidates on each scan area-averaged to a long edge of 1024 px, dmin >= 0.3) labelled by eye from full-size crops; see DEVELOPING.md, Large marks. Scans: the Alaska roll DNGs raw0001-raw0027 and the VueScan RGBI TIFFs (outside the repo).",
+"candidates": [
+{
+"scan": "raw0001.dng",
+"size": [
+1024,
+787
+],
+"box": [
+458,
+257,
+465,
+268
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.dng",
+"size": [
+1024,
+787
+],
+"box": [
+432,
+287,
+443,
+298
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.dng",
+"size": [
+1024,
+787
+],
+"box": [
+419,
+334,
+427,
+340
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.dng",
+"size": [
+1024,
+787
+],
+"box": [
+471,
+346,
+477,
+355
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.dng",
+"size": [
+1024,
+787
+],
+"box": [
+651,
+373,
+798,
+449
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.dng",
+"size": [
+1024,
+787
+],
+"box": [
+584,
+435,
+591,
+441
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.dng",
+"size": [
+1024,
+787
+],
+"box": [
+935,
+468,
+943,
+475
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.dng",
+"size": [
+1024,
+787
+],
+"box": [
+926,
+490,
+937,
+502
+],
+"label": "picture"
+},
+{
+"scan": "raw0002.dng",
+"size": [
+1024,
+759
+],
+"box": [
+572,
+314,
+715,
+392
+],
+"label": "picture"
+},
+{
+"scan": "raw0002.dng",
+"size": [
+1024,
+759
+],
+"box": [
+584,
+362,
+594,
+369
+],
+"label": "picture"
+},
+{
+"scan": "raw0002.dng",
+"size": [
+1024,
+759
+],
+"box": [
+443,
+390,
+454,
+400
+],
+"label": "picture"
+},
+{
+"scan": "raw0002.dng",
+"size": [
+1024,
+759
+],
+"box": [
+317,
+406,
+325,
+413
+],
+"label": "picture"
+},
+{
+"scan": "raw0002.dng",
+"size": [
+1024,
+759
+],
+"box": [
+900,
+406,
+912,
+413
+],
+"label": "picture"
+},
+{
+"scan": "raw0002.dng",
+"size": [
+1024,
+759
+],
+"box": [
+372,
+421,
+378,
+426
+],
+"label": "picture"
+},
+{
+"scan": "raw0002.dng",
+"size": [
+1024,
+759
+],
+"box": [
+978,
+423,
+987,
+435
+],
+"label": "dust"
+},
+{
+"scan": "raw0002.dng",
+"size": [
+1024,
+759
+],
+"box": [
+865,
+454,
+873,
+459
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.dng",
+"size": [
+1024,
+760
+],
+"box": [
+137,
+366,
+157,
+377
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.dng",
+"size": [
+1024,
+760
+],
+"box": [
+124,
+369,
+137,
+378
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.dng",
+"size": [
+1024,
+760
+],
+"box": [
+103,
+378,
+112,
+383
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.dng",
+"size": [
+1024,
+760
+],
+"box": [
+117,
+380,
+130,
+389
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.dng",
+"size": [
+1024,
+760
+],
+"box": [
+944,
+381,
+958,
+390
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.dng",
+"size": [
+1024,
+760
+],
+"box": [
+131,
+386,
+139,
+393
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.dng",
+"size": [
+1024,
+760
+],
+"box": [
+266,
+394,
+277,
+405
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.dng",
+"size": [
+1024,
+760
+],
+"box": [
+941,
+394,
+951,
+406
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.dng",
+"size": [
+1024,
+760
+],
+"box": [
+587,
+407,
+610,
+416
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.dng",
+"size": [
+1024,
+760
+],
+"box": [
+382,
+411,
+389,
+417
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.dng",
+"size": [
+1024,
+760
+],
+"box": [
+844,
+424,
+855,
+434
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.dng",
+"size": [
+1024,
+760
+],
+"box": [
+823,
+434,
+833,
+441
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.dng",
+"size": [
+1024,
+760
+],
+"box": [
+885,
+434,
+897,
+439
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.dng",
+"size": [
+1024,
+760
+],
+"box": [
+345,
+478,
+377,
+491
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.dng",
+"size": [
+1024,
+760
+],
+"box": [
+416,
+479,
+426,
+485
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.dng",
+"size": [
+1024,
+760
+],
+"box": [
+660,
+489,
+683,
+512
+],
+"label": "dust"
+},
+{
+"scan": "raw0003.dng",
+"size": [
+1024,
+760
+],
+"box": [
+407,
+516,
+414,
+522
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.dng",
+"size": [
+1024,
+774
+],
+"box": [
+67,
+17,
+78,
+25
+],
+"label": "dust"
+},
+{
+"scan": "raw0004.dng",
+"size": [
+1024,
+774
+],
+"box": [
+779,
+195,
+788,
+204
+],
+"label": "unsure"
+},
+{
+"scan": "raw0004.dng",
+"size": [
+1024,
+774
+],
+"box": [
+708,
+207,
+715,
+213
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.dng",
+"size": [
+1024,
+774
+],
+"box": [
+42,
+292,
+53,
+306
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.dng",
+"size": [
+1024,
+774
+],
+"box": [
+70,
+339,
+81,
+347
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.dng",
+"size": [
+1024,
+774
+],
+"box": [
+38,
+348,
+43,
+355
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.dng",
+"size": [
+1024,
+774
+],
+"box": [
+69,
+387,
+81,
+397
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.dng",
+"size": [
+1024,
+774
+],
+"box": [
+767,
+420,
+778,
+435
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.dng",
+"size": [
+1024,
+774
+],
+"box": [
+800,
+583,
+806,
+591
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.dng",
+"size": [
+1024,
+774
+],
+"box": [
+715,
+611,
+725,
+618
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.dng",
+"size": [
+1024,
+774
+],
+"box": [
+797,
+635,
+804,
+642
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.dng",
+"size": [
+1024,
+779
+],
+"box": [
+567,
+256,
+573,
+266
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.dng",
+"size": [
+1024,
+779
+],
+"box": [
+550,
+269,
+562,
+278
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.dng",
+"size": [
+1024,
+779
+],
+"box": [
+571,
+273,
+602,
+291
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.dng",
+"size": [
+1024,
+779
+],
+"box": [
+764,
+279,
+775,
+284
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.dng",
+"size": [
+1024,
+779
+],
+"box": [
+506,
+287,
+518,
+295
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.dng",
+"size": [
+1024,
+779
+],
+"box": [
+544,
+288,
+557,
+297
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.dng",
+"size": [
+1024,
+779
+],
+"box": [
+602,
+288,
+623,
+300
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.dng",
+"size": [
+1024,
+779
+],
+"box": [
+957,
+288,
+978,
+298
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.dng",
+"size": [
+1024,
+779
+],
+"box": [
+559,
+295,
+580,
+308
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.dng",
+"size": [
+1024,
+779
+],
+"box": [
+511,
+297,
+522,
+306
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.dng",
+"size": [
+1024,
+779
+],
+"box": [
+582,
+298,
+597,
+306
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.dng",
+"size": [
+1024,
+779
+],
+"box": [
+359,
+299,
+371,
+315
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.dng",
+"size": [
+1024,
+779
+],
+"box": [
+300,
+300,
+308,
+307
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.dng",
+"size": [
+1024,
+779
+],
+"box": [
+335,
+302,
+345,
+310
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.dng",
+"size": [
+1024,
+779
+],
+"box": [
+299,
+309,
+308,
+316
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.dng",
+"size": [
+1024,
+779
+],
+"box": [
+273,
+311,
+285,
+318
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.dng",
+"size": [
+1024,
+779
+],
+"box": [
+394,
+313,
+402,
+321
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.dng",
+"size": [
+1024,
+779
+],
+"box": [
+488,
+314,
+505,
+325
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.dng",
+"size": [
+1024,
+779
+],
+"box": [
+477,
+700,
+493,
+717
+],
+"label": "dust"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+69,
+21,
+77,
+27
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+106,
+21,
+119,
+31
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+167,
+22,
+185,
+36
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+505,
+23,
+514,
+31
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+664,
+23,
+671,
+29
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+127,
+24,
+144,
+32
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+520,
+24,
+528,
+29
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+379,
+25,
+387,
+31
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+762,
+25,
+769,
+32
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+792,
+28,
+802,
+37
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+457,
+36,
+477,
+46
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+507,
+37,
+516,
+47
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+428,
+38,
+439,
+47
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+303,
+39,
+313,
+48
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+316,
+39,
+321,
+45
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+375,
+43,
+383,
+52
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+738,
+44,
+749,
+53
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+293,
+47,
+302,
+54
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+707,
+48,
+718,
+59
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+435,
+55,
+447,
+62
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+132,
+58,
+139,
+65
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+511,
+66,
+523,
+73
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+475,
+67,
+481,
+73
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+884,
+67,
+892,
+73
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+412,
+69,
+424,
+83
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+148,
+70,
+157,
+79
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+670,
+71,
+678,
+76
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+192,
+92,
+210,
+112
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+967,
+103,
+973,
+109
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+318,
+110,
+334,
+122
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+425,
+112,
+434,
+120
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+818,
+116,
+828,
+124
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+531,
+118,
+539,
+125
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+877,
+121,
+886,
+128
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+735,
+124,
+745,
+133
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+552,
+126,
+561,
+133
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+263,
+127,
+272,
+137
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+283,
+127,
+294,
+136
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+352,
+128,
+357,
+135
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+219,
+133,
+226,
+138
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+391,
+133,
+398,
+142
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+635,
+135,
+641,
+142
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+919,
+137,
+927,
+144
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+539,
+140,
+548,
+150
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+844,
+140,
+851,
+147
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+943,
+141,
+950,
+148
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+247,
+147,
+254,
+155
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+426,
+147,
+434,
+153
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+365,
+149,
+373,
+157
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+582,
+151,
+592,
+160
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+387,
+152,
+395,
+160
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+541,
+154,
+549,
+161
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+554,
+155,
+564,
+160
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+298,
+157,
+305,
+165
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+831,
+159,
+838,
+168
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+374,
+164,
+382,
+171
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+283,
+165,
+289,
+171
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+541,
+166,
+550,
+172
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+429,
+173,
+436,
+181
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+360,
+174,
+367,
+178
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+352,
+180,
+367,
+189
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+855,
+182,
+865,
+190
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+347,
+188,
+353,
+194
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+395,
+194,
+414,
+208
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+844,
+196,
+852,
+204
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+158,
+203,
+164,
+211
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+387,
+208,
+403,
+226
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+63,
+209,
+71,
+215
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+413,
+215,
+460,
+237
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+755,
+219,
+762,
+229
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+631,
+221,
+637,
+228
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+883,
+223,
+892,
+233
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+619,
+236,
+639,
+254
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+243,
+237,
+260,
+251
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+295,
+240,
+309,
+247
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+871,
+246,
+887,
+259
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+755,
+252,
+765,
+260
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+889,
+259,
+908,
+269
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+861,
+262,
+881,
+270
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+70,
+267,
+82,
+277
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+177,
+270,
+202,
+286
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+708,
+279,
+717,
+285
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+696,
+310,
+708,
+321
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+626,
+312,
+637,
+321
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+473,
+372,
+481,
+382
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.dng",
+"size": [
+1024,
+789
+],
+"box": [
+483,
+373,
+497,
+385
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.dng",
+"size": [
+1024,
+766
+],
+"box": [
+70,
+14,
+85,
+42
+],
+"label": "unsure"
+},
+{
+"scan": "raw0007.dng",
+"size": [
+1024,
+766
+],
+"box": [
+727,
+24,
+740,
+32
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.dng",
+"size": [
+1024,
+766
+],
+"box": [
+760,
+213,
+771,
+222
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.dng",
+"size": [
+1024,
+766
+],
+"box": [
+691,
+224,
+701,
+233
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.dng",
+"size": [
+1024,
+766
+],
+"box": [
+609,
+232,
+617,
+240
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.dng",
+"size": [
+1024,
+766
+],
+"box": [
+51,
+317,
+62,
+331
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.dng",
+"size": [
+1024,
+766
+],
+"box": [
+72,
+352,
+84,
+363
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.dng",
+"size": [
+1024,
+766
+],
+"box": [
+73,
+395,
+84,
+408
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.dng",
+"size": [
+1024,
+766
+],
+"box": [
+695,
+573,
+703,
+581
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.dng",
+"size": [
+1024,
+766
+],
+"box": [
+695,
+615,
+702,
+622
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.dng",
+"size": [
+1024,
+766
+],
+"box": [
+769,
+626,
+790,
+646
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+944,
+17,
+961,
+28
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+822,
+31,
+827,
+37
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+738,
+64,
+748,
+72
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+762,
+104,
+767,
+110
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+699,
+111,
+711,
+120
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+716,
+114,
+728,
+127
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+683,
+119,
+692,
+127
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+963,
+127,
+972,
+132
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+948,
+135,
+956,
+142
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+615,
+141,
+623,
+149
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+707,
+142,
+715,
+151
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+599,
+144,
+606,
+153
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+818,
+153,
+825,
+160
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+927,
+158,
+937,
+165
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+615,
+162,
+625,
+168
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+598,
+163,
+606,
+169
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+819,
+177,
+828,
+184
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+867,
+178,
+881,
+186
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+847,
+187,
+855,
+193
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+827,
+190,
+839,
+197
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+571,
+192,
+578,
+199
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+919,
+199,
+926,
+206
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+588,
+202,
+598,
+212
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+601,
+217,
+608,
+224
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+612,
+217,
+626,
+225
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+367,
+232,
+375,
+242
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+575,
+233,
+589,
+239
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+794,
+233,
+801,
+239
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+611,
+234,
+620,
+243
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+592,
+235,
+603,
+244
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+584,
+246,
+590,
+251
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+546,
+247,
+553,
+254
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+330,
+250,
+339,
+257
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+705,
+251,
+717,
+259
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+722,
+251,
+760,
+265
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+494,
+259,
+503,
+273
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+530,
+261,
+539,
+269
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+541,
+262,
+549,
+271
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+325,
+264,
+335,
+270
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+451,
+264,
+462,
+276
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+667,
+282,
+674,
+290
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+234,
+287,
+239,
+295
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+240,
+292,
+247,
+305
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+490,
+293,
+498,
+304
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+562,
+293,
+577,
+299
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+248,
+303,
+259,
+316
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+611,
+313,
+617,
+319
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+539,
+315,
+548,
+322
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+457,
+317,
+474,
+328
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+435,
+319,
+443,
+325
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+131,
+467,
+138,
+473
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+19,
+470,
+40,
+482
+],
+"label": "dust"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+121,
+478,
+128,
+484
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+99,
+504,
+120,
+518
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+148,
+508,
+158,
+521
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+144,
+529,
+151,
+536
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+134,
+536,
+144,
+548
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+128,
+551,
+141,
+562
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+168,
+562,
+176,
+569
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+24,
+571,
+37,
+579
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+152,
+582,
+158,
+588
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+108,
+594,
+114,
+601
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+119,
+605,
+127,
+614
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+138,
+609,
+146,
+614
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+27,
+614,
+39,
+629
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+158,
+617,
+165,
+625
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+142,
+619,
+147,
+625
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+129,
+620,
+136,
+626
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+145,
+627,
+152,
+637
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+30,
+651,
+38,
+664
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+59,
+661,
+69,
+678
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+97,
+667,
+111,
+684
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+137,
+673,
+148,
+684
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+69,
+679,
+79,
+695
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+40,
+700,
+51,
+714
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+72,
+707,
+80,
+717
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+119,
+722,
+127,
+735
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+28,
+727,
+36,
+737
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+96,
+730,
+104,
+740
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.dng",
+"size": [
+1024,
+760
+],
+"box": [
+49,
+733,
+55,
+740
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+731,
+21,
+741,
+26
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+556,
+363,
+567,
+368
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+517,
+415,
+529,
+423
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+664,
+417,
+672,
+423
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+685,
+417,
+700,
+422
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+541,
+418,
+550,
+426
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+731,
+422,
+739,
+429
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+874,
+423,
+887,
+430
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+897,
+423,
+909,
+429
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+679,
+429,
+690,
+438
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+470,
+430,
+479,
+437
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+864,
+436,
+879,
+442
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+439,
+439,
+446,
+444
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+386,
+440,
+398,
+450
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+563,
+442,
+572,
+449
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+759,
+443,
+773,
+452
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+703,
+445,
+715,
+450
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+116,
+450,
+125,
+458
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+79,
+451,
+86,
+457
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+781,
+451,
+788,
+460
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+66,
+452,
+76,
+457
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+146,
+473,
+164,
+485
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+503,
+473,
+514,
+479
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+982,
+474,
+991,
+481
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+176,
+477,
+185,
+485
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+195,
+477,
+204,
+482
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+517,
+477,
+524,
+482
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+621,
+477,
+630,
+488
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+289,
+478,
+310,
+488
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+325,
+479,
+332,
+485
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+651,
+480,
+657,
+488
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+84,
+482,
+92,
+489
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+411,
+485,
+420,
+490
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+447,
+485,
+454,
+490
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+119,
+490,
+128,
+498
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+650,
+490,
+657,
+497
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+819,
+490,
+826,
+498
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+290,
+493,
+302,
+499
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+725,
+495,
+745,
+504
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+90,
+501,
+95,
+507
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+178,
+502,
+187,
+510
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+952,
+502,
+960,
+508
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+807,
+507,
+815,
+514
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+779,
+509,
+790,
+523
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+458,
+510,
+472,
+523
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+726,
+510,
+733,
+516
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+849,
+511,
+856,
+518
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+448,
+514,
+457,
+521
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+751,
+516,
+761,
+526
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+186,
+523,
+194,
+530
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+805,
+525,
+814,
+531
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+636,
+529,
+643,
+537
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+430,
+533,
+442,
+546
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+232,
+536,
+250,
+543
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+500,
+540,
+517,
+549
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+573,
+545,
+580,
+550
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+476,
+550,
+488,
+557
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+440,
+554,
+447,
+562
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+121,
+572,
+127,
+580
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+39,
+575,
+46,
+582
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+811,
+623,
+818,
+630
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+680,
+638,
+689,
+645
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+743,
+641,
+751,
+648
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+604,
+647,
+616,
+661
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+563,
+650,
+572,
+663
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+616,
+666,
+625,
+676
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+566,
+668,
+573,
+675
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+733,
+678,
+739,
+685
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+630,
+686,
+643,
+697
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+727,
+688,
+734,
+694
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+483,
+691,
+491,
+698
+],
+"label": "picture"
+},
+{
+"scan": "raw0009.dng",
+"size": [
+1024,
+764
+],
+"box": [
+451,
+693,
+460,
+702
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+420,
+0,
+426,
+2
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+0,
+33,
+3,
+41
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+793,
+78,
+801,
+85
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+606,
+92,
+622,
+102
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+608,
+108,
+618,
+120
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+511,
+110,
+517,
+116
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+676,
+111,
+684,
+119
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+624,
+113,
+632,
+122
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+678,
+124,
+685,
+134
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+639,
+134,
+645,
+140
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+226,
+146,
+236,
+157
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+500,
+146,
+507,
+152
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+439,
+165,
+452,
+173
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+179,
+166,
+185,
+171
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+170,
+167,
+177,
+172
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+49,
+218,
+60,
+226
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+808,
+220,
+816,
+229
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+945,
+225,
+949,
+230
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+767,
+227,
+777,
+234
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+75,
+228,
+81,
+235
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+736,
+236,
+754,
+246
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+814,
+238,
+827,
+250
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+976,
+241,
+983,
+246
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+607,
+253,
+615,
+261
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+523,
+258,
+533,
+264
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+504,
+259,
+512,
+265
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+977,
+259,
+983,
+264
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+785,
+262,
+803,
+275
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+440,
+264,
+448,
+269
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+588,
+266,
+596,
+273
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+491,
+267,
+502,
+276
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+463,
+271,
+469,
+280
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+359,
+275,
+366,
+282
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+519,
+275,
+526,
+282
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+543,
+276,
+551,
+282
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+932,
+276,
+939,
+282
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+399,
+277,
+406,
+284
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+579,
+282,
+585,
+290
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+449,
+284,
+460,
+288
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+507,
+287,
+527,
+297
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+595,
+293,
+602,
+300
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+838,
+294,
+845,
+299
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+428,
+296,
+437,
+304
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+661,
+297,
+666,
+304
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+594,
+302,
+601,
+310
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+820,
+302,
+830,
+309
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+621,
+303,
+630,
+313
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+730,
+304,
+737,
+309
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+841,
+305,
+847,
+310
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+166,
+306,
+179,
+313
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+740,
+307,
+749,
+314
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+786,
+313,
+792,
+318
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+269,
+315,
+282,
+323
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+506,
+321,
+518,
+328
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+780,
+329,
+791,
+342
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+217,
+332,
+227,
+341
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+603,
+332,
+612,
+339
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+753,
+335,
+764,
+341
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+862,
+335,
+876,
+345
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+194,
+339,
+207,
+346
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+680,
+339,
+690,
+346
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+179,
+342,
+190,
+349
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+64,
+347,
+73,
+356
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+776,
+349,
+786,
+358
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+671,
+350,
+683,
+357
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+378,
+351,
+393,
+357
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+50,
+353,
+61,
+361
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+562,
+353,
+569,
+361
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+261,
+354,
+276,
+361
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+178,
+358,
+185,
+363
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+414,
+362,
+422,
+370
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+512,
+362,
+522,
+369
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+702,
+362,
+718,
+369
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+369,
+363,
+383,
+370
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+720,
+364,
+738,
+373
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+643,
+370,
+653,
+376
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+620,
+371,
+627,
+377
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+157,
+375,
+168,
+380
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+432,
+379,
+441,
+389
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+112,
+384,
+119,
+388
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+203,
+385,
+211,
+391
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+179,
+398,
+184,
+404
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+63,
+399,
+75,
+406
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+92,
+402,
+104,
+408
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+685,
+420,
+697,
+427
+],
+"label": "picture"
+},
+{
+"scan": "raw0010.dng",
+"size": [
+1024,
+777
+],
+"box": [
+26,
+429,
+33,
+436
+],
+"label": "picture"
+},
+{
+"scan": "raw0011.dng",
+"size": [
+1024,
+766
+],
+"box": [
+482,
+0,
+487,
+2
+],
+"label": "picture"
+},
+{
+"scan": "raw0011.dng",
+"size": [
+1024,
+766
+],
+"box": [
+492,
+0,
+502,
+2
+],
+"label": "picture"
+},
+{
+"scan": "raw0011.dng",
+"size": [
+1024,
+766
+],
+"box": [
+604,
+0,
+610,
+2
+],
+"label": "picture"
+},
+{
+"scan": "raw0011.dng",
+"size": [
+1024,
+766
+],
+"box": [
+701,
+0,
+711,
+2
+],
+"label": "picture"
+},
+{
+"scan": "raw0011.dng",
+"size": [
+1024,
+766
+],
+"box": [
+721,
+0,
+731,
+2
+],
+"label": "picture"
+},
+{
+"scan": "raw0011.dng",
+"size": [
+1024,
+766
+],
+"box": [
+64,
+255,
+73,
+264
+],
+"label": "picture"
+},
+{
+"scan": "raw0011.dng",
+"size": [
+1024,
+766
+],
+"box": [
+429,
+376,
+438,
+384
+],
+"label": "picture"
+},
+{
+"scan": "raw0011.dng",
+"size": [
+1024,
+766
+],
+"box": [
+523,
+382,
+533,
+389
+],
+"label": "picture"
+},
+{
+"scan": "raw0011.dng",
+"size": [
+1024,
+766
+],
+"box": [
+429,
+387,
+439,
+397
+],
+"label": "picture"
+},
+{
+"scan": "raw0011.dng",
+"size": [
+1024,
+766
+],
+"box": [
+459,
+391,
+468,
+397
+],
+"label": "picture"
+},
+{
+"scan": "raw0011.dng",
+"size": [
+1024,
+766
+],
+"box": [
+496,
+415,
+505,
+421
+],
+"label": "picture"
+},
+{
+"scan": "raw0012.dng",
+"size": [
+1024,
+766
+],
+"box": [
+661,
+419,
+670,
+432
+],
+"label": "picture"
+},
+{
+"scan": "raw0012.dng",
+"size": [
+1024,
+766
+],
+"box": [
+782,
+420,
+788,
+426
+],
+"label": "picture"
+},
+{
+"scan": "raw0012.dng",
+"size": [
+1024,
+766
+],
+"box": [
+798,
+424,
+804,
+431
+],
+"label": "picture"
+},
+{
+"scan": "raw0012.dng",
+"size": [
+1024,
+766
+],
+"box": [
+236,
+455,
+245,
+469
+],
+"label": "picture"
+},
+{
+"scan": "raw0012.dng",
+"size": [
+1024,
+766
+],
+"box": [
+981,
+458,
+989,
+467
+],
+"label": "picture"
+},
+{
+"scan": "raw0012.dng",
+"size": [
+1024,
+766
+],
+"box": [
+324,
+473,
+336,
+483
+],
+"label": "picture"
+},
+{
+"scan": "raw0012.dng",
+"size": [
+1024,
+766
+],
+"box": [
+212,
+504,
+220,
+511
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+686,
+106,
+701,
+113
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+39,
+114,
+50,
+124
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+527,
+150,
+534,
+157
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+590,
+158,
+601,
+169
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+572,
+163,
+582,
+169
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+35,
+200,
+44,
+207
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+451,
+218,
+461,
+224
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+973,
+221,
+980,
+224
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+431,
+224,
+440,
+230
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+435,
+234,
+449,
+241
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+800,
+235,
+809,
+241
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+362,
+242,
+371,
+247
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+327,
+247,
+339,
+256
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+343,
+249,
+357,
+255
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+782,
+254,
+793,
+261
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+321,
+258,
+327,
+263
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+439,
+258,
+447,
+264
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+555,
+259,
+563,
+265
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+258,
+261,
+266,
+269
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+366,
+261,
+374,
+266
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+708,
+277,
+720,
+283
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+691,
+280,
+703,
+286
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+482,
+282,
+490,
+291
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+585,
+283,
+594,
+293
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+465,
+284,
+474,
+289
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+572,
+289,
+583,
+297
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+893,
+289,
+908,
+295
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+773,
+292,
+788,
+299
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+378,
+294,
+385,
+300
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+480,
+294,
+486,
+303
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+369,
+302,
+373,
+307
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+883,
+302,
+897,
+309
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+455,
+311,
+464,
+316
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+347,
+312,
+354,
+316
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+368,
+313,
+372,
+317
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+474,
+313,
+482,
+320
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+490,
+313,
+501,
+321
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+560,
+316,
+569,
+328
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+272,
+318,
+287,
+323
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+951,
+319,
+958,
+326
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+583,
+332,
+636,
+347
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+136,
+333,
+152,
+343
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+527,
+335,
+536,
+342
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+451,
+342,
+482,
+354
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+688,
+347,
+695,
+353
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+61,
+356,
+71,
+365
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+37,
+365,
+43,
+375
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+444,
+367,
+459,
+373
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+353,
+368,
+361,
+375
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+67,
+371,
+80,
+377
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+420,
+373,
+426,
+378
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+127,
+374,
+134,
+381
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+506,
+380,
+513,
+386
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+517,
+381,
+525,
+387
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+494,
+387,
+501,
+395
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.dng",
+"size": [
+1024,
+752
+],
+"box": [
+361,
+391,
+367,
+398
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+0,
+0,
+7,
+2
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+612,
+0,
+619,
+2
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+0,
+17,
+2,
+22
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+0,
+129,
+2,
+135
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+796,
+140,
+808,
+161
+],
+"label": "unsure"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+0,
+141,
+2,
+151
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+456,
+210,
+612,
+300
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+0,
+224,
+3,
+232
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+781,
+234,
+785,
+248
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+0,
+280,
+3,
+288
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+386,
+283,
+393,
+289
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+260,
+300,
+274,
+310
+],
+"label": "dust"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+457,
+344,
+466,
+357
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+306,
+347,
+328,
+368
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+282,
+351,
+289,
+358
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+536,
+354,
+543,
+359
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+392,
+355,
+398,
+360
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+266,
+357,
+275,
+363
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+547,
+358,
+583,
+370
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+353,
+359,
+362,
+365
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+251,
+360,
+259,
+366
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+507,
+361,
+515,
+369
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+270,
+370,
+277,
+376
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+255,
+373,
+262,
+379
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+578,
+380,
+587,
+389
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+393,
+397,
+408,
+420
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+0,
+400,
+3,
+407
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+254,
+403,
+264,
+411
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+828,
+445,
+834,
+452
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+698,
+495,
+713,
+512
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+190,
+603,
+198,
+615
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+794,
+669,
+798,
+675
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.dng",
+"size": [
+1024,
+763
+],
+"box": [
+604,
+687,
+609,
+694
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+736,
+32,
+744,
+42
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+808,
+106,
+818,
+113
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+854,
+179,
+864,
+186
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+538,
+283,
+547,
+292
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+267,
+296,
+274,
+307
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+653,
+312,
+662,
+320
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+369,
+325,
+383,
+341
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+310,
+344,
+317,
+354
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+406,
+346,
+417,
+361
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+327,
+349,
+336,
+356
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+645,
+350,
+656,
+360
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+382,
+351,
+388,
+356
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+348,
+354,
+358,
+367
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+592,
+354,
+605,
+365
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+426,
+356,
+433,
+365
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+458,
+361,
+477,
+372
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+451,
+371,
+457,
+378
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+647,
+373,
+654,
+380
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+626,
+374,
+637,
+384
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+524,
+375,
+538,
+386
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+555,
+391,
+564,
+399
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+389,
+393,
+397,
+401
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+388,
+402,
+402,
+417
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+822,
+463,
+829,
+471
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+873,
+483,
+881,
+491
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+530,
+639,
+542,
+647
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.dng",
+"size": [
+1024,
+760
+],
+"box": [
+175,
+668,
+183,
+677
+],
+"label": "picture"
+},
+{
+"scan": "raw0016.dng",
+"size": [
+1024,
+779
+],
+"box": [
+642,
+132,
+655,
+144
+],
+"label": "picture"
+},
+{
+"scan": "raw0016.dng",
+"size": [
+1024,
+779
+],
+"box": [
+460,
+292,
+470,
+304
+],
+"label": "picture"
+},
+{
+"scan": "raw0016.dng",
+"size": [
+1024,
+779
+],
+"box": [
+506,
+310,
+511,
+316
+],
+"label": "picture"
+},
+{
+"scan": "raw0016.dng",
+"size": [
+1024,
+779
+],
+"box": [
+514,
+313,
+525,
+330
+],
+"label": "picture"
+},
+{
+"scan": "raw0016.dng",
+"size": [
+1024,
+779
+],
+"box": [
+486,
+353,
+497,
+374
+],
+"label": "picture"
+},
+{
+"scan": "raw0016.dng",
+"size": [
+1024,
+779
+],
+"box": [
+519,
+391,
+527,
+401
+],
+"label": "picture"
+},
+{
+"scan": "raw0016.dng",
+"size": [
+1024,
+779
+],
+"box": [
+398,
+396,
+408,
+413
+],
+"label": "picture"
+},
+{
+"scan": "raw0016.dng",
+"size": [
+1024,
+779
+],
+"box": [
+453,
+519,
+461,
+527
+],
+"label": "picture"
+},
+{
+"scan": "raw0016.dng",
+"size": [
+1024,
+779
+],
+"box": [
+443,
+537,
+451,
+545
+],
+"label": "picture"
+},
+{
+"scan": "raw0016.dng",
+"size": [
+1024,
+779
+],
+"box": [
+478,
+556,
+495,
+567
+],
+"label": "picture"
+},
+{
+"scan": "raw0016.dng",
+"size": [
+1024,
+779
+],
+"box": [
+409,
+567,
+426,
+586
+],
+"label": "picture"
+},
+{
+"scan": "raw0016.dng",
+"size": [
+1024,
+779
+],
+"box": [
+410,
+621,
+420,
+633
+],
+"label": "picture"
+},
+{
+"scan": "raw0016.dng",
+"size": [
+1024,
+779
+],
+"box": [
+404,
+639,
+415,
+646
+],
+"label": "picture"
+},
+{
+"scan": "raw0016.dng",
+"size": [
+1024,
+779
+],
+"box": [
+334,
+684,
+345,
+694
+],
+"label": "picture"
+},
+{
+"scan": "raw0017.dng",
+"size": [
+1024,
+756
+],
+"box": [
+40,
+146,
+150,
+176
+],
+"label": "picture"
+},
+{
+"scan": "raw0017.dng",
+"size": [
+1024,
+756
+],
+"box": [
+153,
+159,
+185,
+512
+],
+"label": "picture"
+},
+{
+"scan": "raw0017.dng",
+"size": [
+1024,
+756
+],
+"box": [
+784,
+189,
+800,
+197
+],
+"label": "picture"
+},
+{
+"scan": "raw0017.dng",
+"size": [
+1024,
+756
+],
+"box": [
+578,
+194,
+774,
+249
+],
+"label": "picture"
+},
+{
+"scan": "raw0017.dng",
+"size": [
+1024,
+756
+],
+"box": [
+901,
+218,
+925,
+229
+],
+"label": "picture"
+},
+{
+"scan": "raw0017.dng",
+"size": [
+1024,
+756
+],
+"box": [
+339,
+518,
+347,
+527
+],
+"label": "picture"
+},
+{
+"scan": "raw0017.dng",
+"size": [
+1024,
+756
+],
+"box": [
+217,
+670,
+225,
+680
+],
+"label": "picture"
+},
+{
+"scan": "raw0017.dng",
+"size": [
+1024,
+756
+],
+"box": [
+184,
+713,
+193,
+721
+],
+"label": "picture"
+},
+{
+"scan": "raw0018.dng",
+"size": [
+1024,
+785
+],
+"box": [
+1021,
+9,
+1024,
+19
+],
+"label": "picture"
+},
+{
+"scan": "raw0018.dng",
+"size": [
+1024,
+785
+],
+"box": [
+524,
+353,
+537,
+365
+],
+"label": "unsure"
+},
+{
+"scan": "raw0018.dng",
+"size": [
+1024,
+785
+],
+"box": [
+559,
+354,
+570,
+365
+],
+"label": "unsure"
+},
+{
+"scan": "raw0018.dng",
+"size": [
+1024,
+785
+],
+"box": [
+453,
+360,
+471,
+369
+],
+"label": "unsure"
+},
+{
+"scan": "raw0018.dng",
+"size": [
+1024,
+785
+],
+"box": [
+558,
+367,
+567,
+374
+],
+"label": "unsure"
+},
+{
+"scan": "raw0018.dng",
+"size": [
+1024,
+785
+],
+"box": [
+437,
+372,
+443,
+377
+],
+"label": "unsure"
+},
+{
+"scan": "raw0018.dng",
+"size": [
+1024,
+785
+],
+"box": [
+304,
+584,
+310,
+591
+],
+"label": "picture"
+},
+{
+"scan": "raw0018.dng",
+"size": [
+1024,
+785
+],
+"box": [
+364,
+628,
+373,
+637
+],
+"label": "picture"
+},
+{
+"scan": "raw0018.dng",
+"size": [
+1024,
+785
+],
+"box": [
+538,
+732,
+600,
+761
+],
+"label": "picture"
+},
+{
+"scan": "raw0018.dng",
+"size": [
+1024,
+785
+],
+"box": [
+996,
+737,
+1002,
+744
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+484,
+0,
+492,
+2
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+516,
+0,
+522,
+2
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+912,
+104,
+934,
+196
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+185,
+118,
+240,
+130
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+187,
+146,
+298,
+337
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+320,
+201,
+327,
+205
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+4,
+215,
+11,
+223
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+278,
+225,
+297,
+233
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+318,
+240,
+325,
+248
+],
+"label": "dust"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+4,
+256,
+19,
+266
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+77,
+265,
+177,
+295
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+56,
+292,
+73,
+301
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+159,
+295,
+179,
+304
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+630,
+295,
+643,
+302
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+583,
+303,
+590,
+309
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+628,
+309,
+638,
+315
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+582,
+311,
+626,
+322
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+76,
+313,
+164,
+345
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+581,
+319,
+643,
+335
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+162,
+324,
+180,
+333
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+627,
+335,
+642,
+341
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+603,
+339,
+616,
+345
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+579,
+342,
+602,
+349
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+121,
+347,
+182,
+374
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+578,
+350,
+626,
+362
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+626,
+360,
+645,
+367
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+576,
+363,
+625,
+378
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+27,
+368,
+35,
+375
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+651,
+370,
+660,
+375
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+5,
+372,
+17,
+381
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+622,
+374,
+637,
+380
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+167,
+379,
+184,
+387
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+579,
+382,
+589,
+388
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+561,
+416,
+569,
+427
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+91,
+439,
+105,
+450
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+47,
+506,
+53,
+514
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+235,
+510,
+249,
+523
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+2,
+511,
+9,
+520
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+4,
+519,
+66,
+541
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+37,
+533,
+45,
+538
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+257,
+535,
+271,
+548
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+73,
+538,
+79,
+545
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+275,
+563,
+290,
+577
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+822,
+566,
+839,
+681
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+936,
+567,
+942,
+573
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+298,
+592,
+312,
+607
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+929,
+613,
+937,
+621
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+320,
+627,
+335,
+642
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+151,
+654,
+157,
+660
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+340,
+666,
+358,
+682
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+259,
+679,
+265,
+686
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+366,
+708,
+382,
+724
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+127,
+745,
+135,
+756
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.dng",
+"size": [
+1024,
+776
+],
+"box": [
+78,
+751,
+88,
+758
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+109,
+19,
+121,
+29
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+136,
+19,
+144,
+25
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+749,
+19,
+813,
+263
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+737,
+32,
+746,
+49
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+562,
+36,
+574,
+45
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+124,
+39,
+138,
+48
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+235,
+45,
+244,
+60
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+526,
+51,
+533,
+60
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+183,
+59,
+189,
+65
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+315,
+68,
+320,
+76
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+186,
+71,
+194,
+79
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+357,
+103,
+362,
+120
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+645,
+103,
+653,
+112
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+571,
+111,
+578,
+120
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+686,
+113,
+696,
+228
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+427,
+114,
+433,
+121
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+494,
+121,
+505,
+130
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+197,
+128,
+204,
+138
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+200,
+201,
+206,
+212
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+61,
+204,
+73,
+212
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+268,
+217,
+281,
+223
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+288,
+217,
+298,
+225
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+87,
+229,
+100,
+242
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+459,
+235,
+465,
+241
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+75,
+238,
+82,
+245
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+418,
+245,
+425,
+253
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+592,
+251,
+597,
+258
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+359,
+253,
+365,
+264
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+418,
+257,
+424,
+265
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+686,
+267,
+696,
+274
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+698,
+270,
+705,
+276
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+541,
+295,
+594,
+324
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+829,
+295,
+842,
+304
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+292,
+313,
+299,
+320
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+571,
+324,
+584,
+334
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+686,
+328,
+693,
+337
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+48,
+330,
+56,
+335
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+431,
+333,
+437,
+340
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+715,
+335,
+722,
+343
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+0,
+341,
+2,
+347
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+239,
+347,
+248,
+354
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+659,
+348,
+666,
+355
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+754,
+350,
+844,
+385
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+915,
+353,
+929,
+372
+],
+"label": "dust"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+271,
+371,
+277,
+378
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+732,
+375,
+739,
+380
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+103,
+376,
+115,
+384
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+685,
+378,
+704,
+384
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+891,
+384,
+908,
+393
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+580,
+386,
+589,
+393
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+620,
+430,
+637,
+437
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+0,
+443,
+2,
+453
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+306,
+449,
+312,
+456
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+525,
+450,
+537,
+459
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+798,
+454,
+881,
+467
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+564,
+472,
+611,
+495
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+466,
+475,
+484,
+489
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+0,
+487,
+2,
+495
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+653,
+487,
+660,
+493
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+308,
+489,
+318,
+501
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+501,
+489,
+518,
+507
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+335,
+492,
+358,
+511
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+268,
+496,
+305,
+524
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+0,
+497,
+2,
+502
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+619,
+500,
+629,
+510
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+795,
+502,
+840,
+514
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+319,
+515,
+326,
+521
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+199,
+516,
+205,
+521
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+293,
+527,
+301,
+533
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+125,
+535,
+130,
+542
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+183,
+544,
+192,
+555
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+689,
+557,
+695,
+565
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+459,
+570,
+471,
+587
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+619,
+570,
+627,
+581
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+587,
+574,
+600,
+581
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+363,
+579,
+369,
+589
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+206,
+583,
+217,
+594
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+165,
+595,
+171,
+605
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+106,
+597,
+122,
+610
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+753,
+599,
+760,
+603
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+756,
+606,
+763,
+611
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+738,
+608,
+755,
+618
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+541,
+610,
+551,
+651
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+666,
+622,
+675,
+636
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+647,
+648,
+655,
+658
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+534,
+653,
+541,
+660
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+545,
+657,
+551,
+666
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+589,
+665,
+597,
+670
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+798,
+685,
+803,
+691
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+420,
+712,
+426,
+719
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+459,
+713,
+557,
+755
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+490,
+714,
+505,
+725
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+254,
+726,
+264,
+733
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+819,
+745,
+827,
+755
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+579,
+747,
+588,
+754
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+548,
+748,
+559,
+754
+],
+"label": "picture"
+},
+{
+"scan": "raw0020.dng",
+"size": [
+1024,
+777
+],
+"box": [
+622,
+748,
+635,
+755
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+564,
+79,
+572,
+93
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+556,
+102,
+563,
+109
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+562,
+116,
+571,
+125
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+561,
+154,
+569,
+162
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+584,
+172,
+589,
+178
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+505,
+179,
+510,
+188
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+530,
+191,
+537,
+213
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+507,
+193,
+514,
+203
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+585,
+221,
+590,
+229
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+504,
+234,
+511,
+239
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+528,
+234,
+537,
+249
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+583,
+242,
+589,
+250
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+552,
+246,
+564,
+252
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+678,
+250,
+685,
+256
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+566,
+259,
+573,
+264
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+510,
+276,
+518,
+281
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+589,
+285,
+599,
+294
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+488,
+300,
+495,
+305
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+595,
+300,
+605,
+310
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+490,
+309,
+496,
+313
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+595,
+323,
+603,
+333
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+413,
+333,
+419,
+345
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+276,
+351,
+282,
+357
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+615,
+354,
+621,
+361
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+585,
+356,
+594,
+371
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+210,
+360,
+233,
+377
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+537,
+363,
+542,
+369
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+547,
+365,
+557,
+370
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+631,
+378,
+637,
+385
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+535,
+402,
+545,
+408
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+546,
+402,
+558,
+407
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+299,
+434,
+306,
+440
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+585,
+443,
+596,
+458
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+145,
+453,
+151,
+465
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+348,
+453,
+353,
+460
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+81,
+456,
+90,
+477
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+367,
+457,
+372,
+465
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+108,
+458,
+118,
+468
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+101,
+465,
+107,
+473
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+64,
+467,
+73,
+489
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+367,
+479,
+371,
+488
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+84,
+480,
+90,
+493
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+147,
+490,
+153,
+501
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+707,
+493,
+714,
+501
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+23,
+496,
+32,
+503
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+581,
+504,
+591,
+512
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+597,
+508,
+604,
+515
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+52,
+509,
+55,
+516
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+366,
+517,
+371,
+522
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+327,
+520,
+333,
+527
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+777,
+520,
+784,
+533
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+409,
+521,
+421,
+535
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+639,
+551,
+647,
+558
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+338,
+565,
+353,
+578
+],
+"label": "picture"
+},
+{
+"scan": "raw0021.dng",
+"size": [
+1024,
+758
+],
+"box": [
+864,
+734,
+873,
+742
+],
+"label": "picture"
+},
+{
+"scan": "raw0022.dng",
+"size": [
+1024,
+771
+],
+"box": [
+940,
+126,
+952,
+134
+],
+"label": "picture"
+},
+{
+"scan": "raw0022.dng",
+"size": [
+1024,
+771
+],
+"box": [
+867,
+136,
+876,
+150
+],
+"label": "picture"
+},
+{
+"scan": "raw0022.dng",
+"size": [
+1024,
+771
+],
+"box": [
+337,
+657,
+350,
+669
+],
+"label": "picture"
+},
+{
+"scan": "raw0023.dng",
+"size": [
+1024,
+820
+],
+"box": [
+996,
+0,
+1005,
+7
+],
+"label": "dust"
+},
+{
+"scan": "raw0023.dng",
+"size": [
+1024,
+820
+],
+"box": [
+507,
+332,
+514,
+337
+],
+"label": "picture"
+},
+{
+"scan": "raw0023.dng",
+"size": [
+1024,
+820
+],
+"box": [
+13,
+779,
+17,
+787
+],
+"label": "unsure"
+},
+{
+"scan": "raw0024.dng",
+"size": [
+1024,
+766
+],
+"box": [
+105,
+571,
+189,
+616
+],
+"label": "dust"
+},
+{
+"scan": "raw0024.dng",
+"size": [
+1024,
+766
+],
+"box": [
+0,
+620,
+2,
+626
+],
+"label": "picture"
+},
+{
+"scan": "raw0024.dng",
+"size": [
+1024,
+766
+],
+"box": [
+0,
+665,
+2,
+672
+],
+"label": "picture"
+},
+{
+"scan": "raw0025.dng",
+"size": [
+1024,
+830
+],
+"box": [
+733,
+290,
+748,
+299
+],
+"label": "dust"
+},
+{
+"scan": "raw0025.dng",
+"size": [
+1024,
+830
+],
+"box": [
+523,
+318,
+532,
+332
+],
+"label": "picture"
+},
+{
+"scan": "raw0025.dng",
+"size": [
+1024,
+830
+],
+"box": [
+535,
+321,
+577,
+357
+],
+"label": "picture"
+},
+{
+"scan": "raw0025.dng",
+"size": [
+1024,
+830
+],
+"box": [
+456,
+351,
+465,
+358
+],
+"label": "picture"
+},
+{
+"scan": "raw0025.dng",
+"size": [
+1024,
+830
+],
+"box": [
+527,
+355,
+533,
+364
+],
+"label": "picture"
+},
+{
+"scan": "raw0025.dng",
+"size": [
+1024,
+830
+],
+"box": [
+552,
+360,
+561,
+376
+],
+"label": "picture"
+},
+{
+"scan": "raw0025.dng",
+"size": [
+1024,
+830
+],
+"box": [
+423,
+368,
+429,
+379
+],
+"label": "picture"
+},
+{
+"scan": "raw0025.dng",
+"size": [
+1024,
+830
+],
+"box": [
+461,
+368,
+467,
+376
+],
+"label": "picture"
+},
+{
+"scan": "raw0025.dng",
+"size": [
+1024,
+830
+],
+"box": [
+515,
+371,
+523,
+380
+],
+"label": "picture"
+},
+{
+"scan": "raw0025.dng",
+"size": [
+1024,
+830
+],
+"box": [
+430,
+380,
+437,
+387
+],
+"label": "picture"
+},
+{
+"scan": "raw0025.dng",
+"size": [
+1024,
+830
+],
+"box": [
+542,
+396,
+549,
+411
+],
+"label": "picture"
+},
+{
+"scan": "raw0025.dng",
+"size": [
+1024,
+830
+],
+"box": [
+538,
+415,
+545,
+429
+],
+"label": "picture"
+},
+{
+"scan": "raw0025.dng",
+"size": [
+1024,
+830
+],
+"box": [
+524,
+432,
+543,
+508
+],
+"label": "picture"
+},
+{
+"scan": "raw0025.dng",
+"size": [
+1024,
+830
+],
+"box": [
+360,
+563,
+369,
+573
+],
+"label": "picture"
+},
+{
+"scan": "raw0025.dng",
+"size": [
+1024,
+830
+],
+"box": [
+23,
+605,
+31,
+636
+],
+"label": "picture"
+},
+{
+"scan": "raw0025.dng",
+"size": [
+1024,
+830
+],
+"box": [
+501,
+752,
+540,
+772
+],
+"label": "dust"
+},
+{
+"scan": "raw0026.dng",
+"size": [
+1024,
+770
+],
+"box": [
+613,
+19,
+621,
+26
+],
+"label": "picture"
+},
+{
+"scan": "raw0026.dng",
+"size": [
+1024,
+770
+],
+"box": [
+624,
+19,
+637,
+30
+],
+"label": "picture"
+},
+{
+"scan": "raw0026.dng",
+"size": [
+1024,
+770
+],
+"box": [
+21,
+76,
+27,
+84
+],
+"label": "unsure"
+},
+{
+"scan": "raw0026.dng",
+"size": [
+1024,
+770
+],
+"box": [
+567,
+178,
+577,
+188
+],
+"label": "unsure"
+},
+{
+"scan": "raw0026.dng",
+"size": [
+1024,
+770
+],
+"box": [
+25,
+203,
+33,
+229
+],
+"label": "picture"
+},
+{
+"scan": "raw0026.dng",
+"size": [
+1024,
+770
+],
+"box": [
+23,
+233,
+33,
+259
+],
+"label": "picture"
+},
+{
+"scan": "raw0026.dng",
+"size": [
+1024,
+770
+],
+"box": [
+25,
+268,
+33,
+287
+],
+"label": "picture"
+},
+{
+"scan": "raw0026.dng",
+"size": [
+1024,
+770
+],
+"box": [
+31,
+346,
+36,
+354
+],
+"label": "picture"
+},
+{
+"scan": "raw0026.dng",
+"size": [
+1024,
+770
+],
+"box": [
+25,
+365,
+37,
+380
+],
+"label": "picture"
+},
+{
+"scan": "raw0026.dng",
+"size": [
+1024,
+770
+],
+"box": [
+28,
+394,
+37,
+402
+],
+"label": "picture"
+},
+{
+"scan": "raw0026.dng",
+"size": [
+1024,
+770
+],
+"box": [
+700,
+453,
+708,
+461
+],
+"label": "picture"
+},
+{
+"scan": "raw0026.dng",
+"size": [
+1024,
+770
+],
+"box": [
+710,
+467,
+719,
+475
+],
+"label": "picture"
+},
+{
+"scan": "raw0026.dng",
+"size": [
+1024,
+770
+],
+"box": [
+650,
+548,
+664,
+568
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+154,
+0,
+159,
+2
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+395,
+27,
+475,
+44
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+540,
+32,
+550,
+40
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+524,
+33,
+535,
+37
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+428,
+171,
+436,
+177
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+181,
+179,
+189,
+192
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+181,
+240,
+188,
+248
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+95,
+243,
+102,
+251
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+58,
+271,
+68,
+284
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+785,
+305,
+791,
+313
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+613,
+318,
+622,
+328
+],
+"label": "unsure"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+425,
+339,
+431,
+345
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+34,
+342,
+41,
+349
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+725,
+343,
+730,
+347
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+767,
+344,
+773,
+351
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+914,
+344,
+923,
+354
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+616,
+367,
+623,
+373
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+511,
+369,
+519,
+375
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+504,
+385,
+513,
+398
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+543,
+402,
+555,
+414
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+529,
+434,
+540,
+442
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+54,
+435,
+69,
+444
+],
+"label": "unsure"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+600,
+436,
+608,
+443
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+954,
+448,
+965,
+458
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+533,
+457,
+548,
+465
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+46,
+463,
+69,
+476
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+512,
+485,
+526,
+502
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+531,
+496,
+539,
+502
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+105,
+502,
+119,
+520
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+104,
+538,
+114,
+550
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+467,
+545,
+476,
+554
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+94,
+557,
+102,
+565
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+947,
+560,
+957,
+572
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+481,
+567,
+495,
+574
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+516,
+567,
+526,
+575
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+67,
+593,
+77,
+604
+],
+"label": "picture"
+},
+{
+"scan": "raw0027.dng",
+"size": [
+1024,
+784
+],
+"box": [
+168,
+727,
+182,
+738
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+364,
+2,
+370,
+9
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+390,
+3,
+398,
+9
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+300,
+12,
+306,
+18
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+367,
+18,
+375,
+24
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+471,
+22,
+477,
+29
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+445,
+27,
+452,
+32
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+515,
+28,
+522,
+34
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+458,
+34,
+465,
+40
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+636,
+36,
+644,
+45
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+227,
+43,
+239,
+60
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+263,
+43,
+269,
+51
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+531,
+52,
+537,
+57
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+558,
+56,
+566,
+64
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+587,
+58,
+594,
+65
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+356,
+60,
+364,
+69
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+649,
+60,
+656,
+67
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+547,
+61,
+553,
+69
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+220,
+62,
+232,
+75
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+452,
+72,
+465,
+80
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+533,
+73,
+547,
+80
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+412,
+84,
+419,
+92
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+508,
+84,
+518,
+90
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+483,
+85,
+490,
+92
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+562,
+85,
+571,
+92
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+549,
+87,
+556,
+92
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+375,
+89,
+379,
+93
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+348,
+95,
+356,
+104
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+478,
+97,
+488,
+104
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+273,
+99,
+290,
+110
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+464,
+111,
+470,
+118
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+340,
+113,
+346,
+120
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+360,
+116,
+374,
+130
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+204,
+118,
+214,
+131
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+316,
+122,
+321,
+128
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+459,
+122,
+464,
+128
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+597,
+125,
+605,
+131
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+474,
+137,
+481,
+144
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+359,
+138,
+366,
+149
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+503,
+141,
+511,
+148
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+472,
+146,
+478,
+154
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+337,
+148,
+344,
+155
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+395,
+150,
+405,
+159
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+438,
+151,
+451,
+158
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+495,
+153,
+502,
+159
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+499,
+179,
+507,
+186
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+570,
+188,
+575,
+192
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+435,
+190,
+442,
+196
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+488,
+190,
+498,
+201
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+605,
+202,
+612,
+209
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+496,
+216,
+505,
+225
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+447,
+217,
+454,
+224
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+407,
+225,
+425,
+240
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+572,
+225,
+580,
+231
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+295,
+226,
+301,
+232
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+456,
+230,
+465,
+240
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+605,
+232,
+612,
+242
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+577,
+243,
+587,
+254
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+339,
+244,
+349,
+250
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+659,
+245,
+665,
+252
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+467,
+249,
+477,
+256
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+466,
+258,
+473,
+269
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+284,
+260,
+299,
+273
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+311,
+261,
+318,
+266
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+517,
+261,
+524,
+268
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+326,
+262,
+331,
+267
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+455,
+267,
+464,
+278
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+447,
+279,
+455,
+287
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+467,
+286,
+476,
+297
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+298,
+291,
+306,
+298
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+201,
+361,
+209,
+371
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+380,
+366,
+390,
+376
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+447,
+381,
+456,
+391
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+465,
+382,
+469,
+389
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+381,
+437,
+388,
+442
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+336,
+442,
+352,
+453
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+204,
+448,
+213,
+456
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+390,
+449,
+401,
+456
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+376,
+454,
+382,
+461
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+350,
+455,
+360,
+462
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+246,
+492,
+251,
+500
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+325,
+516,
+341,
+529
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+316,
+520,
+323,
+526
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+346,
+521,
+352,
+528
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+224,
+559,
+241,
+569
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+347,
+564,
+355,
+575
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+220,
+595,
+227,
+601
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+244,
+598,
+252,
+608
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+367,
+611,
+379,
+621
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+259,
+620,
+266,
+629
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+243,
+627,
+252,
+635
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+230,
+811,
+237,
+817
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+299,
+823,
+307,
+831
+],
+"label": "picture"
+},
+{
+"scan": "raw0001.tif",
+"size": [
+688,
+1024
+],
+"box": [
+253,
+1022,
+260,
+1024
+],
+"label": "picture"
+},
+{
+"scan": "raw0002.tif",
+"size": [
+688,
+1024
+],
+"box": [
+198,
+446,
+216,
+464
+],
+"label": "picture"
+},
+{
+"scan": "raw0002.tif",
+"size": [
+688,
+1024
+],
+"box": [
+304,
+478,
+312,
+485
+],
+"label": "picture"
+},
+{
+"scan": "raw0002.tif",
+"size": [
+688,
+1024
+],
+"box": [
+109,
+612,
+165,
+733
+],
+"label": "picture"
+},
+{
+"scan": "raw0002.tif",
+"size": [
+688,
+1024
+],
+"box": [
+154,
+647,
+169,
+653
+],
+"label": "picture"
+},
+{
+"scan": "raw0002.tif",
+"size": [
+688,
+1024
+],
+"box": [
+190,
+693,
+197,
+712
+],
+"label": "picture"
+},
+{
+"scan": "raw0002.tif",
+"size": [
+688,
+1024
+],
+"box": [
+188,
+713,
+196,
+726
+],
+"label": "picture"
+},
+{
+"scan": "raw0002.tif",
+"size": [
+688,
+1024
+],
+"box": [
+257,
+769,
+267,
+778
+],
+"label": "picture"
+},
+{
+"scan": "raw0002.tif",
+"size": [
+688,
+1024
+],
+"box": [
+292,
+988,
+299,
+993
+],
+"label": "picture"
+},
+{
+"scan": "raw0002.tif",
+"size": [
+688,
+1024
+],
+"box": [
+259,
+993,
+268,
+1001
+],
+"label": "picture"
+},
+{
+"scan": "raw0002.tif",
+"size": [
+688,
+1024
+],
+"box": [
+570,
+995,
+577,
+1003
+],
+"label": "unsure"
+},
+{
+"scan": "raw0002.tif",
+"size": [
+688,
+1024
+],
+"box": [
+607,
+996,
+617,
+1003
+],
+"label": "picture"
+},
+{
+"scan": "raw0002.tif",
+"size": [
+688,
+1024
+],
+"box": [
+574,
+1021,
+584,
+1024
+],
+"label": "picture"
+},
+{
+"scan": "raw0002.tif",
+"size": [
+688,
+1024
+],
+"box": [
+595,
+1022,
+602,
+1024
+],
+"label": "picture"
+},
+{
+"scan": "raw0002.tif",
+"size": [
+688,
+1024
+],
+"box": [
+621,
+1022,
+628,
+1024
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+489,
+24,
+497,
+29
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+412,
+26,
+419,
+33
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+393,
+41,
+400,
+49
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+492,
+54,
+504,
+61
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+392,
+55,
+401,
+62
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+373,
+87,
+380,
+96
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+77,
+103,
+85,
+108
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+236,
+109,
+249,
+120
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+250,
+119,
+271,
+141
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+541,
+119,
+545,
+125
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+52,
+122,
+57,
+128
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+547,
+131,
+553,
+137
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+527,
+228,
+535,
+235
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+241,
+233,
+250,
+240
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+381,
+259,
+388,
+265
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+219,
+263,
+228,
+270
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+451,
+289,
+460,
+294
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+502,
+310,
+510,
+320
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+505,
+326,
+512,
+332
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+386,
+333,
+393,
+340
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+480,
+340,
+488,
+348
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+505,
+344,
+512,
+348
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+500,
+355,
+510,
+360
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+594,
+446,
+603,
+452
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+538,
+452,
+546,
+459
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+479,
+453,
+486,
+458
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+622,
+458,
+631,
+465
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+610,
+469,
+619,
+477
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+438,
+475,
+447,
+480
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+604,
+486,
+614,
+495
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+415,
+491,
+422,
+500
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+474,
+492,
+481,
+498
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+555,
+507,
+563,
+517
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+477,
+515,
+486,
+525
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+631,
+518,
+643,
+526
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+371,
+522,
+383,
+541
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+543,
+526,
+551,
+533
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+655,
+526,
+662,
+532
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+591,
+527,
+600,
+537
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+407,
+531,
+417,
+539
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+567,
+544,
+577,
+553
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+401,
+567,
+411,
+573
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+470,
+567,
+479,
+574
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+431,
+570,
+444,
+578
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+129,
+571,
+142,
+577
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+313,
+575,
+320,
+581
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+196,
+580,
+205,
+587
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+429,
+631,
+435,
+636
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+431,
+658,
+439,
+666
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+415,
+674,
+422,
+679
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+287,
+680,
+298,
+694
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+366,
+690,
+376,
+698
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+577,
+695,
+584,
+701
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+288,
+697,
+297,
+704
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+562,
+703,
+574,
+712
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+479,
+707,
+486,
+717
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+550,
+711,
+557,
+717
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+556,
+723,
+568,
+730
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+335,
+727,
+342,
+734
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+347,
+733,
+356,
+742
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+425,
+747,
+432,
+754
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+290,
+767,
+297,
+773
+],
+"label": "picture"
+},
+{
+"scan": "raw0003.tif",
+"size": [
+688,
+1024
+],
+"box": [
+415,
+795,
+424,
+802
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.tif",
+"size": [
+688,
+1024
+],
+"box": [
+363,
+449,
+371,
+454
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.tif",
+"size": [
+688,
+1024
+],
+"box": [
+319,
+509,
+326,
+517
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.tif",
+"size": [
+688,
+1024
+],
+"box": [
+432,
+521,
+462,
+554
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.tif",
+"size": [
+688,
+1024
+],
+"box": [
+386,
+523,
+405,
+541
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.tif",
+"size": [
+688,
+1024
+],
+"box": [
+415,
+531,
+422,
+537
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.tif",
+"size": [
+688,
+1024
+],
+"box": [
+412,
+545,
+418,
+550
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.tif",
+"size": [
+688,
+1024
+],
+"box": [
+390,
+547,
+395,
+555
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.tif",
+"size": [
+688,
+1024
+],
+"box": [
+135,
+561,
+141,
+571
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.tif",
+"size": [
+688,
+1024
+],
+"box": [
+317,
+604,
+325,
+613
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.tif",
+"size": [
+688,
+1024
+],
+"box": [
+391,
+641,
+405,
+650
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.tif",
+"size": [
+688,
+1024
+],
+"box": [
+448,
+641,
+458,
+649
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.tif",
+"size": [
+688,
+1024
+],
+"box": [
+359,
+758,
+366,
+769
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.tif",
+"size": [
+688,
+1024
+],
+"box": [
+415,
+804,
+425,
+842
+],
+"label": "picture"
+},
+{
+"scan": "raw0004.tif",
+"size": [
+688,
+1024
+],
+"box": [
+345,
+837,
+352,
+844
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.tif",
+"size": [
+688,
+1024
+],
+"box": [
+434,
+187,
+446,
+199
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.tif",
+"size": [
+688,
+1024
+],
+"box": [
+175,
+348,
+185,
+357
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.tif",
+"size": [
+688,
+1024
+],
+"box": [
+510,
+357,
+518,
+366
+],
+"label": "unsure"
+},
+{
+"scan": "raw0005.tif",
+"size": [
+688,
+1024
+],
+"box": [
+528,
+389,
+535,
+393
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.tif",
+"size": [
+688,
+1024
+],
+"box": [
+250,
+421,
+301,
+493
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.tif",
+"size": [
+688,
+1024
+],
+"box": [
+505,
+443,
+519,
+450
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.tif",
+"size": [
+688,
+1024
+],
+"box": [
+475,
+464,
+481,
+471
+],
+"label": "unsure"
+},
+{
+"scan": "raw0005.tif",
+"size": [
+688,
+1024
+],
+"box": [
+84,
+493,
+99,
+507
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.tif",
+"size": [
+688,
+1024
+],
+"box": [
+269,
+498,
+284,
+510
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.tif",
+"size": [
+688,
+1024
+],
+"box": [
+21,
+680,
+34,
+688
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.tif",
+"size": [
+688,
+1024
+],
+"box": [
+44,
+751,
+56,
+762
+],
+"label": "picture"
+},
+{
+"scan": "raw0005.tif",
+"size": [
+688,
+1024
+],
+"box": [
+225,
+819,
+233,
+825
+],
+"label": "dust"
+},
+{
+"scan": "raw0005.tif",
+"size": [
+688,
+1024
+],
+"box": [
+46,
+823,
+53,
+831
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.tif",
+"size": [
+688,
+1024
+],
+"box": [
+468,
+494,
+473,
+502
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.tif",
+"size": [
+688,
+1024
+],
+"box": [
+568,
+642,
+579,
+663
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.tif",
+"size": [
+688,
+1024
+],
+"box": [
+253,
+667,
+260,
+677
+],
+"label": "picture"
+},
+{
+"scan": "raw0006.tif",
+"size": [
+688,
+1024
+],
+"box": [
+457,
+683,
+469,
+692
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+425,
+23,
+433,
+31
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+547,
+25,
+554,
+31
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+132,
+28,
+145,
+46
+],
+"label": "dust"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+439,
+32,
+453,
+45
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+204,
+43,
+218,
+51
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+237,
+52,
+246,
+66
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+73,
+64,
+79,
+69
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+237,
+71,
+244,
+79
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+245,
+71,
+257,
+80
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+98,
+87,
+106,
+95
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+111,
+114,
+121,
+122
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+241,
+115,
+289,
+129
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+211,
+118,
+225,
+130
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+104,
+151,
+113,
+161
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+248,
+157,
+255,
+164
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+195,
+164,
+205,
+173
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+209,
+205,
+216,
+213
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+140,
+219,
+145,
+229
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+126,
+232,
+134,
+242
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+98,
+233,
+108,
+243
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+219,
+241,
+227,
+257
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+29,
+248,
+44,
+257
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+238,
+255,
+271,
+273
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+561,
+288,
+610,
+299
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+27,
+300,
+38,
+309
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+553,
+314,
+560,
+321
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+353,
+364,
+366,
+378
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+124,
+367,
+137,
+379
+],
+"label": "dust"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+251,
+383,
+258,
+389
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+149,
+391,
+157,
+397
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+205,
+417,
+215,
+426
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+71,
+475,
+79,
+483
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+85,
+490,
+93,
+499
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+90,
+589,
+99,
+595
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+519,
+707,
+526,
+714
+],
+"label": "dust"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+80,
+716,
+89,
+727
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+77,
+740,
+83,
+748
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+72,
+760,
+82,
+772
+],
+"label": "picture"
+},
+{
+"scan": "raw0007.tif",
+"size": [
+688,
+1024
+],
+"box": [
+88,
+763,
+94,
+769
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.tif",
+"size": [
+688,
+1024
+],
+"box": [
+229,
+142,
+252,
+153
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.tif",
+"size": [
+688,
+1024
+],
+"box": [
+100,
+250,
+107,
+263
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.tif",
+"size": [
+688,
+1024
+],
+"box": [
+213,
+312,
+222,
+324
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.tif",
+"size": [
+688,
+1024
+],
+"box": [
+202,
+315,
+209,
+322
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.tif",
+"size": [
+688,
+1024
+],
+"box": [
+458,
+378,
+465,
+388
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.tif",
+"size": [
+688,
+1024
+],
+"box": [
+529,
+403,
+537,
+416
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.tif",
+"size": [
+688,
+1024
+],
+"box": [
+370,
+546,
+376,
+552
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.tif",
+"size": [
+688,
+1024
+],
+"box": [
+282,
+566,
+292,
+578
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.tif",
+"size": [
+688,
+1024
+],
+"box": [
+511,
+717,
+525,
+746
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.tif",
+"size": [
+688,
+1024
+],
+"box": [
+485,
+739,
+493,
+750
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.tif",
+"size": [
+688,
+1024
+],
+"box": [
+328,
+742,
+456,
+752
+],
+"label": "picture"
+},
+{
+"scan": "raw0008.tif",
+"size": [
+688,
+1024
+],
+"box": [
+483,
+759,
+491,
+765
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+255,
+286,
+267,
+292
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+243,
+287,
+252,
+293
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+297,
+290,
+303,
+300
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+358,
+291,
+367,
+300
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+417,
+291,
+423,
+296
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+301,
+303,
+314,
+314
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+120,
+330,
+133,
+354
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+326,
+364,
+340,
+373
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+307,
+371,
+316,
+378
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+243,
+417,
+257,
+424
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+357,
+421,
+407,
+443
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+124,
+442,
+133,
+455
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+175,
+462,
+194,
+476
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+402,
+463,
+418,
+470
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+74,
+515,
+88,
+524
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+63,
+561,
+68,
+569
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+159,
+633,
+166,
+641
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+513,
+643,
+525,
+652
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+30,
+691,
+42,
+699
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+45,
+692,
+52,
+698
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+506,
+726,
+513,
+733
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+551,
+791,
+561,
+800
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+107,
+829,
+113,
+836
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+82,
+853,
+101,
+870
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+40,
+906,
+50,
+915
+],
+"label": "picture"
+},
+{
+"scan": "raw0013.tif",
+"size": [
+688,
+1024
+],
+"box": [
+75,
+920,
+82,
+927
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.tif",
+"size": [
+688,
+1024
+],
+"box": [
+348,
+371,
+357,
+383
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.tif",
+"size": [
+688,
+1024
+],
+"box": [
+388,
+410,
+395,
+418
+],
+"label": "unsure"
+},
+{
+"scan": "raw0014.tif",
+"size": [
+688,
+1024
+],
+"box": [
+296,
+495,
+302,
+516
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.tif",
+"size": [
+688,
+1024
+],
+"box": [
+337,
+523,
+344,
+536
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.tif",
+"size": [
+688,
+1024
+],
+"box": [
+371,
+540,
+382,
+550
+],
+"label": "picture"
+},
+{
+"scan": "raw0014.tif",
+"size": [
+688,
+1024
+],
+"box": [
+334,
+559,
+345,
+570
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.tif",
+"size": [
+688,
+1024
+],
+"box": [
+319,
+29,
+323,
+33
+],
+"label": "dust"
+},
+{
+"scan": "raw0015.tif",
+"size": [
+688,
+1024
+],
+"box": [
+235,
+86,
+241,
+95
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.tif",
+"size": [
+688,
+1024
+],
+"box": [
+255,
+168,
+260,
+176
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.tif",
+"size": [
+688,
+1024
+],
+"box": [
+332,
+211,
+340,
+220
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.tif",
+"size": [
+688,
+1024
+],
+"box": [
+297,
+225,
+303,
+233
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.tif",
+"size": [
+688,
+1024
+],
+"box": [
+272,
+239,
+277,
+250
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.tif",
+"size": [
+688,
+1024
+],
+"box": [
+627,
+303,
+635,
+308
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.tif",
+"size": [
+688,
+1024
+],
+"box": [
+627,
+313,
+648,
+320
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.tif",
+"size": [
+688,
+1024
+],
+"box": [
+624,
+410,
+631,
+418
+],
+"label": "picture"
+},
+{
+"scan": "raw0015.tif",
+"size": [
+688,
+1024
+],
+"box": [
+190,
+677,
+200,
+687
+],
+"label": "picture"
+},
+{
+"scan": "raw0016.tif",
+"size": [
+688,
+1024
+],
+"box": [
+260,
+709,
+267,
+720
+],
+"label": "dust"
+},
+{
+"scan": "raw0017.tif",
+"size": [
+688,
+1024
+],
+"box": [
+383,
+313,
+387,
+318
+],
+"label": "picture"
+},
+{
+"scan": "raw0017.tif",
+"size": [
+688,
+1024
+],
+"box": [
+351,
+339,
+360,
+348
+],
+"label": "picture"
+},
+{
+"scan": "raw0017.tif",
+"size": [
+688,
+1024
+],
+"box": [
+351,
+356,
+359,
+364
+],
+"label": "picture"
+},
+{
+"scan": "raw0017.tif",
+"size": [
+688,
+1024
+],
+"box": [
+199,
+371,
+205,
+385
+],
+"label": "picture"
+},
+{
+"scan": "raw0017.tif",
+"size": [
+688,
+1024
+],
+"box": [
+420,
+722,
+427,
+729
+],
+"label": "dust"
+},
+{
+"scan": "raw0017.tif",
+"size": [
+688,
+1024
+],
+"box": [
+299,
+762,
+309,
+774
+],
+"label": "picture"
+},
+{
+"scan": "raw0017.tif",
+"size": [
+688,
+1024
+],
+"box": [
+20,
+783,
+29,
+794
+],
+"label": "dust"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+87,
+250,
+92,
+257
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+88,
+265,
+94,
+296
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+179,
+460,
+184,
+468
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+303,
+470,
+309,
+481
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+179,
+471,
+185,
+479
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+225,
+576,
+231,
+587
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+242,
+576,
+252,
+587
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+180,
+604,
+187,
+620
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+188,
+625,
+194,
+632
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+537,
+863,
+543,
+870
+],
+"label": "dust"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+620,
+870,
+627,
+876
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+489,
+885,
+496,
+893
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+586,
+896,
+592,
+901
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+598,
+902,
+605,
+908
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+519,
+903,
+527,
+910
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+573,
+907,
+590,
+918
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+636,
+907,
+642,
+914
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+507,
+911,
+513,
+917
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+551,
+913,
+559,
+921
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+628,
+918,
+633,
+925
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+271,
+923,
+280,
+934
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+396,
+939,
+405,
+945
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+362,
+947,
+370,
+954
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+201,
+949,
+208,
+956
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+378,
+956,
+385,
+962
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+459,
+968,
+468,
+980
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+540,
+979,
+549,
+986
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+583,
+980,
+594,
+989
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+267,
+981,
+275,
+990
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+394,
+993,
+402,
+1003
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+492,
+1009,
+500,
+1017
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+649,
+1013,
+655,
+1019
+],
+"label": "picture"
+},
+{
+"scan": "raw0019.tif",
+"size": [
+688,
+1024
+],
+"box": [
+608,
+1020,
+615,
+1024
+],
+"label": "picture"
+}
+]
+}

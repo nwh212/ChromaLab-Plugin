@@ -1,6 +1,7 @@
 """Training pairs -> linear negative (.f32 for the detector) + infrared ground truth.
 
-prep.py TRAINING_FOLDER WORK_FOLDER [raw0001 ...]   (default: every *-neg.tif with an -ir.tif)
+prep.py TRAINING_FOLDER WORK_FOLDER [raw0001 ...]   (default: every *-neg.tif with an -ir.tif,
+and every VueScan raw "64 bit RGBI" TIFF: 4 samples, read at full size and precision)
 
 Ground truth: dust blocks infrared; the film's dyes mostly don't, except dense cyan dye a little.
 So: infrared density minus what the negative's own (red) density explains (a robust per-frame
@@ -13,17 +14,53 @@ from PIL import Image
 import glob, os
 SRC, here = sys.argv[1], sys.argv[2]
 os.makedirs(here, exist_ok=True)
-frames = sys.argv[3:] or sorted(os.path.basename(f)[:-8] for f in glob.glob(f"{SRC}/*-neg.tif") if os.path.exists(f[:-8] + "-ir.tif"))
+import struct
+
+def rgbi_layout(path):
+    """(width, height, offset) of an uncompressed, contiguous 16-bit RGBI TIFF, else None."""
+    with open(path, "rb") as f:
+        head = f.read(8)
+        if head[:2] != b"II":
+            return None
+        f.seek(struct.unpack("<I", head[4:8])[0])
+        tags = {}
+        for _ in range(struct.unpack("<H", f.read(2))[0]):
+            tag, typ, cnt, val = struct.unpack("<HHI4s", f.read(12))
+            if typ in (3, 4) and cnt == 1:
+                tags[tag] = struct.unpack("<H" if typ == 3 else "<I", val[: 2 if typ == 3 else 4])[0]
+            elif tag == 273:
+                where = f.tell()
+                f.seek(struct.unpack("<I", val)[0]); offs = struct.unpack(f"<{min(cnt, 2)}{'H' if typ == 3 else 'I'}", f.read((2 if typ == 3 else 4) * min(cnt, 2)))
+                f.seek(where); tags[273] = offs
+    w, h = tags.get(256), tags.get(257)
+    if tags.get(277) != 4 or tags.get(259, 1) != 1 or not w or not h:
+        return None
+    offs = tags[273] if isinstance(tags.get(273), tuple) else (tags.get(273),)
+    if len(offs) > 1 and offs[1] - offs[0] != w * 8 * tags.get(278, 1):
+        return None  # strips not one after another
+    return w, h, offs[0]
+
+pairs = sorted(os.path.basename(f)[:-8] for f in glob.glob(f"{SRC}/*-neg.tif") if os.path.exists(f[:-8] + "-ir.tif"))
+raws = sorted(os.path.basename(f)[:-4] for f in glob.glob(f"{SRC}/*.tif") if not f.endswith(("-neg.tif", "-ir.tif")) and rgbi_layout(f))
+frames = sys.argv[3:] or pairs + raws
 
 def read(path, ch):
     out = subprocess.run(["magick", path, "-depth", "8", ("rgb:-" if ch == 3 else "gray:-")], capture_output=True, check=True).stdout
     return np.frombuffer(out, np.uint8)
 
 for name in frames:
-    size = subprocess.run(["magick", "identify", "-format", "%w %h", f"{SRC}/{name}-neg.tif"], capture_output=True, text=True).stdout.split()
-    w, h = int(size[0]), int(size[1])
-    neg = (read(f"{SRC}/{name}-neg.tif", 3).reshape(h, w, 3).astype(np.float32) / 255) ** 2.2
-    ir = read(f"{SRC}/{name}-ir.tif", 1).reshape(h, w).astype(np.float32) / 255
+    layout = os.path.exists(f"{SRC}/{name}.tif") and rgbi_layout(f"{SRC}/{name}.tif")
+    if layout:
+        # VueScan raw: linear 16-bit, the infrared as the fourth sample
+        w, h, off = layout
+        a = np.memmap(f"{SRC}/{name}.tif", dtype="<u2", mode="r", offset=off, shape=(h, w, 4))
+        neg = a[..., :3].astype(np.float32) / 65535
+        ir = a[..., 3].astype(np.float32) / 65535
+    else:
+        size = subprocess.run(["magick", "identify", "-format", "%w %h", f"{SRC}/{name}-neg.tif"], capture_output=True, text=True).stdout.split()
+        w, h = int(size[0]), int(size[1])
+        neg = (read(f"{SRC}/{name}-neg.tif", 3).reshape(h, w, 3).astype(np.float32) / 255) ** 2.2
+        ir = read(f"{SRC}/{name}-ir.tif", 1).reshape(h, w).astype(np.float32) / 255
     neg.astype("<f4").tofile(f"{here}/{name}.f32")
 
     # valid film: not the holder (infrared and visible dark), not empty holder (visible clipped)

@@ -9,11 +9,12 @@
 
 pub mod bands;
 pub mod clean;
+pub mod large;
 mod model;
 pub mod params;
 #[cfg(test)]
 mod tests;
 
-pub use clean::{Spots, clean, find, ring_radius};
+pub use clean::{Spots, clean, find, ring_radius, warm_up};
 pub use model::NF;
-pub use params::{IMAGE_OPTIONS, MAX_SIZE, MIN_SIZE, OVERLAP, Params, Polarity};
+pub use params::{BAND_OVERLAP, IMAGE_OPTIONS, MAX_SIZE, MIN_SIZE, OVERLAP, Params, Polarity, SCALE_OPTIONS, SCAN_OPTIONS};

@@ -1,5 +1,5 @@
 use crate::bands::clean_banded;
-use crate::{OVERLAP, Params, Polarity, clean, find};
+use crate::{OVERLAP, Params, Polarity, SCALE_OPTIONS, clean, find, warm_up};
 
 /// A grainy flat negative-like frame (linear values around `level`), deterministic.
 fn grainy(w: usize, h: usize, level: f32, grain_stops: f32) -> Vec<f32> {
@@ -210,4 +210,298 @@ fn fills_match_their_surroundings_in_level_and_grain() {
     let (mean, grain) = stops(&clean_ref, &|_| true);
     assert!((fill_mean - mean).abs() < 0.02, "fills are {} stops off their surroundings", fill_mean - mean);
     assert!((0.7..1.3).contains(&(fill_grain / grain)), "fills have {} of the grain around them", fill_grain / grain);
+}
+
+#[test]
+fn a_speck_is_found_where_a_channel_is_clipped() {
+    // a film base at the scanner's white in red: a faint speck shows in green and blue only
+    let (w, h) = (160, 120);
+    let mut px = grainy(w, h, 0.4, 0.1);
+    dot(&mut px, w, 80, 60, 3.0, 0.5); // blocks half the light
+    for p in px.as_chunks_mut::<3>().0 {
+        p[0] = (p[0] * 4.0).min(1.0); // red: clipped everywhere, the speck included
+    }
+    let spots = find(&px, w, h, (0, 0), &Params::default());
+    assert_eq!(spots.mask[60 * w + 80], 1, "the speck's centre is masked");
+    assert!(spots.mask.iter().filter(|&&m| m != 0).count() < 120, "only the speck");
+    clean(&mut px, w, h, (0, 0), &Params::default());
+    let red = px[(60 * w + 80) * 3];
+    assert!((red - 1.0).abs() < 0.005, "red stays at the clip ({red})");
+}
+
+#[test]
+fn a_raw_tiff_read_as_srgb_is_cleaned_on_its_own_values() {
+    // the host decoded a linear scan with the sRGB curve: undone, the speck is found and filled as
+    // on the scan itself, and every other pixel comes back exactly as given
+    use crate::clean::{srgb_decode, srgb_encode};
+    let (w, h) = (160, 120);
+    let mut scan = grainy(w, h, 0.4, 0.1);
+    dot(&mut scan, w, 80, 60, 3.0, 0.5);
+    let given: Vec<f32> = scan.iter().map(|&v| srgb_decode(v)).collect();
+    let mut px = given.clone();
+    let raw = Params { untagged: true, ..Params::default() };
+    assert!(clean(&mut px, w, h, (0, 0), &raw) > 0, "the speck is found");
+    let mut direct = scan.clone();
+    clean(&mut direct, w, h, (0, 0), &Params::default());
+    let i = (60 * w + 80) * 3;
+    assert!((srgb_encode(px[i]) - direct[i]).abs() < 1e-3, "filled as on the scan ({} vs {})", srgb_encode(px[i]), direct[i]);
+    let changed = px.iter().zip(&given).filter(|(a, b)| a != b).count();
+    let masked = direct.iter().zip(&scan).filter(|(a, b)| a != b).count();
+    assert_eq!(changed, masked, "only the filled pixels change");
+    // the fast curves are the sRGB standard's, closely, and undo each other
+    for v in [0.0f32, 0.002, 0.01, 0.05, 0.2, 0.7, 1.0] {
+        let exact = if v <= 0.003_130_8 { 12.92 * v } else { 1.055 * v.powf(1.0 / 2.4) - 0.055 };
+        assert!((srgb_encode(v) - exact).abs() < 1e-4, "encode {v}: {} vs {exact}", srgb_encode(v));
+        assert!((srgb_encode(srgb_decode(v)) - v).abs() < 2e-4, "round trip {v}");
+    }
+}
+
+#[test]
+fn noise_near_black_is_not_dust() {
+    // dense film: blue a few counts above black, its noise most of its value
+    let (w, h) = (160, 120);
+    let mut px = grainy(w, h, 0.2, 0.05);
+    let noisy = grainy(w, h, 0.001, 1.0);
+    for (p, n) in px.as_chunks_mut::<3>().0.iter_mut().zip(noisy.as_chunks::<3>().0) {
+        p[2] = n[2];
+    }
+    assert_eq!(clean(&mut px, w, h, (0, 0), &Params::default()), 0, "nothing masked");
+}
+
+#[test]
+fn half_scale_finds_a_wide_hair_in_whole_cells() {
+    // a soft diagonal hair 8 px wide: too wide for the hair detector at the scan's own scale
+    let (w, h) = (240, 200);
+    let mut px = grainy(w, h, 0.4, 0.1);
+    for y in 20..180 {
+        for x in 0..w {
+            let across = (x as f32 - 40.0 - 0.9 * (y as f32 - 20.0)).abs() * 0.743;
+            if across < 4.0 {
+                for c in 0..3 {
+                    px[(y * w + x) * 3 + c] *= 0.6;
+                }
+            }
+        }
+    }
+    let half = Params::from_json(&serde_json::json!({"scale": SCALE_OPTIONS[1]}));
+    assert!(half.half && !Params::default().half);
+    let on_hair = |m: &[u8]| (60..140).filter(|&y| m[y * w + 40 + (0.9 * (y as f32 - 20.0)) as usize] != 0).count();
+    // (an odd origin: the cells are fixed in the frame, not in the band)
+    let spots = find(&px, w, h, (3, 5), &half);
+    let (at_half, at_full) = (on_hair(&spots.mask), on_hair(&find(&px, w, h, (3, 5), &Params::default()).mask));
+    assert!(at_half >= 30 && at_half > 2 * at_full, "much of the hair at half scale ({at_half} of 80 rows), little at full ({at_full})");
+    for y in (1..h - 1).step_by(2) {
+        for x in (1..w - 1).step_by(2) {
+            let cell = [y * w + x, y * w + x + 1, (y + 1) * w + x, (y + 1) * w + x + 1].map(|i| spots.mask[i]);
+            assert!(cell.iter().all(|&m| m == cell[0]), "a cell's four pixels share its verdict");
+        }
+    }
+    let n = clean(&mut px, w, h, (3, 5), &half);
+    assert!(n > 0 && px.iter().all(|v| v.is_finite()));
+}
+
+#[test]
+fn the_warm_up_runs() {
+    // (its job is to call everything once; here it must just not fail)
+    warm_up();
+}
+
+/// A plane of grain (σ about `sigma`) for the hair-following tests, and its three channels.
+fn grain_plane(w: usize, h: usize, sigma: f32) -> Vec<f32> {
+    let px = grainy(w, h, 1.0, sigma * 3.46);
+    px.chunks(3).map(|c| -c[0].log2()).collect()
+}
+
+fn grey(g: &[f32]) -> Vec<f32> {
+    g.iter().flat_map(|&v| [v, v, v]).collect()
+}
+
+#[test]
+fn a_found_hair_is_followed_into_its_soft_end() {
+    // a sharp hair, found (marked 3 px wide, as the detector marks it), that goes on soft and 7 px
+    // wide (where it lifts off the film)
+    let (w, h) = (200, 100);
+    let mut g = grain_plane(w, h, 0.02);
+    let mut mask = vec![0u8; w * h];
+    for x in 20..100 {
+        g[40 * w + x] += 1.0;
+        for y in 39..=41 {
+            mask[y * w + x] = 1;
+        }
+    }
+    for y in 37..=43 {
+        for x in 100..170 {
+            g[y * w + x] += 0.25;
+        }
+    }
+    let seen = grey(&g);
+    crate::clean::extend_marks(&mut mask, &g, &seen, None, w, h);
+    let soft = (37..=43).flat_map(|y| (100..170).map(move |x| (x, y))).filter(|&(x, y)| mask[y * w + x] != 0).count();
+    assert!(soft as f32 > 0.8 * (7 * 70) as f32, "the soft end is followed ({soft} of 490)");
+    assert!((0..w).all(|x| mask[80 * w + x] == 0), "the grain is left alone");
+}
+
+#[test]
+fn an_edge_a_hair_touches_is_not_followed() {
+    // a hair that ends on the edge of a dense part of the picture: an edge is denser on one side only
+    let (w, h) = (200, 120);
+    let mut g = grain_plane(w, h, 0.02);
+    for y in 60..h {
+        for x in 0..w {
+            g[y * w + x] += 0.5;
+        }
+    }
+    let mut mask = vec![0u8; w * h];
+    for y in 20..62 {
+        g[y * w + 100] += 1.0;
+        for x in 99..=101 {
+            mask[y * w + x] = 1;
+        }
+    }
+    let seen = grey(&g);
+    crate::clean::extend_marks(&mut mask, &g, &seen, None, w, h);
+    let along = (55..70).flat_map(|y| (0..w).filter(|x| x.abs_diff(100) > 10).map(move |x| (x, y))).filter(|&(x, y)| mask[y * w + x] != 0).count();
+    assert!(along < 20, "the edge isn't run along ({along} pixels)");
+}
+
+#[test]
+fn a_coloured_line_is_not_followed() {
+    // the same soft end, denser in red only: part of the picture, not dust (dust is grey)
+    let (w, h) = (200, 100);
+    let mut g = grain_plane(w, h, 0.02);
+    let mut mask = vec![0u8; w * h];
+    for x in 20..100 {
+        g[40 * w + x] += 1.0;
+        for y in 39..=41 {
+            mask[y * w + x] = 1;
+        }
+    }
+    let mut seen = grey(&g);
+    for y in 37..=43 {
+        for x in 100..170 {
+            g[y * w + x] += 0.25;
+            seen[(y * w + x) * 3] += 0.75;
+        }
+    }
+    crate::clean::extend_marks(&mut mask, &g, &seen, None, w, h);
+    let soft = (37..=43).flat_map(|y| (100..170).map(move |x| (x, y))).filter(|&(x, y)| mask[y * w + x] != 0).count();
+    assert!(soft < 40, "a red line isn't followed ({soft} pixels)");
+}
+
+/// `px` (`w x h`) area-averaged to a long edge of 1024 px, as the host hands it to *Measure*.
+fn measured(px: &[f32], w: usize, h: usize) -> (Vec<f32>, usize, usize) {
+    let k = 1024.0 / w.max(h) as f64;
+    let (sw, sh) = (((w as f64 * k).round() as usize).max(1), ((h as f64 * k).round() as usize).max(1));
+    let mut out = vec![0f32; sw * sh * 3];
+    let mut n = vec![0f32; sw * sh];
+    for y in 0..h {
+        for x in 0..w {
+            let j = (y * sh / h).min(sh - 1) * sw + (x * sw / w).min(sw - 1);
+            for c in 0..3 {
+                out[j * 3 + c] += px[(y * w + x) * 3 + c];
+            }
+            n[j] += 1.0;
+        }
+    }
+    for j in 0..sw * sh {
+        for c in 0..3 {
+            out[j * 3 + c] /= n[j].max(1.0);
+        }
+    }
+    (out, sw, sh)
+}
+
+/// A fibre: a hooked stroke `width` px wide and a translucent flap beside it, on grainy film,
+/// at (`cx`, `cy`); far wider than the spot detector's 20 px.
+fn fibre(px: &mut [f32], w: usize, cx: usize, cy: usize) {
+    for t in 0..90 {
+        let (x, y) = (cx + t, cy + t / 3);
+        for d in 0..7 {
+            let i = ((y + d) * w + x) * 3;
+            for c in 0..3 {
+                px[i + c] *= 0.12;
+            }
+        }
+    }
+    for y in cy + 8..cy + 40 {
+        for x in cx + 20..cx + 50 {
+            let i = (y * w + x) * 3;
+            for c in 0..3 {
+                px[i + c] *= 0.45;
+            }
+        }
+    }
+}
+
+#[test]
+fn a_fibre_too_wide_for_the_spot_pass_is_measured_and_removed_alike_in_bands() {
+    let (w, h) = (1600, 1100);
+    let mut px = grainy(w, h, 0.3, 0.05);
+    let (cx, cy) = (700, 500);
+    fibre(&mut px, w, cx, cy);
+    // the spot pass alone leaves most of it
+    let mut plain = px.clone();
+    crate::clean(&mut plain, w, h, (0, 0), &Params { canvas: Some((w, h)), ..Params::default() });
+    let left =
+        |img: &[f32]| (cy..cy + 40).flat_map(|y| (cx..cx + 90).map(move |x| (y, x))).filter(|&(y, x)| img[(y * w + x) * 3 + 1] < 0.3 * 0.6).count();
+    assert!(left(&plain) > 300, "{}", left(&plain));
+    // Measure finds it, once
+    let (m, mw, mh) = measured(&px, w, h);
+    let a = crate::large::measure(&m, mw, mh, &Params::default());
+    let marks = crate::large::marks_of(&serde_json::json!({ "_analysis": a }));
+    assert_eq!(marks.len(), 1, "{a}");
+    let p = Params { marks, ..Params::default() };
+    // the whole frame in one band, and in bands whose edges cut through the fibre
+    let mut whole = px.clone();
+    crate::clean(&mut whole, w, h, (0, 0), &Params { canvas: Some((w, h)), ..p.clone() });
+    let mut banded = px.clone();
+    crate::bands::clean_banded(&mut banded, w, h, &p, 120_000);
+    assert!(crate::bands::plan(w, h, crate::BAND_OVERLAP, 120_000).iter().any(|b| (cy..cy + 40).contains(&b.1)), "a band edge crosses the fibre");
+    let differ = (cy - 60..cy + 100)
+        .flat_map(|y| (cx - 60..cx + 150).map(move |x| (y, x)))
+        .filter(|&(y, x)| whole[(y * w + x) * 3..(y * w + x) * 3 + 3] != banded[(y * w + x) * 3..(y * w + x) * 3 + 3])
+        .count();
+    assert_eq!(differ, 0);
+    // and it's gone: no pixel of it is left dark, and the fill is at the film's level
+    assert_eq!(left(&whole), 0);
+    let mean =
+        (cy..cy + 40).flat_map(|y| (cx..cx + 90).map(move |x| (y, x))).map(|(y, x)| f64::from(whole[(y * w + x) * 3 + 1])).sum::<f64>() / 3600.0;
+    assert!((mean / 0.3 - 1.0).abs() < 0.08, "{mean}");
+}
+
+#[test]
+fn a_measurement_that_no_longer_fits_the_frame_changes_nothing() {
+    let (w, h) = (800, 600);
+    let px = grainy(w, h, 0.3, 0.05);
+    // a mark written down where the film is clear (the crop changed after Measure, say)
+    let a = serde_json::json!({"_analysis": {"large": {"v": 1, "size": [1024, 768], "marks": [[0.4, 0.4, 0.45, 0.45, 0.004, [1.7, 1.7, 1.7], [0.5, 0.5, 0.5]]]}}});
+    let marks = crate::large::marks_of(&a);
+    assert_eq!(marks.len(), 1);
+    assert!(crate::large::mask(&px, w, h, (0, 0), (w, h), &marks, &Params::default()).is_none());
+    // a mark thicker than the fill reaches across is left
+    let thick = crate::large::Mark { thick: 0.2, ..marks[0].clone() };
+    let mut dark = px.clone();
+    dot(&mut dark, w, 340, 260, 30.0, 0.1);
+    assert!(crate::large::mask(&dark, w, h, (0, 0), (w, h), &[thick], &Params::default()).is_none());
+    // and odd measurements are no marks
+    for bad in [
+        serde_json::json!({}),
+        serde_json::json!({"_analysis": {"large": {"v": 2, "size": [10, 10], "marks": [[0.1, 0.1, 0.2, 0.2, 0.01, [1, 1, 1], [1, 1, 1]]]}}}),
+        serde_json::json!({"_analysis": {"large": {"v": 1, "size": [0, 0], "marks": [[0.1, 0.1, 0.2, 0.2, 0.01, [1, 1, 1], [1, 1, 1]]]}}}),
+        serde_json::json!({"_analysis": {"large": {"v": 1, "size": [10, 10], "marks": [[0.3, 0.1, 0.2, 0.2, 0.01, [1, 1, 1], [1, 1, 1]], "x", [1]]}}}),
+    ] {
+        assert!(crate::large::marks_of(&bad).is_empty(), "{bad}");
+    }
+}
+
+#[test]
+fn plain_grain_and_a_converted_image_measure_no_marks() {
+    let (w, h) = (1024, 700);
+    let px = grainy(w, h, 0.3, 0.05);
+    let a = crate::large::measure(&px, w, h, &Params::default());
+    assert_eq!(a["large"]["marks"].as_array().map(Vec::len), Some(0), "{a}");
+    let mut dark = px.clone();
+    fibre(&mut dark, w, 400, 300);
+    let conv = Params::from_json(&serde_json::json!({"image": crate::IMAGE_OPTIONS[1]}));
+    assert_eq!(crate::large::measure(&dark, w, h, &conv)["large"]["marks"].as_array().map(Vec::len), Some(0));
 }

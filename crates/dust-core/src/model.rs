@@ -43,6 +43,8 @@ pub(crate) struct Planes<'a> {
     pub res: &'a [f32],
     /// The hair detector's response (NaN where it wasn't computed).
     pub line_res: &'a [f32],
+    /// Per pixel, the channels that can't show dust there (see `clean::blind`), if any are.
+    pub blind: Option<&'a [u8]>,
 }
 
 fn clip(v: f32) -> f32 {
@@ -64,17 +66,20 @@ pub(crate) fn features(p: &Planes, x: usize, y: usize, thr: f32, thr_line: f32) 
         }
     };
     let base = p.bg[i];
+    // where a channel is blind, the others' share of the mean density stands for all three
+    let blind = p.blind.map_or(0, |b| b[i]);
+    let gain = crate::clean::blind_gain(blind);
     let mut f = [0f32; NF];
     let mut k = 0;
     for dy in -FINE..=FINE {
         for dx in -FINE..=FINE {
-            f[k] = clip(p.g[at(dx, dy)] - base);
+            f[k] = clip((p.g[at(dx, dy)] - base) * gain);
             k += 1;
         }
     }
     for dy in -COARSE..=COARSE {
         for dx in -COARSE..=COARSE {
-            f[k] = clip(p.gs[at(dx * COARSE_STEP, dy * COARSE_STEP)] - base);
+            f[k] = clip((p.gs[at(dx * COARSE_STEP, dy * COARSE_STEP)] - base) * gain);
             k += 1;
         }
     }
@@ -97,6 +102,7 @@ pub(crate) fn features(p: &Planes, x: usize, y: usize, thr: f32, thr_line: f32) 
         (6, -6),
         (7, -3),
     ];
+    let depths = k;
     for c in 0..3 {
         let mut centre = 0.0;
         for dy in -1..=1 {
@@ -108,6 +114,16 @@ pub(crate) fn features(p: &Planes, x: usize, y: usize, thr: f32, thr_line: f32) 
         ring.sort_unstable_by(f32::total_cmp);
         f[k] = clip(centre / 9.0 - 0.5 * (ring[7] + ring[8]));
         k += 1;
+    }
+    // a blind channel takes the mean depth of those that see
+    let seeing = 3 - blind.count_ones();
+    if blind != 0 && seeing != 0 {
+        let mean = (0..3).filter(|c| blind & (1 << c) == 0).map(|c| f[depths + c]).sum::<f32>() / seeing as f32;
+        for c in 0..3 {
+            if blind & (1 << c) != 0 {
+                f[depths + c] = mean;
+            }
+        }
     }
     let line = p.line_res[i];
     f[k] = clip(p.res[i]);

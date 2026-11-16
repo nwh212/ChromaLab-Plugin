@@ -1,8 +1,9 @@
 //! Running the filter the way the host does, for tests and tuning: the frame cut into bands of at
-//! most `budget_px` pixels, each padded by [`OVERLAP`] (edge pixels repeated at the frame's
-//! border), processed on its own, and only its inside kept. Mirrors the host's `plan_bands`.
+//! most `budget_px` pixels, each padded by the manifest's overlap ([`BAND_OVERLAP`]; edge pixels
+//! repeated at the frame's border), processed on its own with the frame's size (as `_image`
+//! gives it), and only its inside kept. Mirrors the host's `plan_bands` (in rows).
 
-use crate::{OVERLAP, Params, clean};
+use crate::{BAND_OVERLAP, Params, clean};
 
 /// The host's band budget: 4 MiB of RGB `f32`.
 pub const HOST_BUDGET_PX: usize = (4 << 20) / 12;
@@ -23,7 +24,8 @@ pub fn plan(w: usize, h: usize, ov: usize, budget_px: usize) -> Vec<(usize, usiz
 
 /// Cleans the whole frame `px` (`w × h`) band by band; returns the masked pixels of the bands' insides.
 pub fn clean_banded(px: &mut [f32], w: usize, h: usize, p: &Params, budget_px: usize) -> usize {
-    let ov = OVERLAP;
+    let ov = BAND_OVERLAP;
+    let p = &Params { canvas: Some((w, h)), ..p.clone() };
     let src = px.to_vec();
     let mut count = 0;
     for (x0, y0, x1, y1) in plan(w, h, ov, budget_px) {

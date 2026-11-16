@@ -8,6 +8,9 @@
 //! 1. **Density.** `g` is the mean of the channels' `−log2` (stops), sign-flipped for a converted
 //!    image, so a spot is always *denser than its surroundings*: dust and hair block light. Working
 //!    in stops makes a spot's depth independent of exposure and of the film's mask.
+//!    A channel the scan clipped (a film base at the scanner's white, often red) shows nothing of
+//!    shallow dust: where most of a pixel's neighbourhood is clipped in a channel, that channel is
+//!    left out and what the others show counts in its place ([`blind`]).
 //! 2. **Background** from a ring of 16 samples around the pixel (of `g` lightly smoothed, 1-2-1), at a
 //!    radius just beyond the largest spot: its 6th largest sample. A spot narrower than the ring
 //!    doesn't reach it; a hair crossing it touches two samples of sixteen; on the dense side of an
@@ -24,14 +27,20 @@
 //!    - *Hysteresis*: a candidate the network is less sure of counts as dust when it touches
 //!      dust, so a hair that fades along its length is taken whole.
 //!    - *Growth*: by up to two pixels into the soft edge, then by one more.
+//!
+//!    At *Detection scale: Half* steps 1–4 run on the band averaged 2×2 (cells fixed in the frame),
+//!    with sizes halved so nothing looks further than the overlap, and each cell's verdict goes to
+//!    its four pixels ([`find_half`]).
 //! 5. **Fill:** each masked pixel, per channel in density, from the nearest unmasked pixels along
-//!    8 directions (inverse-square weights), plus grain matched to what those pixels show.
+//!    8 directions (inverse-square weights), plus the film's own grain: what the pixel's mirror
+//!    image across the spot's nearest edge shows over its surroundings (made-up noise of the same
+//!    strength where there is no such pixel).
 //!
 //! The constants were tuned, and the network trained, against infrared dust maps (scans with an
 //! infrared pass, which shows the dust alone); see DEVELOPING.md.
 
 use crate::model::{self, Model, Planes};
-use crate::params::{OVERLAP, Params, Polarity};
+use crate::params::{MIN_SIZE, OVERLAP, Params, Polarity};
 
 /// Smallest linear sample considered (a density of about 20 stops).
 const FLOOR: f32 = 1e-6;
@@ -52,6 +61,17 @@ const POOL: f32 = 0.5;
 const SMOOTH: f32 = 0.5;
 /// Pixels above threshold a core needs in its 3×3 (itself included).
 const SUPPORT: u32 = 3;
+/// A linear sample at or above this is clipped; a channel is blind at a pixel when more than half
+/// of the square of this radius around it is.
+/// At half scale the widest spot searched for, in cells: its ring ([`ring_radius`]) is then 7 cells,
+/// 14 px and a cell's own offset, inside the overlap.
+const HALF_MAX_SIZE: usize = 10;
+const _: () = assert!(2 * (HALF_MAX_SIZE / 2 + 2) + 2 <= OVERLAP);
+const CLIPPED: f32 = 0.999;
+/// Light added to every sample before the detector takes its density (linear, of full scale).
+const DARK_LIFT: f32 = 0.002;
+const BLIND_RADIUS: usize = 8;
+const _: () = assert!(BLIND_RADIUS <= OVERLAP);
 const _: () = assert!(model::REACH <= OVERLAP);
 /// With the detail check ([`crate::model`]) the detector only proposes candidates, with these
 /// lower thresholds (grains for spots and for hairs, the least depth in stops, the weight of busy
@@ -60,7 +80,7 @@ const CAND_NOISE: f32 = 2.5;
 const CAND_LINE: f32 = 5.0;
 const CAND_MIN_DEPTH: f32 = 0.08;
 const CAND_STRUCT: f32 = 0.5;
-const MODEL_CUT: f32 = 3.0;
+const MODEL_CUT: f32 = 3.5;
 /// How far below the cut a candidate touching dust may be and still count as dust (logits).
 const HYSTERESIS: f32 = 4.0;
 /// With the model, "Sensitivity" moves its cut by this many logits either way of 50 (the candidates'
@@ -84,6 +104,17 @@ const LATTICE: i64 = 8;
 const LINE_GATE: f32 = 0.6;
 /// Grain added to fills, as a share of the measured grain.
 const GRAIN_K: f32 = 0.9;
+/// The most grain a fill takes from its mirror pixel: this many of the neighbours' deviations
+/// (taken to be at least [`GRAIN_FLOOR`] stops, as soft grain's neighbours differ little).
+/// How much of the mirror pixel's grain a fill takes (the fill's level, a mean of real pixels,
+/// carries some grain already).
+const MIRROR_K: f32 = 1.0;
+/// The share of a band's pixels that may be spots for their fills to take mirrored grain.
+const MIRROR_CAP: f32 = 0.05;
+const GRAIN_MOST: f32 = 6.0;
+const GRAIN_FLOOR: f32 = 0.01;
+/// Half the side of the square whose mean a mirror pixel is measured against (wider than a clump of grain).
+const GRAIN_WINDOW: usize = 4;
 
 /// With the `tuning` feature a constant can be overridden from the environment
 /// (`CHROMADUST_TUNE_<NAME>`) to sweep it without rebuilding; otherwise it is itself.
@@ -98,6 +129,34 @@ fn knob(_name: &str, default: f32) -> f32 {
 
 /// The ring sample (of 16, from the lowest) taken as the background.
 const RANK: f32 = 10.0;
+
+/// Hair following (see [`follow_hairs`]): its ring's radius, and how far either side of a pixel
+/// the ridge test looks.
+const FOLLOW_RING: usize = 14;
+const FOLLOW_RIDGE: usize = 12;
+const _: () = assert!(FOLLOW_RING < OVERLAP && FOLLOW_RIDGE < OVERLAP);
+/// A pixel joins this many noise σ above its ring, as a ridge (denser than both sides) this many
+/// σ high, and when its least dense channel shows at least this share of its densest (dust is
+/// grey: it blocks every colour alike).
+const FOLLOW_K: f32 = 2.5;
+const FOLLOW_RIDGE_K: f32 = 2.0;
+const FOLLOW_NEUTRAL: f32 = 0.4;
+/// The furthest a hair is followed, in steps from the part found.
+const FOLLOW_STEPS: usize = 150;
+/// What a hair grows by may be at most this many times the part found, or it's dropped: a hair
+/// that touches an edge of the picture would run along it.
+const FOLLOW_CAP: f32 = 3.0;
+/// What counts as a hair: this long at least, and long for its area (extent² / area).
+const FOLLOW_MIN_EXT: usize = 15;
+const FOLLOW_SHAPE: f32 = 4.0;
+/// The block the noise σ is measured in, sampled every so many pixels each way.
+const FOLLOW_BLOCK: usize = 64;
+const FOLLOW_SAMPLE: usize = 4;
+/// The halo: every hair then takes in the pixels around it still this many noise σ over their
+/// ring, up to this many pixels out. A hair's blur reaches past its mark, and a fill drawn from
+/// the blur leaves a ghost of the hair.
+const HALO_K: f32 = 1.0;
+const HALO_STEPS: usize = 3;
 
 /// 16 directions, as unit vectors.
 fn directions() -> [(f32, f32); 16] {
@@ -185,6 +244,61 @@ fn sum3(m: &[u8], w: usize, h: usize) -> Vec<u8> {
     out
 }
 
+/// Per pixel, the channels that can't show dust there (bit `c` for channel `c`): those clipped
+/// (at `clipped` or above, in the band's own encoding) over more than half of the square of [`BLIND_RADIUS`] around it. `None` when no channel is
+/// clipped anywhere near that much (nearly every scan).
+fn blind(px: &[f32], w: usize, h: usize, clipped: f32) -> Option<Vec<u8>> {
+    let n = w * h;
+    let side = 2 * BLIND_RADIUS + 1;
+    let need = (side * side / 2) as u16;
+    let mut out: Option<Vec<u8>> = None;
+    let mut flags = vec![0u8; n];
+    let mut rows = vec![0u16; n];
+    for c in 0..3 {
+        let mut count = 0usize;
+        for (f, v) in flags.iter_mut().zip(px.as_chunks::<3>().0) {
+            *f = u8::from(v[c] >= clipped);
+            count += usize::from(*f);
+        }
+        // (a pixel needs over half of 289 around it: fewer than that in the whole band can't do it)
+        if count <= usize::from(need) {
+            continue;
+        }
+        // the box sum, rows then columns, with the edge pixel repeated beyond the band
+        let at = |i: i64, len: usize| i.clamp(0, len as i64 - 1) as usize;
+        let r = BLIND_RADIUS as i64;
+        for y in 0..h {
+            let row = &flags[y * w..(y + 1) * w];
+            let mut sum: u16 = (-r..=r).map(|d| u16::from(row[at(d, w)])).sum();
+            for x in 0..w {
+                rows[y * w + x] = sum;
+                sum = sum + u16::from(row[at(x as i64 + r + 1, w)]) - u16::from(row[at(x as i64 - r, w)]);
+            }
+        }
+        let mask = out.get_or_insert_with(|| vec![0u8; n]);
+        for x in 0..w {
+            let mut sum: u16 = (-r..=r).map(|d| rows[at(d, h) * w + x]).sum();
+            for y in 0..h {
+                if sum > need {
+                    mask[y * w + x] |= 1 << c;
+                }
+                sum = sum + rows[at(y as i64 + r + 1, h) * w + x] - rows[at(y as i64 - r, h) * w + x];
+            }
+        }
+    }
+    out
+}
+
+/// What a residual of the mean density is multiplied by where `blind` channels are left out of it:
+/// three channels' worth from those that see (1 when all or none do).
+pub(crate) fn blind_gain(blind: u8) -> f32 {
+    match blind.count_ones() {
+        1 => 1.5,
+        2 => 3.0,
+        _ => 1.0,
+    }
+}
+
 /// 3×3 dilation of a 0/1 mask, `where_` (if given) limiting where it may grow.
 fn dilate(m: &[u8], w: usize, h: usize, where_: Option<&[bool]>) -> Vec<u8> {
     let s = sum3(m, w, h);
@@ -193,11 +307,19 @@ fn dilate(m: &[u8], w: usize, h: usize, where_: Option<&[bool]>) -> Vec<u8> {
 
 /// The median and a standard deviation from the lower half only (median − 16th percentile):
 /// spots and hairs only push values up, so a hair crossing the window can't inflate it.
-fn med_sigma(v: &mut [f32]) -> (f32, f32) {
+fn med_sigma(v: &mut [f32], low: bool) -> (f32, f32) {
     if v.is_empty() {
         return (0.0, 0.0);
     }
     v.sort_unstable_by(f32::total_cmp);
+    if low {
+        // from the lower quarter alone (the 25th and 5th percentiles of a normal spread are
+        // 0.674 and 1.645 deviations below its middle): a hair as wide as half the window can't
+        // raise its own threshold
+        let q = v[v.len() / 4];
+        let sigma = ((q - v[v.len() / 20]) / (1.645 - 0.674)).max(0.0);
+        return (q + 0.674 * sigma, sigma);
+    }
     let med = v[v.len() / 2];
     (med, (med - v[v.len() * 16 / 100]).max(0.0))
 }
@@ -241,16 +363,108 @@ fn kth_largest(s: &[f32; 16], k: usize) -> f32 {
     top[k - 1]
 }
 
+/// The densities of `samples`, and (when `lift` > 0) the same with `lift` added to each sample
+/// first; `untagged`: a raw TIFF the host decoded with the sRGB curve, whose values encoded again
+/// are the scan's. (One pass per case: a test, or a second encoding, per sample costs the host's
+/// interpreter a good part of the pass.)
+pub(crate) fn densities(samples: &[f32], untagged: bool, lift: f32) -> (Vec<f32>, Vec<f32>) {
+    match (untagged, lift > 0.0) {
+        (false, false) => (samples.iter().map(|&v| -fast_log2(v)).collect(), Vec::new()),
+        (false, true) => (samples.iter().map(|&v| -fast_log2(v)).collect(), samples.iter().map(|&v| -fast_log2(v + lift)).collect()),
+        (true, false) => (samples.iter().map(|&v| -fast_log2(srgb_encode(v))).collect(), Vec::new()),
+        (true, true) => {
+            let (mut d, mut s) = (Vec::with_capacity(samples.len()), Vec::with_capacity(samples.len()));
+            for &v in samples {
+                let e = srgb_encode(v);
+                d.push(-fast_log2(e));
+                s.push(-fast_log2(e + lift));
+            }
+            (d, s)
+        }
+    }
+}
+
+/// [`find`] at half scale: the band averaged 2×2 in linear light, over cells fixed in the frame
+/// (a cell is the four pixels at even frame coordinates and the next), searched with half the
+/// spot size; a cell that is a spot makes its four pixels one. Pixels outside every whole cell
+/// (an odd first or last row or column: in the band's margin, or the frame's last line) are left.
+fn find_half(px: &[f32], w: usize, h: usize, origin: (i64, i64), p: &Params) -> Spots {
+    let n = w * h;
+    let (density, _) = densities(&px[..n * 3], p.untagged, 0.0);
+    let (ax, ay) = (origin.0.rem_euclid(2) as usize, origin.1.rem_euclid(2) as usize);
+    let (w2, h2) = (w.saturating_sub(ax) / 2, h.saturating_sub(ay) / 2);
+    let mut mask = vec![0u8; n];
+    if w2 == 0 || h2 == 0 {
+        return Spots { mask, density };
+    }
+    let mut small = vec![0f32; w2 * h2 * 3];
+    let scan = |v: f32| if p.untagged { srgb_encode(v) } else { v };
+    for y in 0..h2 {
+        let (top, bottom) = ((ay + 2 * y) * w + ax, (ay + 2 * y + 1) * w + ax);
+        for x in 0..w2 {
+            let (a, b) = ((top + 2 * x) * 3, (bottom + 2 * x) * 3);
+            for c in 0..3 {
+                small[(y * w2 + x) * 3 + c] = 0.25 * (scan(px[a + c]) + scan(px[a + 3 + c]) + scan(px[b + c]) + scan(px[b + 3 + c]));
+            }
+        }
+    }
+    // half the size, and no ring beyond what the overlap covers at this scale
+    let max_size = p.max_size.div_ceil(2).clamp(MIN_SIZE / 2, HALF_MAX_SIZE);
+    // (the cells are the scan's own values already)
+    let q = Params { max_size, half: false, wide: true, untagged: false, ..p.clone() };
+    let found = find_full(&small, w2, h2, ((origin.0 + ax as i64) / 2, (origin.1 + ay as i64) / 2), &q);
+    for y in 0..h2 {
+        for x in 0..w2 {
+            if found.mask[y * w2 + x] != 0 {
+                let i = (ay + 2 * y) * w + ax + 2 * x;
+                mask[i] = 1;
+                mask[i + 1] = 1;
+                mask[i + w] = 1;
+                mask[i + w + 1] = 1;
+            }
+        }
+    }
+    Spots { mask, density }
+}
+
 /// Finds the spots in band `px` (interleaved linear RGB, `w × h`, its top-left at frame pixel `origin`).
 pub fn find(px: &[f32], w: usize, h: usize, origin: (i64, i64), p: &Params) -> Spots {
     let n = w * h;
     if n == 0 || px.len() < n * 3 {
         return Spots { mask: vec![0; n], density: vec![0.0; n * 3] };
     }
-    let density: Vec<f32> = px[..n * 3].iter().map(|&v| -fast_log2(v)).collect();
+    if p.half { find_half(px, w, h, origin, p) } else { find_full(px, w, h, origin, p) }
+}
+
+/// [`find`] at the frame's own scale without the detail check (it was trained on full-size
+/// scans): the large-mark candidates on a frame downsized for *Measure* ([`crate::large`]).
+pub(crate) fn find_classic(px: &[f32], w: usize, h: usize, p: &Params) -> Spots {
+    let n = w * h;
+    if n == 0 || px.len() < n * 3 {
+        return Spots { mask: vec![0; n], density: vec![0.0; n * 3] };
+    }
+    find_full(px, w, h, (0, 0), &Params { classic: true, ..p.clone() })
+}
+
+/// [`find`] at the band's own scale (`px` holds `w × h` pixels, and there are some).
+fn find_full(px: &[f32], w: usize, h: usize, origin: (i64, i64), p: &Params) -> Spots {
+    let n = w * h;
+    let lift = if p.polarity == Polarity::Darker { knob("LIFT", DARK_LIFT) } else { 0.0 };
+    let (density, seen) = densities(&px[..n * 3], p.untagged, lift);
     let sign = if p.polarity == Polarity::Darker { 1.0 } else { -1.0 };
-    let g: Vec<f32> = density.as_chunks::<3>().0.iter().map(|c| sign * (c[0] + c[1] + c[2]) / 3.0).collect();
+    // what the detector looks at: on film as scanned, the density of the sample plus a little
+    // light, so a channel near black (dense film, where the scanner's noise is whole stops) weighs
+    // little; the fill works on the true densities
+    let seen: &[f32] = if lift > 0.0 { &seen } else { &density };
+    let g: Vec<f32> = seen.as_chunks::<3>().0.iter().map(|c| sign * (c[0] + c[1] + c[2]) / 3.0).collect();
     let gs = smooth3(&g, w, h, knob("SMOOTH", SMOOTH));
+    // channels that can't show dust (film as scanned: there the clipped end is the film's base)
+    let blind = if p.polarity == Polarity::Darker && knob("BLIND", 1.0) > 0.5 {
+        blind(px, w, h, if p.untagged { srgb_decode(CLIPPED) } else { CLIPPED })
+    } else {
+        None
+    };
+    let gain = |i: usize| blind.as_ref().map_or(1.0, |b| blind_gain(b[i]));
     // the detail check: film as scanned only (it was trained on that)
     let model = Model::load();
     // (tuning: CHROMADUST_MODEL=file tries another model without rebuilding)
@@ -259,7 +473,7 @@ pub fn find(px: &[f32], w: usize, h: usize, origin: (i64, i64), p: &Params) -> S
         Ok(path) => std::fs::read(path).ok().and_then(|b| Model::parse(&b)),
         Err(_) => model,
     };
-    let model = model.filter(|_| p.polarity == Polarity::Darker && knob("MODEL", 1.0) > 0.5);
+    let model = model.filter(|_| p.polarity == Polarity::Darker && !p.classic && knob("MODEL", 1.0) > 0.5);
     #[cfg(feature = "tuning")]
     let dump = std::env::var("CHROMADUST_DUMP").ok();
     #[cfg(not(feature = "tuning"))]
@@ -277,6 +491,7 @@ pub fn find(px: &[f32], w: usize, h: usize, origin: (i64, i64), p: &Params) -> S
         (knob("NOISE", K_NOISE), knob("STRUCT", K_STRUCT), knob("MIN_DEPTH", MIN_DEPTH), knob("LINE", K_LINE), knob("SOFT", SOFT))
     };
     let (pool_q, gate) = (knob("POOL", POOL), knob("GATE", LINE_GATE));
+    let low_stats = knob("LOW_STATS", if p.wide { 1.0 } else { 0.0 }) > 0.5;
     let inside = |x: usize, y: usize, r: usize| x >= r && y >= r && x + r < w && y + r < h;
 
     #[cfg(feature = "tuning")]
@@ -321,7 +536,7 @@ pub fn find(px: &[f32], w: usize, h: usize, origin: (i64, i64), p: &Params) -> S
                 continue; // res stays 0
             }
             bg[i] = kth_largest(&samples, kth);
-            res[i] = v - bg[i];
+            res[i] = (v - bg[i]) * gain(i);
         }
     }
 
@@ -357,12 +572,18 @@ pub fn find(px: &[f32], w: usize, h: usize, origin: (i64, i64), p: &Params) -> S
             bs.clear();
             for dy in (-WIN..=WIN).step_by(2) {
                 for dx in (-WIN..=WIN).step_by(2) {
-                    let i = clamp(cy + i64::from(dy), h) * w + clamp(cx + i64::from(dx), w);
+                    // (only what the band holds: repeating its edge row would count a hair
+                    // lying along it several times, and hide it from its own threshold)
+                    let (px, py) = (cx + i64::from(dx), cy + i64::from(dy));
+                    if px < 0 || py < 0 || px >= w as i64 || py >= h as i64 {
+                        continue;
+                    }
+                    let i = py as usize * w + px as usize;
                     rs.push(res[i]);
                     bs.push(bg[i]);
                 }
             }
-            let (med, sigma) = med_sigma(&mut rs);
+            let (med, sigma) = med_sigma(&mut rs, low_stats);
             let (hi, lo) = (bs.len() * 9 / 10, bs.len() / 10);
             stats[j * gw + k] = [med, sigma, nth(&mut bs, hi) - nth(&mut bs, lo)];
         }
@@ -438,7 +659,7 @@ pub fn find(px: &[f32], w: usize, h: usize, origin: (i64, i64), p: &Params) -> S
                 }
                 best = best.max(before.min(after));
             }
-            line_res[i] = best / (LINE + 1) as f32 - bg[i];
+            line_res[i] = (best / (LINE + 1) as f32 - bg[i]) * gain(i);
         }
     }
     #[cfg(feature = "tuning")]
@@ -464,13 +685,17 @@ pub fn find(px: &[f32], w: usize, h: usize, origin: (i64, i64), p: &Params) -> S
             ls.clear();
             for dy in (-2..=2).map(|s| s * LATTICE) {
                 for dx in (-2..=2).map(|s| s * LATTICE) {
-                    let v = line_res[clamp(ly + dy, h) * w + clamp(lx + dx, w)];
+                    let (px, py) = (lx + dx, ly + dy);
+                    if px < 0 || py < 0 || px >= w as i64 || py >= h as i64 {
+                        continue;
+                    }
+                    let v = line_res[py as usize * w + px as usize];
                     if !v.is_nan() {
                         ls.push(v);
                     }
                 }
             }
-            let (med, sigma) = med_sigma(&mut ls);
+            let (med, sigma) = med_sigma(&mut ls, low_stats);
             lstats[j * gw + k] = [med, sigma, 0.0];
         }
     }
@@ -527,7 +752,7 @@ pub fn find(px: &[f32], w: usize, h: usize, origin: (i64, i64), p: &Params) -> S
     prof.lap("scores+cores");
     // 4b. the detail check on every candidate pixel
     if smart {
-        let planes = Planes { w, h, g: &g, gs: &gs, d: &density, bg: &bg, res: &res, line_res: &line_res };
+        let planes = Planes { w, h, g: &g, gs: &gs, d: seen, bg: &bg, res: &res, line_res: &line_res, blind: blind.as_deref() };
         let cut = knob("CUT", MODEL_CUT) + (50.0 - p.sensitivity) / 50.0 * SENS_LOGITS;
         #[cfg(feature = "tuning")]
         let mut record: Vec<u8> = Vec::new();
@@ -619,14 +844,332 @@ pub fn find(px: &[f32], w: usize, h: usize, origin: (i64, i64), p: &Params) -> S
             }
             core = dust;
         }
+        #[cfg(feature = "tuning")]
+        if let Some(path) = &dump {
+            // (appended: a banded run dumps band by band)
+            use std::io::Write;
+            if let Ok(mut f) = std::fs::OpenOptions::new().create(true).append(true).open(path) {
+                let _ = f.write_all(&record);
+            }
+        }
     }
     #[cfg(feature = "tuning")]
     prof.lap("detail check");
     let grown = dilate(&dilate(&core, w, h, Some(&soft)), w, h, Some(&soft));
-    let mask = dilate(&grown, w, h, None);
+    let mut mask = dilate(&grown, w, h, None);
+    // (not in a crowded band, as the fill's grain: there it would spend the host's budget on
+    // marks the detector already covers)
+    let crowded = mask.iter().filter(|&&m| m != 0).count() as f32 > MIRROR_CAP * n as f32;
+    if p.polarity == Polarity::Darker && !p.wide && !crowded {
+        extend_marks(&mut mask, &g, seen, blind.as_deref(), w, h);
+    }
     #[cfg(feature = "tuning")]
     prof.lap("grow");
     Spots { mask, density }
+}
+
+/// The 8 neighbours.
+const NEIGHBOURS: [(i64, i64); 8] = [(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1)];
+
+/// Follows the hairs in `mask` into the parts the detector missed: where a hair lifts off the film
+/// it turns soft and wide, too faint and too broad for the spot and hair tests, though the infrared
+/// shows it as plainly as the rest. From every hair found (a mark at least [`FOLLOW_MIN_EXT`] long
+/// and thin), the mask grows through neighbouring pixels that are dense over a ring of radius
+/// [`FOLLOW_RING`], a ridge (denser than the pixels [`FOLLOW_RIDGE`] away on both sides in some
+/// direction: an edge of the picture is denser on one side only) and grey. `g` is the mean
+/// density, `seen` the per-channel densities, `blind` the channels that can't show dust.
+///
+/// Then every hair takes in its halo (see [`HALO_K`]).
+#[inline(never)]
+pub(crate) fn extend_marks(mask: &mut [u8], g: &[f32], seen: &[f32], blind: Option<&[u8]>, w: usize, h: usize) {
+    let n = w * h;
+    // pixel i's neighbours that are in the band (index arithmetic, no closures: in the host's
+    // interpreter every call in these loops counts)
+    let neighbours = |i: usize, out: &mut [usize; 8]| -> usize {
+        let (x, y) = (i % w, i / w);
+        let mut k = 0;
+        for (dx, dy) in NEIGHBOURS {
+            let (qx, qy) = (x as i64 + dx, y as i64 + dy);
+            if qx >= 0 && qy >= 0 && (qx as usize) < w && (qy as usize) < h {
+                out[k] = qy as usize * w + qx as usize;
+                k += 1;
+            }
+        }
+        k
+    };
+    let mut nb = [0usize; 8];
+    // the hairs: marks long and thin enough (their pixels, one after another, in `members`)
+    let mut done = vec![false; n];
+    let mut members: Vec<usize> = Vec::new();
+    let mut seeds: Vec<(usize, usize)> = Vec::new();
+    let marked: Vec<usize> = mask.iter().enumerate().filter_map(|(i, &m)| (m != 0).then_some(i)).collect();
+    for start in marked {
+        if done[start] {
+            continue;
+        }
+        let first = members.len();
+        let (mut x0, mut x1, mut y0, mut y1) = (usize::MAX, 0, usize::MAX, 0);
+        done[start] = true;
+        members.push(start);
+        let mut next = first;
+        while next < members.len() {
+            let i = members[next];
+            next += 1;
+            let (x, y) = (i % w, i / w);
+            (x0, x1, y0, y1) = (x0.min(x), x1.max(x), y0.min(y), y1.max(y));
+            let k = neighbours(i, &mut nb);
+            for &q in &nb[..k] {
+                if mask[q] != 0 && !done[q] {
+                    done[q] = true;
+                    members.push(q);
+                }
+            }
+        }
+        let (ext, area) = ((x1 - x0).max(y1 - y0) + 1, members.len() - first);
+        if ext >= FOLLOW_MIN_EXT && (ext * ext) as f32 > FOLLOW_SHAPE * area as f32 {
+            seeds.push((first, members.len()));
+        } else {
+            members.truncate(first);
+        }
+    }
+    if seeds.is_empty() {
+        return;
+    }
+    let ring: [(i64, i64); 16] = directions().map(|(c, s)| ((c * FOLLOW_RING as f32).round() as i64, (s * FOLLOW_RING as f32).round() as i64));
+    let ridge: [(i64, i64); 8] = std::array::from_fn(|k| {
+        let (c, s) = directions()[2 * k];
+        ((c * FOLLOW_RIDGE as f32).round() as i64, (s * FOLLOW_RIDGE as f32).round() as i64)
+    });
+    // box means over 3 × 3 where a test asks (a soft hair is wider than that, and the tests see
+    // less grain), of the mean density and of each channel
+    let mean = |j: usize| box3(j, w, h, |k| g[k]);
+    // the noise: per block, the spread of the mean's residual over a sample of its pixels
+    let bw = w.div_ceil(FOLLOW_BLOCK);
+    let mut sigma = vec![f32::NAN; bw * h.div_ceil(FOLLOW_BLOCK)];
+    let mut block_sigma = |i: usize| -> f32 {
+        let (bx, by) = ((i % w) / FOLLOW_BLOCK, (i / w) / FOLLOW_BLOCK);
+        let b = by * bw + bx;
+        if sigma[b].is_nan() {
+            let mut r = Vec::with_capacity((FOLLOW_BLOCK / FOLLOW_SAMPLE).pow(2));
+            for y in (by * FOLLOW_BLOCK..((by + 1) * FOLLOW_BLOCK).min(h)).step_by(FOLLOW_SAMPLE) {
+                for x in (bx * FOLLOW_BLOCK..((bx + 1) * FOLLOW_BLOCK).min(w)).step_by(FOLLOW_SAMPLE) {
+                    r.push(over_ring(y * w + x, w, h, &ring, mean));
+                }
+            }
+            let half = r.len() / 2;
+            let med = nth(&mut r, half);
+            let mut dev: Vec<f32> = r.iter().map(|v| (v - med).abs()).collect();
+            let k = dev.len() / 2;
+            sigma[b] = 1.4826 * nth(&mut dev, k);
+        }
+        sigma[b]
+    };
+    // whether pixel i may join (0 not known yet, 1 yes, 2 no)
+    let mut known = vec![0u8; n];
+    let mut joins = |i: usize| -> bool {
+        if known[i] == 0 {
+            let s = block_sigma(i).max(1e-4);
+            let mut ok = over_ring(i, w, h, &ring, mean) > FOLLOW_K * s;
+            if ok {
+                let (x, y) = ((i % w) as i64, (i / w) as i64);
+                let at = |dx: i64, dy: i64| clamp(y + dy, h) * w + clamp(x + dx, w);
+                let here = mean(i);
+                let best = ridge.iter().map(|&(dx, dy)| (here - mean(at(dx, dy))).min(here - mean(at(-dx, -dy)))).fold(f32::MIN, f32::max);
+                ok = best > FOLLOW_RIDGE_K * s;
+            }
+            if ok {
+                // grey: every channel that can see is about as much denser than its ring
+                let b = blind.map_or(0, |b| b[i]);
+                let (mut lo, mut hi) = (f32::MAX, f32::MIN);
+                for c in (0..3).filter(|c| b & (1 << c) == 0) {
+                    let r = over_ring(i, w, h, &ring, |j| box3(j, w, h, |k| seen[k * 3 + c]));
+                    (lo, hi) = (lo.min(r), hi.max(r));
+                }
+                ok = hi > 0.0 && lo > FOLLOW_NEUTRAL * hi;
+            }
+            known[i] = if ok { 1 } else { 2 };
+        }
+        known[i] == 1
+    };
+    // 1: added; 2: reached, but by a hair that grew too far
+    let mut added = vec![0u8; n];
+    let mut kept: Vec<usize> = Vec::new();
+    let follow = knob("FOLLOW", 1.0) > 0.5;
+    let seeds = if follow { seeds } else { Vec::new() };
+    let (mut front, mut next, mut mine) = (Vec::new(), Vec::new(), Vec::new());
+    for &(a, b) in &seeds {
+        let cap = (FOLLOW_CAP * (b - a) as f32) as usize;
+        front.clear();
+        front.extend_from_slice(&members[a..b]);
+        mine.clear();
+        for _ in 0..FOLLOW_STEPS {
+            next.clear();
+            for &i in &front {
+                let k = neighbours(i, &mut nb);
+                for &q in &nb[..k] {
+                    if mask[q] == 0 && added[q] == 0 && joins(q) {
+                        added[q] = 1;
+                        mine.push(q);
+                        next.push(q);
+                    }
+                }
+            }
+            if next.is_empty() || mine.len() > cap {
+                break;
+            }
+            std::mem::swap(&mut front, &mut next);
+        }
+        if mine.len() > cap {
+            for &q in &mine {
+                added[q] = 2;
+            }
+        } else {
+            kept.extend_from_slice(&mine);
+        }
+    }
+    // what was added, with the margin every mark gets
+    for &i in &kept {
+        mask[i] = 1;
+        let k = neighbours(i, &mut nb);
+        for &q in &nb[..k] {
+            mask[q] = 1;
+        }
+    }
+    // the halo, around every hair
+    let (halo_k, steps) = (knob("HALO_K", HALO_K), knob("HALO_STEPS", HALO_STEPS as f32) as usize);
+    front.clear();
+    for &(a, b) in &seeds {
+        front.extend_from_slice(&members[a..b]);
+    }
+    front.extend_from_slice(&kept);
+    for _ in 0..steps {
+        next.clear();
+        for &i in &front {
+            let k = neighbours(i, &mut nb);
+            for &q in &nb[..k] {
+                if mask[q] == 0 && over_ring(q, w, h, &ring, mean) > halo_k * block_sigma(q).max(1e-4) {
+                    mask[q] = 1;
+                    next.push(q);
+                }
+            }
+        }
+        if next.is_empty() {
+            break;
+        }
+        std::mem::swap(&mut front, &mut next);
+    }
+}
+
+/// `plane`'s mean over the 3 × 3 around pixel `i` (edges clamped).
+#[inline(always)]
+fn box3(i: usize, w: usize, h: usize, plane: impl Fn(usize) -> f32) -> f32 {
+    let (x, y) = (i % w, i / w);
+    if x > 0 && y > 0 && x + 1 < w && y + 1 < h {
+        let mut s = 0.0;
+        for r in [i - w, i, i + w] {
+            s += plane(r - 1) + plane(r) + plane(r + 1);
+        }
+        return s / 9.0;
+    }
+    let mut s = 0.0;
+    for dy in -1..=1 {
+        for dx in -1..=1 {
+            s += plane(clamp(y as i64 + dy, h) * w + clamp(x as i64 + dx, w));
+        }
+    }
+    s / 9.0
+}
+
+/// `plane` at pixel `i` over its ring's 7th lowest of 16 (most of a hair's ring is clear film).
+fn over_ring(i: usize, w: usize, h: usize, ring: &[(i64, i64); 16], plane: impl Fn(usize) -> f32) -> f32 {
+    let (x, y) = ((i % w) as i64, (i / w) as i64);
+    let s = ring.map(|(dx, dy)| -plane(clamp(y + dy, h) * w + clamp(x + dx, w)));
+    plane(i) + kth_largest(&s, 7)
+}
+
+/// What the pixel `step` away from (`x`, `y`) shows over the mean of the clear pixels around it,
+/// per channel (`None` when it is a spot itself or outside the band).
+#[inline(never)]
+fn mirror_grain(mask: &[u8], d: &[f32], w: usize, h: usize, (x, y): (usize, usize), step: (i64, i64)) -> Option<[f32; 3]> {
+    let (sx, sy) = (x as i64 + step.0, y as i64 + step.1);
+    if sx < 0 || sy < 0 || sx >= w as i64 || sy >= h as i64 {
+        return None;
+    }
+    let (sx, sy) = (sx as usize, sy as usize);
+    let s = sy * w + sx;
+    if mask[s] != 0 {
+        return None;
+    }
+    let (mut mean, mut count) = ([0f32; 3], 0f32);
+    // (every other pixel each way: a quarter of the work for the same mean)
+    for yy in (sy.saturating_sub(GRAIN_WINDOW)..=(sy + GRAIN_WINDOW).min(h - 1)).step_by(2) {
+        for xx in (sx.saturating_sub(GRAIN_WINDOW)..=(sx + GRAIN_WINDOW).min(w - 1)).step_by(2) {
+            let j = yy * w + xx;
+            if mask[j] == 0 {
+                for c in 0..3 {
+                    mean[c] += d[j * 3 + c];
+                }
+                count += 1.0;
+            }
+        }
+    }
+    Some(std::array::from_fn(|c| d[s * 3 + c] - mean[c] / count))
+}
+
+/// Calls every function a band can need once, on a tiny made-up band (a speck on grain) at both
+/// detection scales, so a host that compiles each function on its first call does it now, in one go.
+///
+/// Chromaforge's wasmi charges that compilation to the call's fuel, which it hands out in slices
+/// of 20 M instructions, and a compilation that doesn't fit in what is left of a slice fails the
+/// whole call as if the budget were spent (emmertex/chromaforge#1200). Run first, this compiles
+/// everything inside the first, full slice: it costs a few million instructions, compilation
+/// included.
+pub fn warm_up() {
+    const N: usize = 16;
+    let mut px = vec![0.3f32; N * N * 3];
+    for (i, v) in px.iter_mut().enumerate() {
+        *v *= 1.0 + 0.04 * noise(i as i64, 7, 0);
+    }
+    for y in 7..10 {
+        for x in 7..10 {
+            for c in 0..3 {
+                px[(y * N + x) * 3 + c] *= 0.2;
+            }
+        }
+    }
+    // (a function is compiled whole on its first call, so calling it is enough: the second run
+    // takes along what only some bands call, a clipped channel's and the raw TIFF's curves)
+    let mut band = px.clone();
+    clean(&mut band, N, N, (0, 0), &Params::default());
+    let mut band: Vec<f32> = px.chunks(3).flat_map(|c| [1.0, c[1], c[2]]).collect();
+    clean(&mut band, N, N, (0, 0), &Params { half: true, untagged: true, ..Params::default() });
+    // the mask of a large mark Measure wrote down (the fill's longer rays are the code above)
+    let mark = crate::large::Mark { x0: 0.4, y0: 0.4, x1: 0.65, y1: 0.65, thick: 0.05, bg: [1.74; 3], depth: [2.3; 3], cell: 1.0 / N as f32 };
+    let _ = crate::large::mask(&px, N, N, (0, 0), (N, N), &[mark], &Params::default());
+    // and a converted negative's (shown, which skips the fill)
+    let mut band: Vec<f32> = px.iter().map(|v| 1.0 - v).collect();
+    clean(&mut band, N, N, (0, 0), &Params { polarity: Polarity::Lighter, show: true, ..Params::default() });
+    // a hair with a soft end, for the hair following (which a band this small doesn't reach): every
+    // test it makes runs, the grey one included (a blind channel too)
+    {
+        const M: usize = 20;
+        let mut g = vec![0f32; M * M];
+        let mut mask = vec![0u8; M * M];
+        for (i, v) in g.iter_mut().enumerate() {
+            *v = 0.02 * noise(i as i64, 3, 0);
+        }
+        for x in 0..M {
+            g[8 * M + x] += if x < 15 { 1.0 } else { 0.3 };
+            if x < 15 {
+                mask[8 * M + x] = 1;
+            }
+        }
+        let seen: Vec<f32> = g.iter().flat_map(|&v| [v, v, v]).collect();
+        extend_marks(&mut mask, &g, &seen, Some(&vec![1u8; M * M]), M, M);
+    }
+    // (the fill's own helpers, which a band this small may not reach)
+    let density: Vec<f32> = px.iter().map(|&v| -fast_log2(v)).collect();
+    let _ = mirror_grain(&vec![0; N * N], &density, N, N, (8, 8), (3, 0));
 }
 
 /// A deterministic standard normal-ish number for frame pixel (`x`, `y`), channel `c`.
@@ -645,26 +1188,85 @@ fn noise(x: i64, y: i64, c: u64) -> f32 {
     (sum - 2.0) * 3f32.sqrt()
 }
 
+/// `2^x`, to about 2e-7 relative (the exponent's bits, plus a quintic for the fraction): like
+/// [`fast_log2`], far cheaper than the library's in the host's interpreter.
+pub(crate) fn fast_exp2(x: f32) -> f32 {
+    let x = x.clamp(-126.0, 127.0);
+    let i = x.floor();
+    let f = x - i;
+    let p = 1.0 + f * (0.693_152_7 + f * (0.240_153_2 + f * (0.055_828_18 + f * (0.008_988_955 + f * 0.001_876_643))));
+    f32::from_bits(((i as i32 + 127) as u32) << 23) * p
+}
+
+/// The sRGB curve, linear light to encoded, from a table (a few instructions a sample: `powf`
+/// costs the host's interpreter some 400, a third of a busy band's budget). The table holds the
+/// exact curve at every float with the top 9 bits of mantissa, from the curve's linear part up to
+/// 2; between entries the curve is all but straight (error under 1e-6).
+pub(crate) fn srgb_encode(v: f32) -> f32 {
+    const KNEE: f32 = 0.003_130_8;
+    const SHIFT: u32 = 14;
+    static TABLE: std::sync::OnceLock<Vec<f32>> = std::sync::OnceLock::new();
+    let v = v.max(0.0);
+    if v <= KNEE {
+        return 12.92 * v;
+    }
+    let lo = KNEE.to_bits() >> SHIFT;
+    let table = TABLE.get_or_init(|| {
+        let hi = 2f32.to_bits() >> SHIFT;
+        (lo..=hi + 1).map(|k| 1.055 * f32::from_bits(k << SHIFT).powf(1.0 / 2.4) - 0.055).collect()
+    });
+    let bits = v.min(2.0).to_bits();
+    let k = ((bits >> SHIFT) - lo) as usize;
+    let t = (bits & ((1 << SHIFT) - 1)) as f32 / (1 << SHIFT) as f32;
+    match (table.get(k), table.get(k + 1)) {
+        (Some(&a), Some(&b)) => a + (b - a) * t,
+        _ => 1.055 * v.powf(1.0 / 2.4) - 0.055,
+    }
+}
+
+/// The sRGB curve, encoded to linear light.
+pub(crate) fn srgb_decode(v: f32) -> f32 {
+    if v <= 0.040_45 { v / 12.92 } else { fast_exp2(2.4 * fast_log2((v + 0.055) / 1.055)) }
+}
+
 /// Removes the spots of band `px` in place (or paints them, with `show`); returns how many pixels were masked.
+///
+/// With `p.untagged` the band is a linear scan that the host decoded with the sRGB curve (a TIFF
+/// without a colour profile is taken for sRGB): the spots are found, and filled, on the scan's own
+/// values (each sample encoded again as it's read, which is what the detail check was trained on),
+/// and a fill is decoded as it's written. Every other pixel is left as it came.
 pub fn clean(px: &mut [f32], w: usize, h: usize, origin: (i64, i64), p: &Params) -> usize {
     let n = w * h;
     if n == 0 || px.len() < n * 3 {
         return 0;
     }
-    let spots = find(px, w, h, origin, p);
+    let mut spots = find(px, w, h, origin, p);
     #[cfg(feature = "tuning")]
     let mut prof = Prof::new();
+    // the large marks Measure found, where they reach into this band
+    let large = p.canvas.and_then(|c| crate::large::mask(px, w, h, origin, c, &p.marks, p));
+    if let Some(l) = &large {
+        for (m, &v) in spots.mask.iter_mut().zip(l) {
+            *m |= v;
+        }
+    }
     let (mask, d) = (&spots.mask, &spots.density);
     // each ray's steps, rounded once: steps[k][t] is the pixel t steps out along direction k
-    const RAY: usize = OVERLAP;
+    // (a large mark's pixels look as far as `large::RAY`, the others as far as `OVERLAP`)
+    const RAY: usize = crate::large::RAY;
     // (8 directions are plenty for a fill, and a ray needn't go further than the widest spot)
-    let ray = (p.max_size + 2).min(RAY);
+    // (at half scale a spot is wider by the cells it grew by)
+    let spot_ray = if p.half { OVERLAP } else { (p.max_size + 2).min(OVERLAP) };
     let steps: Vec<[(i64, i64); RAY + 2]> = directions()
         .iter()
         .step_by(2)
         .map(|&(cx, cy)| std::array::from_fn(|t| ((cx * t as f32).round() as i64, (cy * t as f32).round() as i64)))
         .collect();
     let offs: Vec<[isize; RAY + 2]> = steps.iter().map(|s| s.map(|(dx, dy)| dy as isize * w as isize + dx as isize)).collect();
+    // (a band that is mostly spots has no room in the host's budget for it, and little clear
+    // film to mirror: there the grain is made up)
+    let crowded = mask.iter().filter(|&&m| m != 0).count() as f32 > MIRROR_CAP * n as f32;
+    let (mirror, mirror_k) = (p.grain && !crowded && knob("MIRROR", 1.0) > 0.5, knob("MIRROR_K", MIRROR_K));
     let mut count = 0;
     for y in 0..h {
         for x in 0..w {
@@ -690,7 +1292,10 @@ pub fn clean(px: &mut [f32], w: usize, h: usize, origin: (i64, i64), p: &Params)
                 let (qx, qy) = (x as i64 + dx, y as i64 + dy);
                 (qx >= 0 && qy >= 0 && qx < w as i64 && qy < h as i64).then(|| qy as usize * w + qx as usize)
             };
+            let ray = if large.as_ref().is_some_and(|l| l[i] != 0) { RAY } else { spot_ray };
             let (mut acc, mut wsum, mut var, mut nvar) = ([0f32; 3], 0f32, [0f32; 3], 0f32);
+            // the ray that reaches clear film soonest, and how far that is
+            let mut nearest: Option<(usize, usize)> = None;
             for k in 0..steps.len() {
                 for t in 1..=ray {
                     let Some(q) = at(k, t) else { break };
@@ -713,20 +1318,42 @@ pub fn clean(px: &mut [f32], w: usize, h: usize, origin: (i64, i64), p: &Params)
                         nvar += 1.0;
                     }
                     wsum += wt;
+                    if nearest.is_none_or(|(_, best)| t < best) {
+                        nearest = Some((k, t));
+                    }
                     break;
                 }
             }
             if wsum == 0.0 {
                 continue;
             }
+            // The film's own grain, from the pixel's mirror image across the spot's nearest edge:
+            // what that pixel shows over the mean of the clear pixels around it. Mirrored, a
+            // spot's pixels take theirs from different pixels, in order, so the fill has the
+            // grain's real size and colour, which noise made up pixel by pixel wouldn't.
+            let grain = if mirror { nearest.and_then(|(k, t)| mirror_grain(mask, d, w, h, (x, y), steps[k].get(2 * t - 1).copied()?)) } else { None };
             for c in 0..3 {
                 let mut v = acc[c] / wsum;
-                if p.grain && nvar > 0.0 {
-                    // neighbours differ by √2 σ when their grain is independent
-                    let sigma = (var[c] / nvar / 2.0).sqrt();
+                // neighbours differ by √2 σ when their grain is independent
+                let sigma = if nvar > 0.0 { (var[c] / nvar / 2.0).sqrt() } else { 0.0 };
+                if let Some(g) = grain {
+                    // (bounded: beside an edge of the picture the mirror pixel's difference from
+                    // its surroundings is the edge, not grain)
+                    let most = GRAIN_MOST * sigma.max(GRAIN_FLOOR);
+                    v += mirror_k * g[c].clamp(-most, most);
+                } else if p.grain && nvar > 0.0 {
                     v += GRAIN_K * sigma * noise(origin.0 + x as i64, origin.1 + y as i64, c as u64);
                 }
                 out[c] = (-v).exp2();
+            }
+        }
+    }
+    // a raw TIFF's fills back into the host's encoding (in a pass of their own: a test inside the
+    // loop above costs the host's interpreter more than this whole pass)
+    if p.untagged && !p.show {
+        for (out, &m) in px.as_chunks_mut::<3>().0.iter_mut().zip(mask) {
+            if m != 0 {
+                *out = out.map(srgb_decode);
             }
         }
     }
