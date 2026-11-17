@@ -388,6 +388,44 @@ fn a_coloured_line_is_not_followed() {
     assert!(soft < 40, "a red line isn't followed ({soft} pixels)");
 }
 
+#[test]
+fn on_black_and_white_a_line_of_the_picture_is_left_and_hairs_are_not() {
+    // three marks 60 px long, as the detector marks them (3 px wide): a piece of a line that runs
+    // across the frame, a hair that ends where its mark does, and a hair found only in part
+    let (w, h) = (300, 150);
+    let mut g = grain_plane(w, h, 0.02);
+    let mut mask = vec![0u8; w * h];
+    let (line, hair, part) = (30, 75, 120);
+    for x in 0..w {
+        g[line * w + x] += 1.0;
+    }
+    for x in 120..180 {
+        g[hair * w + x] += 1.0;
+    }
+    for x in 120..240 {
+        g[part * w + x] += 1.0;
+    }
+    for row in [line, hair, part] {
+        for x in 120..180 {
+            for y in row - 1..=row + 1 {
+                mask[y * w + x] = 1;
+            }
+        }
+    }
+    crate::clean::drop_lines(&mut mask, &g, w, h);
+    let marked = |row: usize| (120..180).filter(|&x| mask[row * w + x] != 0).count();
+    assert_eq!(marked(line), 0, "the line of the picture is left");
+    assert_eq!(marked(hair), 60, "the hair stays marked");
+    assert_eq!(marked(part), 60, "the hair found in part stays marked");
+}
+
+#[test]
+fn the_film_setting_only_changes_black_and_white() {
+    let p = |film: &str| Params::from_json(&serde_json::json!({ "film": film }));
+    assert!(!Params::default().bw && !p(crate::FILM_OPTIONS[0]).bw, "Colour is the default and isn't black and white");
+    assert!(p(crate::FILM_OPTIONS[1]).bw);
+}
+
 /// `px` (`w x h`) area-averaged to a long edge of 1024 px, as the host hands it to *Measure*.
 fn measured(px: &[f32], w: usize, h: usize) -> (Vec<f32>, usize, usize) {
     let k = 1024.0 / w.max(h) as f64;
@@ -450,6 +488,10 @@ fn a_fibre_too_wide_for_the_spot_pass_is_measured_and_removed_alike_in_bands() {
     let a = crate::large::measure(&m, mw, mh, &Params::default());
     let marks = crate::large::marks_of(&serde_json::json!({ "_analysis": a }));
     assert_eq!(marks.len(), 1, "{a}");
+    // the same whatever Sensitivity and Protect detail say (the model was fitted at the defaults)
+    for (sensitivity, protect) in [(100.0, 0.0), (0.0, 100.0)] {
+        assert_eq!(crate::large::measure(&m, mw, mh, &Params { sensitivity, protect, ..Params::default() }), a);
+    }
     let p = Params { marks, ..Params::default() };
     // the whole frame in one band, and in bands whose edges cut through the fibre
     let mut whole = px.clone();

@@ -158,6 +158,20 @@ const FOLLOW_SAMPLE: usize = 4;
 const HALO_K: f32 = 1.0;
 const HALO_STEPS: usize = 3;
 
+/// Lines of the picture (black-and-white film, see [`drop_lines`]): a long thin mark this long at
+/// least (and long for its area: extent² / area over [`LINE_SHAPE`]) is looked past, from each
+/// end, out to [`LINE_REACH`] pixels; it is the picture's when, past both ends, at least
+/// [`LINE_SHARE`] of the steps still find a ridge [`LINE_K`] noise σ above both sides
+/// ([`LINE_SIDE`] pixels away).
+const LINE_MIN_EXT: usize = 25;
+const LINE_SHAPE: f32 = 6.0;
+const LINE_REACH: usize = 48;
+const LINE_SIDE: f32 = 6.0;
+const LINE_K: f32 = 1.5;
+const LINE_SHARE: f32 = 0.6;
+/// Steps past an end that must lie in the band for that end to count as carrying on.
+const LINE_MIN_STEPS: usize = 8;
+
 /// 16 directions, as unit vectors.
 fn directions() -> [(f32, f32); 16] {
     std::array::from_fn(|k| {
@@ -863,6 +877,9 @@ fn find_full(px: &[f32], w: usize, h: usize, origin: (i64, i64), p: &Params) -> 
     if p.polarity == Polarity::Darker && !p.wide && !crowded {
         extend_marks(&mut mask, &g, seen, blind.as_deref(), w, h);
     }
+    if p.bw && p.polarity == Polarity::Darker && !p.wide && knob("LINES", 1.0) > 0.5 {
+        drop_lines(&mut mask, &g, w, h);
+    }
     #[cfg(feature = "tuning")]
     prof.lap("grow");
     Spots { mask, density }
@@ -1057,6 +1074,153 @@ pub(crate) fn extend_marks(mask: &mut [u8], g: &[f32], seen: &[f32], blind: Opti
             break;
         }
         std::mem::swap(&mut front, &mut next);
+    }
+}
+
+/// Black-and-white film only: unmarks the long thin marks that are part of a longer line.
+///
+/// On colour film a thin dense line of the picture (a wire against the sky, a lit thread, strands
+/// of fur) usually has some colour, and the detail check keeps it; on black-and-white film it is
+/// as grey as a hair, and the detector takes it for one, a piece at a time. A hair on the film
+/// ends: past its ends the density falls back to the background's. A line of the picture carries
+/// on. So from each end of every long thin mark this steps on along the mark's direction there
+/// (allowing a pixel and a half either way) and asks whether a ridge is still there: denser than
+/// the pixels [`LINE_SIDE`] away on both sides by [`LINE_K`] noise σ. Where at least
+/// [`LINE_SHARE`] of the steps find one past both ends, the mark is unmarked. (Past one end is
+/// not enough: a hair the detector found only part of carries on past that part.) The noise σ is
+/// the spread of the same difference (across x and across y) over a grid of pixels around the
+/// mark. Steps outside the band, or inside the mark, don't count, and an end with too few steps
+/// left doesn't carry on, so a hair cut by the band's edge stays marked. Measured on the "bw"
+/// release's scans, whose hair-like marks were labelled by eye: 13 of 34 lines of the picture
+/// unmarked (2 more in part), none of 6 hairs; and on black-and-white copies of the infrared
+/// frames, the hairs' pixels covered are the same with and without it.
+#[inline(never)]
+pub(crate) fn drop_lines(mask: &mut [u8], g: &[f32], w: usize, h: usize) {
+    let n = w * h;
+    let mean = |x: i64, y: i64| box3(clamp(y, h) * w + clamp(x, w), w, h, |k| g[k]);
+    let inside = |x: f32, y: f32, m: f32| x >= m && y >= m && x < w as f32 - m && y < h as f32 - m;
+    let (k_ridge, share) = (knob("LINE_K", LINE_K), knob("LINE_SHARE", LINE_SHARE));
+    let mut id = vec![0u32; n];
+    let mut members: Vec<usize> = Vec::new();
+    let mut r: Vec<f32> = Vec::new();
+    let mut next_id = 0u32;
+    for start in 0..n {
+        if mask[start] == 0 || id[start] != 0 {
+            continue;
+        }
+        next_id += 1;
+        members.clear();
+        members.push(start);
+        id[start] = next_id;
+        let (mut x0, mut x1, mut y0, mut y1) = (usize::MAX, 0, usize::MAX, 0);
+        let mut k = 0;
+        while k < members.len() {
+            let i = members[k];
+            k += 1;
+            let (x, y) = (i % w, i / w);
+            (x0, x1, y0, y1) = (x0.min(x), x1.max(x), y0.min(y), y1.max(y));
+            for (dx, dy) in NEIGHBOURS {
+                let (qx, qy) = (x as i64 + dx, y as i64 + dy);
+                if qx >= 0 && qy >= 0 && (qx as usize) < w && (qy as usize) < h {
+                    let q = qy as usize * w + qx as usize;
+                    if mask[q] != 0 && id[q] == 0 {
+                        id[q] = next_id;
+                        members.push(q);
+                    }
+                }
+            }
+        }
+        let (ext, area) = ((x1 - x0).max(y1 - y0) + 1, members.len());
+        if ext < LINE_MIN_EXT || ((ext * ext) as f32) <= LINE_SHAPE * area as f32 {
+            continue;
+        }
+        // the main axis
+        let (mut sx, mut sy) = (0f64, 0f64);
+        for &i in &members {
+            sx += (i % w) as f64;
+            sy += (i / w) as f64;
+        }
+        let (cx, cy) = (sx / area as f64, sy / area as f64);
+        let (mut a, mut b, mut c) = (0f64, 0f64, 0f64);
+        for &i in &members {
+            let (dx, dy) = ((i % w) as f64 - cx, (i / w) as f64 - cy);
+            a += dx * dx;
+            b += dx * dy;
+            c += dy * dy;
+        }
+        let theta = 0.5 * (2.0 * b).atan2(a - c);
+        let (ax, ay) = (theta.cos(), theta.sin());
+        let proj = |i: usize| ((i % w) as f64 - cx) * ax + ((i / w) as f64 - cy) * ay;
+        let (lo, hi) = members.iter().fold((f64::MAX, f64::MIN), |(l, u), &i| (l.min(proj(i)), u.max(proj(i))));
+        // the noise σ around the mark
+        r.clear();
+        let side = LINE_SIDE as i64;
+        for y in ((y0 as i64 - 32).max(side)..(y1 as i64 + 32).min(h as i64 - side)).step_by(4) {
+            for x in ((x0 as i64 - 32).max(side)..(x1 as i64 + 32).min(w as i64 - side)).step_by(4) {
+                let v = mean(x, y);
+                r.push(v - 0.5 * (mean(x - side, y) + mean(x + side, y)));
+                r.push(v - 0.5 * (mean(x, y - side) + mean(x, y + side)));
+            }
+        }
+        if r.len() < 16 {
+            continue;
+        }
+        let half = r.len() / 2;
+        let med = nth(&mut r, half);
+        let mut dev: Vec<f32> = r.iter().map(|v| (v - med).abs()).collect();
+        let sigma = (1.4826 * nth(&mut dev, half)).max(1e-4);
+        let mut ends = 0;
+        for sign in [1.0f64, -1.0] {
+            let end = if sign > 0.0 { hi } else { lo };
+            // the end, and the mark's direction there (from the stretch before it)
+            let (mut ex, mut ey, mut en, mut bx, mut by, mut bn) = (0f64, 0f64, 0f64, 0f64, 0f64, 0f64);
+            for &i in &members {
+                let t = sign * (proj(i) - end);
+                let (x, y) = ((i % w) as f64, (i / w) as f64);
+                if t >= -4.0 {
+                    (ex, ey, en) = (ex + x, ey + y, en + 1.0);
+                } else if t >= -16.0 {
+                    (bx, by, bn) = (bx + x, by + y, bn + 1.0);
+                }
+            }
+            let (ex, ey) = (ex / en, ey / en);
+            let (mut dx, mut dy) = if bn > 0.0 { (ex - bx / bn, ey - by / bn) } else { (sign * ax, sign * ay) };
+            let len = (dx * dx + dy * dy).sqrt();
+            (dx, dy) = if len < 1e-6 { (sign * ax, sign * ay) } else { (dx / len, dy / len) };
+            let (dx, dy, ex, ey) = (dx as f32, dy as f32, ex as f32, ey as f32);
+            let (nx, ny) = (-dy, dx);
+            let (mut steps, mut ridge) = (0usize, 0usize);
+            for s in (4..=LINE_REACH).step_by(2) {
+                let mut best: Option<f32> = None;
+                for off in [-1.5f32, 0.0, 1.5] {
+                    let (qx, qy) = (ex + s as f32 * dx + off * nx, ey + s as f32 * dy + off * ny);
+                    if !inside(qx, qy, LINE_SIDE + 2.0) {
+                        continue;
+                    }
+                    let (ix, iy) = (qx.round() as i64, qy.round() as i64);
+                    if id[iy as usize * w + ix as usize] == next_id {
+                        continue;
+                    }
+                    let v = mean(ix, iy);
+                    let l = mean((qx - LINE_SIDE * nx).round() as i64, (qy - LINE_SIDE * ny).round() as i64);
+                    let u = mean((qx + LINE_SIDE * nx).round() as i64, (qy + LINE_SIDE * ny).round() as i64);
+                    let d = (v - l).min(v - u) / sigma;
+                    best = Some(best.map_or(d, |e: f32| e.max(d)));
+                }
+                if let Some(d) = best {
+                    steps += 1;
+                    ridge += usize::from(d > k_ridge);
+                }
+            }
+            if steps >= LINE_MIN_STEPS && ridge as f32 >= share * steps as f32 {
+                ends += 1;
+            }
+        }
+        if ends == 2 {
+            for &i in &members {
+                mask[i] = 0;
+            }
+        }
     }
 }
 

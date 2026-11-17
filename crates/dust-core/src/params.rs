@@ -28,6 +28,9 @@ pub struct Params {
     pub half: bool,
     /// The host decoded a linear scan with the sRGB curve (see [`SCAN_OPTIONS`]).
     pub untagged: bool,
+    /// Black-and-white film (see [`FILM_OPTIONS`]): long thin marks that are part of a longer
+    /// line are left (`clean::drop_lines`).
+    pub bw: bool,
     /// Set by the half-scale search for its own pass: marks may be as wide as half a statistics window.
     pub(crate) wide: bool,
     /// Set for the large-mark candidates ([`crate::large`]): the detector without its detail check.
@@ -59,6 +62,7 @@ impl Default for Params {
             show: false,
             half: false,
             untagged: false,
+            bw: false,
             wide: false,
             classic: false,
             marks: Vec::new(),
@@ -82,6 +86,15 @@ pub const SCALE_OPTIONS: [&str; 2] = ["Full", "Half (experimental)"];
 /// out about 2.2 times as deep, and picture highlights (a zipper's glints) get as deep as dust. The
 /// second option undoes the curve. DNGs, and TIFFs with a profile, are read right: the first.
 pub const SCAN_OPTIONS: [&str; 2] = ["DNG, or TIFF with a profile", "Raw TIFF without a profile"];
+
+/// *Film*. On colour film dust is grey and most thin lines of the picture aren't, and the detail
+/// check leans on that; on black-and-white film a wire, a lit thread or a strand of fur is as
+/// grey as a hair, and it was taken for one, a piece at a time (most of the hair-like marks on the
+/// "bw" release's scans, labelled by eye). The second option leaves the long thin marks that
+/// carry on past both ends; the first changes nothing. (A model trained on black-and-white copies
+/// of the infrared frames was tried and dropped: on those scans it was no better than this one
+/// at telling dust from picture.)
+pub const FILM_OPTIONS: [&str; 2] = ["Colour", "Black & white"];
 
 /// The frame's size from the host's `_image` (`canvasWidth`, `canvasHeight`).
 fn canvas(v: &Value) -> Option<(usize, usize)> {
@@ -111,6 +124,7 @@ impl Params {
             marks: crate::large::marks_of(v),
             canvas: canvas(v),
             untagged: v.get("scan").and_then(Value::as_str) == Some(SCAN_OPTIONS[1]),
+            bw: v.get("film").and_then(Value::as_str) == Some(FILM_OPTIONS[1]),
             half: v.get("scale").and_then(Value::as_str) == Some(SCALE_OPTIONS[1]),
         }
     }

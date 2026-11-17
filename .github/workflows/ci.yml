@@ -4,7 +4,8 @@ on:
   push:
     branches: [main]
   pull_request:
-  # publishing a release (tag vX.Y.Z) on GitHub builds and attaches chromalab-vX.Y.Z.wasm
+  # publishing a release on GitHub builds and attaches the plug-in: tag vX.Y.Z → chromalab-vX.Y.Z.wasm,
+  # tag chromadust-vX.Y.Z → chromadust-vX.Y.Z.wasm
   release:
     types: [published]
 
@@ -35,6 +36,8 @@ jobs:
 
   release:
     # (a prerelease carries its own files: nothing is built or attached for it)
+    # tag vX.Y.Z → ChromaLab (chromalab-vX.Y.Z.wasm, notes from "## X.Y.Z");
+    # tag chromadust-vX.Y.Z → ChromaDust (chromadust-vX.Y.Z.wasm, notes from "## ChromaDust X.Y.Z")
     if: github.event_name == 'release' && !github.event.release.prerelease
     needs: check
     runs-on: ubuntu-latest
@@ -48,16 +51,22 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32-unknown-unknown
-      - name: Check the tag matches Cargo.toml
+      - name: Which plug-in, and check the tag matches its Cargo.toml
         run: |
-          v=$(grep -m1 '^version' plugins/chromalab/Cargo.toml | cut -d'"' -f2)
-          test "v$v" = "$TAG" || { echo "release tag $TAG but plugins/chromalab/Cargo.toml says $v"; exit 1; }
-      - run: cargo build --release --target wasm32-unknown-unknown -p chromalab
+          case "$TAG" in
+            chromadust-v*) plugin=chromadust; v=${TAG#chromadust-v}; heading="## ChromaDust $v" ;;
+            v*)            plugin=chromalab;  v=${TAG#v};            heading="## $v" ;;
+            *) echo "release tag $TAG is neither vX.Y.Z nor chromadust-vX.Y.Z"; exit 1 ;;
+          esac
+          c=$(grep -m1 '^version' "plugins/$plugin/Cargo.toml" | cut -d'"' -f2)
+          test "$c" = "$v" || { echo "release tag $TAG but plugins/$plugin/Cargo.toml says $c"; exit 1; }
+          { echo "PLUGIN=$plugin"; echo "VERSION=$v"; echo "HEADING=$heading"; } >> "$GITHUB_ENV"
+      - run: cargo build --release --target wasm32-unknown-unknown -p "$PLUGIN"
       - name: Attach the plug-in (and the changelog's notes when the release has none)
         run: |
-          cp target/wasm32-unknown-unknown/release/chromalab.wasm "chromalab-$TAG.wasm"
-          gh release upload "$TAG" "chromalab-$TAG.wasm" --clobber
+          cp "target/wasm32-unknown-unknown/release/$PLUGIN.wasm" "$PLUGIN-v$VERSION.wasm"
+          gh release upload "$TAG" "$PLUGIN-v$VERSION.wasm" --clobber
           if [ -z "$(gh release view "$TAG" --json body --jq .body)" ]; then
-            notes=$(awk -v v="## ${TAG#v}" '$0 ~ "^"v {f=1; next} /^## / {f=0} f' CHANGELOG.md)
+            notes=$(awk -v h="$HEADING" 'index($0, h) == 1 && (length($0) == length(h) || substr($0, length(h) + 1, 1) == " ") {f=1; next} /^## / {f=0} f' CHANGELOG.md)
             gh release edit "$TAG" --notes "$notes"
           fi

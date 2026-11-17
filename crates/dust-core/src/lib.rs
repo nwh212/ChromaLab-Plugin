@@ -17,4 +17,4 @@ mod tests;
 
 pub use clean::{Spots, clean, find, ring_radius, warm_up};
 pub use model::NF;
-pub use params::{BAND_OVERLAP, IMAGE_OPTIONS, MAX_SIZE, MIN_SIZE, OVERLAP, Params, Polarity, SCALE_OPTIONS, SCAN_OPTIONS};
+pub use params::{BAND_OVERLAP, FILM_OPTIONS, IMAGE_OPTIONS, MAX_SIZE, MIN_SIZE, OVERLAP, Params, Polarity, SCALE_OPTIONS, SCAN_OPTIONS};

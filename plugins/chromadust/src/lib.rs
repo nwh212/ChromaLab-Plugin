@@ -7,7 +7,7 @@
 
 #![deny(clippy::unwrap_used, clippy::expect_used, clippy::panic, clippy::unimplemented, clippy::todo, clippy::unreachable)]
 
-use dust_core::{BAND_OVERLAP, IMAGE_OPTIONS, MAX_SIZE, MIN_SIZE, Params, SCALE_OPTIONS, SCAN_OPTIONS, clean, warm_up};
+use dust_core::{BAND_OVERLAP, FILM_OPTIONS, IMAGE_OPTIONS, MAX_SIZE, MIN_SIZE, Params, SCALE_OPTIONS, SCAN_OPTIONS, clean, warm_up};
 use serde_json::Value;
 
 /// The manifest as written, in dialog order; `@…` placeholders are filled in from the code by [`manifest`].
@@ -36,8 +36,12 @@ pub fn manifest() -> String {
         .replace("\"@version\"", &json_string(env!("CARGO_PKG_VERSION")))
         .replace("\"@overlap\"", &BAND_OVERLAP.to_string())
         .replace("\"@icon\"", &json_string(include_str!("../../../brand/chromadust-icon.svg")))
+        .replace("\"@header_dark\"", &json_string(include_str!("../../../brand/chromadust-logo-dark.svg")))
+        .replace("\"@header_light\"", &json_string(include_str!("../../../brand/chromadust-logo-light.svg")))
         .replace("\"@images\"", &Value::from(IMAGE_OPTIONS.to_vec()).to_string())
         .replace("\"@image_default\"", &json_string(IMAGE_OPTIONS[0]))
+        .replace("\"@films\"", &Value::from(FILM_OPTIONS.to_vec()).to_string())
+        .replace("\"@film_default\"", &json_string(FILM_OPTIONS[0]))
         .replace("\"@scales\"", &Value::from(SCALE_OPTIONS.to_vec()).to_string())
         .replace("\"@scale_default\"", &json_string(SCALE_OPTIONS[0]))
         .replace("\"@scans\"", &Value::from(SCAN_OPTIONS.to_vec()).to_string())
@@ -113,9 +117,14 @@ mod tests {
         assert_eq!(m["stage"], "source");
         assert!(m["icon"].as_str().unwrap().starts_with("<svg"));
         assert!(m["icon"].as_str().unwrap().len() <= 24 * 1024);
+        for theme in ["dark", "light"] {
+            let header = m["header"][theme].as_str().unwrap();
+            assert!(header.starts_with("<svg") && header.contains("<title>ChromaDust</title>") && header.len() <= 24 * 1024);
+        }
         let p = &m["params"];
         assert_eq!(p["image"]["options"].as_array().unwrap().len(), IMAGE_OPTIONS.len());
         assert_eq!(p["scan"]["options"].as_array().unwrap().len(), SCAN_OPTIONS.len());
+        assert_eq!(p["film"]["options"].as_array().unwrap().len(), FILM_OPTIONS.len());
         assert_eq!((p["maxSize"]["min"].as_u64(), p["maxSize"]["max"].as_u64()), (Some(MIN_SIZE as u64), Some(MAX_SIZE as u64)));
         // every default is what Params assumes when the host sends nothing
         let defaults: serde_json::Map<String, Value> = p.as_object().unwrap().iter().map(|(k, s)| (k.clone(), s["default"].clone())).collect();

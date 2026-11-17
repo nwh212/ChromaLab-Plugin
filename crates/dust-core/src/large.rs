@@ -90,7 +90,11 @@ pub fn candidates(px: &[f32], w: usize, h: usize, p: &Params) -> Vec<Candidate> 
     if n == 0 || px.len() < n * 3 || p.polarity != Polarity::Darker {
         return Vec::new();
     }
-    let q = Params { max_size: MAX_SIZE, half: false, show: false, ..p.clone() };
+    // Sensitivity and Protect detail at their defaults, whatever the sliders say: [`is_dust`] was
+    // fitted to the candidates found there (`crowd` counts them), and at Sensitivity 100 the
+    // threshold falls to a quarter and the candidates ran Measure out of the host's budget.
+    let d = Params::default();
+    let q = Params { max_size: MAX_SIZE, half: false, show: false, sensitivity: d.sensitivity, protect: d.protect, ..p.clone() };
     let found = find_classic(px, w, h, &q);
     let (_, seen) = densities(&px[..n * 3], p.untagged, LIFT);
     let mask = &found.mask;

@@ -78,6 +78,11 @@ slides, every WB mode, a spread of looks, stocks, profiles and sliders).
    builds the plug-in and attaches `chromalab-vX.Y.Z.wasm`, with the changelog's notes if the release
    has none.
 
+ChromaDust is released the same way: its version is in `plugins/chromadust/Cargo.toml`, its
+changelog entry is headed `## ChromaDust X.Y.Z`, and its release is tagged `chromadust-vX.Y.Z`. CI
+then builds and attaches `chromadust-vX.Y.Z.wasm`. Update the `changelog` link in its manifest to the
+new entry's anchor. A release marked as a prerelease gets nothing from CI: attach its file yourself.
+
 ## A new plug-in
 
 Add `plugins/<name>` with `crate-type = ["cdylib", "rlib"]`, depend on `pixel-filter`, and write its
@@ -253,7 +258,28 @@ hair filled 86.8 → 91.1 % (raw0012 85 → 94, v0019 81 → 91, v0003 73 → 78
 more pixels filled away from infrared dust, the same time (a tile of 48 wastes about as much margin as
 a strip of 16). Tiles alone, at 16, gained under a point (a horizontal hair gets cut by a tile's side
 instead), and 32 wasn't enough for v0007. On a host that cuts strips a 48 px overlap costs about three
-times the work: don't release `BAND_OVERLAP` > 16 until tiles are in Chromaforge.
+times the work. Tiles are in Chromaforge from v26.47.1, which is why ChromaDust needs it.
+
+**Black-and-white film (*Film*, `drop_lines`).** On black-and-white film a wire, a lit thread or a
+strand of fur is as grey as a hair, and the network took it for one, a piece at a time. Five
+black-and-white scans were labelled by eye from crops (in the work folder's history; nothing of them
+is in the repository): most of the hair-like marks there were lines of the picture.
+
+*Black & white* runs `drop_lines` after the hair following. From each end of every long, thin mark
+(at least 25 px, extent² / area over 6), it steps up to 48 px on along the mark's direction there,
+looking for a ridge: denser than the pixels 6 px to both sides by 1.5 noise σ. A mark where at least
+60 % of the steps find one, past both ends, is unmarked. One end is not enough: past the found part
+of a hair that was found only in part, the rest of the hair carries on.
+
+The result on the labelled marks: 13 of 34 picture lines kept (2 more in part), 6 of 6 hairs still
+removed. On black-and-white copies of the infrared frames, the hairs' pixels covered are the same
+with and without it. Tried and dropped:
+- a model trained on those black-and-white copies: no better than the colour model at telling dust
+  from picture;
+- counting a tile's edge as "carries on": cost hair, and spared about 2 more lines.
+
+What it still misses is mostly long wire runs that leave the tile: that needs context from beyond
+the tile. *Colour* doesn't call it, and its output is byte-identical to 0.1.0-pre6.
 
 **Large marks (*Measure*, `large.rs`).** A mark wider than the spot pass's 20 px (raw0005's fibre,
 about 115 × 90 px with a translucent flap) can't be told from picture inside a band: on its own

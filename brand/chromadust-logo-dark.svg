@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1030 240" width="2060" height="480">
+<title>ChromaDust</title>
+<defs>
+<linearGradient id="spectrum" gradientUnits="userSpaceOnUse" x1="30" y1="0" x2="544" y2="0">
+<stop offset="0" stop-color="#ff4d6d"/><stop offset="0.3" stop-color="#ff9a3c"/><stop offset="0.55" stop-color="#ffd23f"/>
+<stop offset="0.78" stop-color="#3bceac"/><stop offset="1" stop-color="#4d8dff"/></linearGradient>
+</defs>
+<g fill="none" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
+<g stroke="url(#spectrum)"><path d="M136.3,92.2 A61.0,61.0 0 1 0 136.3,173.8"/><path d="M167.33183435412104,52 V194 M167.33183435412104,194 V160.0 A34.0,34.0 0 0 1 235.33183435412104,160.0 V194"/><path d="M266.33183435412104,194 V160.0 A34.0,34.0 0 0 1 300.33183435412104,126 H308.33183435412104"/><circle cx="373.33183435412104" cy="160.0" r="34.0"/><path d="M438.33183435412104,194 V152.52 A26.52,26.52 0 0 1 491.37183435412106,152.52 V194 M491.37183435412106,152.52 A26.52,26.52 0 0 1 544.4118343541211,152.52 V194"/><circle cx="609.4118343541211" cy="160.0" r="34.0"/><path d="M643.4118343541211,126 V194"/></g>
+<g stroke="#e8eaee"><path d="M682.41,72 V194 M682.41,72 H696.41 A61,61 0 0 1 696.41,194 H682.41"/><path d="M788.41,126 V160 A34,34 0 0 0 856.41,160 V126 M856.41,126 V194"/><path d="M924.34,133.25 A17,17 0 1 0 910.41,160 A17,17 0 1 1 896.48,186.75"/><path d="M970.41,92 V180 Q970.41,194 984.41,194 H990.41 M956.41,126 H992.41"/></g>
+</g>
+<g fill="#ffb03a"><path d="M1004.41,64 l5,15 l15,5 l-15,5 l-5,15 l-5,-15 l-15,-5 l15,-5 z"/><circle cx="982.41" cy="58" r="4.5" opacity="0.6"/><circle cx="1018.41" cy="122" r="3.5" opacity="0.6"/></g>
+</svg>

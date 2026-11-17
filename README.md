@@ -16,6 +16,10 @@ spirit of the two-step negative-conversion tools: **measure** the frame once, th
 It uses the app's pixel-filter ABI (PhotoCraft plug-in ABI v1 with the `pc_analyze` v1.1 proposal; see
 the app's `docs/plugins.md` ▸ *Pixel filters*), runs in its sandbox and asks for no permissions.
 
+> **Also here: [ChromaDust](CHROMADUST.md)**, which removes dust, hair and specks from scanned film
+> before ChromaLab converts it. It is a separate plug-in (`chromadust-<version>.wasm`), with
+> its own [guide](CHROMADUST.md).
+
 ChromaLab was called ChromaNeg until 0.12. It keeps the same plug-in ID
 (`io.github.nwh212.chromaneg`), so it replaces ChromaNeg when installed, and photos converted with
 ChromaNeg keep working.

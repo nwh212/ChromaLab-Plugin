@@ -4,6 +4,35 @@ Measurements made with one version can need **Measure** again in a later one; th
 "Reference error" is the mean difference from a Negative Lab Pro conversion of the same scan, in
 levels of 255 (see the README).
 
+ChromaDust's entries are headed "ChromaDust" and its version (its guide is
+[CHROMADUST.md](CHROMADUST.md)); the others are ChromaLab's.
+
+## ChromaDust 0.1.0
+The first release of ChromaDust, a pixel filter that removes dust, hair and specks from scanned
+film. Install `chromadust-v0.1.0.wasm` beside ChromaLab and add it above ChromaLab. It needs
+Chromaforge v26.47.1 or newer for its tiles; on older versions it runs, but slower (see the guide).
+- **Dust and specks:** a classical detector proposes marks denser than their surroundings, and a
+  small network (57 features, 16-8-1) decides which are dust. The network was trained on 25 frames
+  whose infrared channel shows the dust. The marks are filled from their surroundings with the
+  film's own grain.
+- **Hairs, whole:** every hair found is followed along its soft, out-of-focus stretches, and its
+  halo is filled too.
+- **Large marks by Measure:** a fibre or flake wider than *Max spot size* is found on the whole
+  frame (at 1024 px, inside the crop) and removed at full size.
+- **Film: Black & white:** leaves the long, thin marks that carry on past both ends, which are lines
+  of the picture (wires, threads, fur), not hairs. On five black-and-white scans it kept 13 of the
+  34 picture lines that had been removed (2 more in part), and still removed all 6 hairs. *Colour*
+  is unchanged.
+- **Scan file: Raw TIFF without a profile** for raw scans saved as TIFF, which the app reads as sRGB.
+- **Image: Converted negative** for a filter placed after ChromaLab (the classical detector alone).
+- **Detection scale: Half (experimental)** for large, soft flatbed scans.
+- Previews: the app's small draft is left alone, so the dust removal shows once the full-size run
+  is done.
+- Since 0.1.0-pre6: *Measure* no longer follows *Sensitivity* and *Protect detail*. Its model was
+  fitted at their defaults, and at Sensitivity 100 Measure ran out of the app's instruction budget.
+  Checked through Chromaforge v26.47.1's filter runtime at 85 % of its budget, at the sliders'
+  extremes, in both Film modes.
+
 ## 0.12.2
 - **Links in the Plug-in Manager:** the About tab shows ChromaLab's homepage, repository, changelog
   and licence, and a *Report a Problem* button that opens the repository's issues (manifest
