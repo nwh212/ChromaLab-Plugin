@@ -28,8 +28,8 @@ pub struct Params {
     pub half: bool,
     /// The host decoded a linear scan with the sRGB curve (see [`SCAN_OPTIONS`]).
     pub untagged: bool,
-    /// Black-and-white film (see [`FILM_OPTIONS`]): long thin marks that are part of a longer
-    /// line are left (`clean::drop_lines`).
+    /// Black-and-white film (see [`FILM_OPTIONS`]): marks that sit on a longer line of the
+    /// picture are left (`clean::drop_lines`).
     pub bw: bool,
     /// Set by the half-scale search for its own pass: marks may be as wide as half a statistics window.
     pub(crate) wide: bool,
@@ -90,8 +90,8 @@ pub const SCAN_OPTIONS: [&str; 2] = ["DNG, or TIFF with a profile", "Raw TIFF wi
 /// *Film*. On colour film dust is grey and most thin lines of the picture aren't, and the detail
 /// check leans on that; on black-and-white film a wire, a lit thread or a strand of fur is as
 /// grey as a hair, and it was taken for one, a piece at a time (most of the hair-like marks on the
-/// "bw" release's scans, labelled by eye). The second option leaves the long thin marks that
-/// carry on past both ends; the first changes nothing. (A model trained on black-and-white copies
+/// "bw" release's scans, labelled by eye). The second option leaves the marks that sit on a line
+/// carrying on past both ends; the first changes nothing. (A model trained on black-and-white copies
 /// of the infrared frames was tried and dropped: on those scans it was no better than this one
 /// at telling dust from picture.)
 pub const FILM_OPTIONS: [&str; 2] = ["Colour", "Black & white"];

@@ -19,15 +19,18 @@ Chromaforge v26.47.1 or newer for its tiles; on older versions it runs, but slow
   halo is filled too.
 - **Large marks by Measure:** a fibre or flake wider than *Max spot size* is found on the whole
   frame (at 1024 px, inside the crop) and removed at full size.
-- **Film: Black & white:** leaves the long, thin marks that carry on past both ends, which are lines
-  of the picture (wires, threads, fur), not hairs. On five black-and-white scans it kept 13 of the
-  34 picture lines that had been removed (2 more in part), and still removed all 6 hairs. *Colour*
-  is unchanged.
+- **Film: Black & white:** leaves the marks that sit on a line carrying on past both ends, which
+  are lines of the picture (wires, threads, fur, whiskers), not hairs. It follows the line as it
+  bends and fades. On five black-and-white scans it kept 21 of the 34 picture lines that had been
+  removed (4 more in part), and still removed all 6 hairs. *Colour* is unchanged.
 - **Scan file: Raw TIFF without a profile** for raw scans saved as TIFF, which the app reads as sRGB.
 - **Image: Converted negative** for a filter placed after ChromaLab (the classical detector alone).
 - **Detection scale: Half (experimental)** for large, soft flatbed scans.
 - Previews: the app's small draft is left alone, so the dust removal shows once the full-size run
   is done.
+- Since 0.1.0-pre6: *Black & white* also follows curved, fading lines (a cat's whiskers were cut
+  up before), and checks short marks, not only long ones. Real dust found on the infrared-labelled
+  frames: 77.3 → 76.9 %. *Colour* output is byte for byte the same.
 - Since 0.1.0-pre6: *Measure* no longer follows *Sensitivity* and *Protect detail*. Its model was
   fitted at their defaults, and at Sensitivity 100 Measure ran out of the app's instruction budget.
   Checked through Chromaforge v26.47.1's filter runtime at 85 % of its budget, at the sliders'

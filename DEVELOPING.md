@@ -265,18 +265,41 @@ strand of fur is as grey as a hair, and the network took it for one, a piece at 
 black-and-white scans were labelled by eye from crops (in the work folder's history; nothing of them
 is in the repository): most of the hair-like marks there were lines of the picture.
 
-*Black & white* runs `drop_lines` after the hair following. From each end of every long, thin mark
-(at least 25 px, extent² / area over 6), it steps up to 48 px on along the mark's direction there,
-looking for a ridge: denser than the pixels 6 px to both sides by 1.5 noise σ. A mark where at least
-60 % of the steps find one, past both ends, is unmarked. One end is not enough: past the found part
-of a hair that was found only in part, the rest of the hair carries on.
+*Black & white* runs `drop_lines` after the hair following. It finds the marks once and asks two
+tests; a mark either finds to be part of a line is unmarked. One end is never enough: past the found
+part of a hair that was found only in part, the rest of the hair carries on.
+- `straight_line`, for long, thin marks (at least 25 px, extent² / area over 6): from each end it
+  steps up to 48 px on along the mark's direction there, looking for a ridge denser than the pixels
+  6 px to both sides by 1.5 noise σ. At least 60 % of the steps must find one, past both ends.
+- `Ridges::carries_on`, for every mark of 12 px or more (40 in a crowded tile): from the mark's
+  densest pixel it follows the ridge both ways, in 2 px steps, each taking the strongest of the
+  three nearest of 16 directions at three offsets across, so it bends with the line. The ridge
+  strength is a 13 px segment's mean density over the parallel segments 3 px to either side, in σ
+  of the same measure around the tile block (64 px). Below 2.5 σ is a miss, three misses in a row
+  end it; it must run 24 px outside the mark past both ends.
 
-The result on the labelled marks: 13 of 34 picture lines kept (2 more in part), 6 of 6 hairs still
-removed. On black-and-white copies of the infrared frames, the hairs' pixels covered are the same
-with and without it. Tried and dropped:
+The ridge test came from a cat's whiskers (raw0003): curved, tapering lines the detector cut into
+short, fat pieces (after the mask's growth most were under 25 px or too fat for the straight test).
+It was prototyped in Python on the default run's masks, then swept in Rust (`CHROMADUST_TUNE_LINE_K`,
+`_LINE_REACH`). Results on the labelled marks, both tests together: 21 of 34 picture lines kept (4
+more in part; 13 and 2 with the straight test alone), 6 of 6 hairs still removed, 188 of 225
+labelled dust specks still removed (190 before), raw0003's whiskers 917 px marked (3216 before). On
+black-and-white copies of the infrared frames: spot recall 77.3 → 76.9 %, depth covered 65.2 →
+64.7 %, precision 54.9 % either way. Lower thresholds (K 2.0) spared one more line but cost a hair;
+a shorter reach (20 px) cost a hair.
+
+Budget: in Chromaforge's runtime a pass over a tile costs about as much as the tests themselves, so
+both tests share one pass, and the tile's "crowded" share comes from the detector. A first version
+with a pass of its own took bw_raw0010 at the sliders' extremes from 3215 to 3708 fuel per sample;
+the shared pass brings it to 3127 (78 % of the budget), below 0.1.0-pre6.
+
+Tried and dropped:
 - a model trained on those black-and-white copies: no better than the colour model at telling dust
   from picture;
-- counting a tile's edge as "carries on": cost hair, and spared about 2 more lines.
+- counting a tile's edge as "carries on": cost hair, and spared about 2 more lines;
+- *Protect detail* moving the network's cut by the background's texture: barely touched the marks in
+  raw0003's light, grainy areas (most of them clumps of grain about 3.8 σ deep) and cost 10 dust
+  specks at 100. Those grain marks need a labelled set of their own.
 
 What it still misses is mostly long wire runs that leave the tile: that needs context from beyond
 the tile. *Colour* doesn't call it, and its output is byte-identical to 0.1.0-pre6.

@@ -412,11 +412,58 @@ fn on_black_and_white_a_line_of_the_picture_is_left_and_hairs_are_not() {
             }
         }
     }
-    crate::clean::drop_lines(&mut mask, &g, w, h);
+    crate::clean::drop_lines(&mut mask, &g, w, h, false);
     let marked = |row: usize| (120..180).filter(|&x| mask[row * w + x] != 0).count();
     assert_eq!(marked(line), 0, "the line of the picture is left");
     assert_eq!(marked(hair), 60, "the hair stays marked");
     assert_eq!(marked(part), 60, "the hair found in part stays marked");
+}
+
+#[test]
+fn on_black_and_white_pieces_of_a_curved_fading_line_are_left_and_a_curved_hair_is_not() {
+    // a whisker: an arc 1 px wide that fades from 0.5 to 0.2 stops along its length, of which the
+    // detector marked three short pieces (as it marks them, 3 px wide); and a hair as curved, that
+    // ends where its mark does
+    let (w, h) = (400, 260);
+    let mut g = grain_plane(w, h, 0.02);
+    let arc = |cy: f32, t: f32| (40.0 + t, cy + (t - 160.0).powi(2) / 400.0);
+    for k in 0..=3200 {
+        let t = k as f32 / 10.0;
+        let (x, y) = arc(60.0, t);
+        g[y.round() as usize * w + x.round() as usize] = g[y.round() as usize * w + x.round() as usize].max(0.5 - 0.3 * t / 320.0);
+    }
+    for k in 0..=500 {
+        let t = 130.0 + k as f32 / 10.0;
+        let (x, y) = arc(180.0, t);
+        g[y.round() as usize * w + x.round() as usize] = 0.5;
+    }
+    let mut mask = vec![0u8; w * h];
+    let mark = |mask: &mut [u8], cy: f32, from: f32, to: f32| {
+        let mut t = from;
+        while t <= to {
+            let (x, y) = arc(cy, t);
+            for dy in -1..=1i64 {
+                for dx in -1..=1i64 {
+                    mask[(y.round() as i64 + dy) as usize * w + (x.round() as i64 + dx) as usize] = 1;
+                }
+            }
+            t += 0.5;
+        }
+    };
+    let pieces = [(60.0, 100.0), (150.0, 162.0), (230.0, 240.0)];
+    for (from, to) in pieces {
+        mark(&mut mask, 60.0, from, to);
+    }
+    mark(&mut mask, 180.0, 130.0, 180.0);
+    crate::clean::drop_lines(&mut mask, &g, w, h, false);
+    let marked = |cy: f32, from: f32, to: f32| {
+        let (x, y) = arc(cy, (from + to) / 2.0);
+        mask[y.round() as usize * w + x.round() as usize] != 0
+    };
+    for (from, to) in pieces {
+        assert!(!marked(60.0, from, to), "the piece of the whisker at {from}..{to} is left");
+    }
+    assert!(marked(180.0, 130.0, 180.0), "the curved hair stays marked");
 }
 
 #[test]

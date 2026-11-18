@@ -74,19 +74,25 @@ crop) under 0.5 megapixels is never cleaned.
 
 **Film.** On colour film, dust and hair are grey and most fine lines of the picture are coloured,
 and the network leans on that. On black-and-white film everything is grey. There a wire against
-the sky, a lit thread or a strand of fur looks just like a hair, and it was removed a piece at a
-time. *Black & white* looks past both ends of every long, thin mark. A hair ends; a line of the
-picture carries on. Marks that carry on past both ends are left.
+the sky, a lit thread, a strand of fur or a cat's whisker looks just like a hair, and it was
+removed a piece at a time. *Black & white* follows the line each mark lies on, past both ends,
+bending with it as a whisker bends and fades. A hair ends; a line of the picture carries on.
+Marks that carry on past both ends are left.
 
-On five black-and-white scans labelled by eye, it kept 13 of the 34 picture lines that had been
-removed (2 more in part), and still removed all 6 hairs. On the infrared-labelled frames it removed
-as much of each hair as before. *Colour* is ChromaDust's normal mode, and the setting changes
+On five black-and-white scans labelled by eye, it kept 21 of the 34 picture lines that had been
+removed (4 more in part), and still removed all 6 hairs. On one of them, less than a third as much
+of a cat's whiskers was removed as before. On the infrared-labelled frames it found as much of the dust as
+before, to within half a percent. *Colour* is ChromaDust's normal mode, and the setting changes
 nothing on colour film.
 
 ## Limits
 
-- **Long lines on black and white.** A wire that runs out of the 48 px a tile sees past its edge
-  is judged within the tile alone, and can still be taken for a hair.
+- **Lines on black and white.** A line that runs out of the 48 px a tile sees past its edge is
+  judged within the tile alone, and can still be taken for a hair. So can a line too faint to
+  follow past a mark (13 of the 34 labelled lines were still removed).
+- **Grain on black and white.** In flat, light areas of a grainy black-and-white scan the darkest
+  clumps of grain can be marked. They are filled with the film's own grain, so it rarely shows.
+  *Protect detail* doesn't change this yet; lowering *Sensitivity* does.
 - **Very large scans.** The app runs a filter in pieces of at most about 350,000 pixels, margins
   included. On a 7300 px-wide flatbed scan a frame takes about 26 s on 20 threads, against the app's
   60 s limit (emmertex/chromaforge#1195).

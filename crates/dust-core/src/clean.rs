@@ -158,19 +158,44 @@ const FOLLOW_SAMPLE: usize = 4;
 const HALO_K: f32 = 1.0;
 const HALO_STEPS: usize = 3;
 
-/// Lines of the picture (black-and-white film, see [`drop_lines`]): a long thin mark this long at
-/// least (and long for its area: extent² / area over [`LINE_SHAPE`]) is looked past, from each
-/// end, out to [`LINE_REACH`] pixels; it is the picture's when, past both ends, at least
-/// [`LINE_SHARE`] of the steps still find a ridge [`LINE_K`] noise σ above both sides
-/// ([`LINE_SIDE`] pixels away).
-const LINE_MIN_EXT: usize = 25;
-const LINE_SHAPE: f32 = 6.0;
-const LINE_REACH: usize = 48;
-const LINE_SIDE: f32 = 6.0;
-const LINE_K: f32 = 1.5;
-const LINE_SHARE: f32 = 0.6;
+/// Lines of the picture (black-and-white film, see [`drop_lines`]): marks of at least this many
+/// pixels are looked at ([`LINE_MIN_AREA_CROWDED`] in a crowded band). The ridge each lies on is followed in steps of [`LINE_STEP`] px, at most
+/// [`LINE_TRAVEL`] px each way, and must run on for [`LINE_REACH`] px outside the mark past both
+/// ends, each step at least [`LINE_K`] noise σ strong (up to [`LINE_MISSES`] weaker steps in a
+/// row). The ridge is measured along [`LINE_SEG`] px either side of a point against the parallel
+/// segments [`LINE_SIDE`] px away, in [`LINE_DIRS`] directions; its noise from the points out to
+/// [`LINE_NOISE_REACH`] px around the middle of the mark's block of [`LINE_BLOCK`] px. Fitted on the "bw" release's labelled scans.
+const LINE_MIN_AREA: usize = 12;
+/// In a band more than [`MIRROR_CAP`] marked, marks of at least this many pixels.
+const LINE_MIN_AREA_CROWDED: usize = 40;
+const LINE_STEP: f32 = 2.0;
+const LINE_TRAVEL: f32 = 200.0;
+const LINE_REACH: usize = 24;
+const LINE_K: f32 = 2.5;
+const LINE_MISSES: usize = 2;
+const LINE_SEG: usize = 6;
+const LINE_SIDE: f32 = 3.0;
+const LINE_DIRS: usize = 16;
+const LINE_NOISE_REACH: usize = 32;
+const LINE_NOISE_STEP: usize = 6;
+/// The noise is worked out once per block this many pixels square, around its middle.
+const LINE_BLOCK: usize = 64;
+/// How far inside the band a ridge is measured (its samples' reach, rounded up).
+const LINE_MARGIN: usize = LINE_SEG + LINE_SIDE as usize + 2;
+
+/// The straight test ([`straight_line`]): a long thin mark this long at least (and
+/// long for its area: extent² / area over [`STRAIGHT_SHAPE`]) is looked past, from each end, out
+/// to [`STRAIGHT_REACH`] pixels; it is the picture's when, past both ends, at least
+/// [`STRAIGHT_SHARE`] of the steps still find a ridge [`STRAIGHT_K`] noise σ above both sides
+/// ([`STRAIGHT_SIDE`] pixels away).
+const STRAIGHT_MIN_EXT: usize = 25;
+const STRAIGHT_SHAPE: f32 = 6.0;
+const STRAIGHT_REACH: usize = 48;
+const STRAIGHT_SIDE: f32 = 6.0;
+const STRAIGHT_K: f32 = 1.5;
+const STRAIGHT_SHARE: f32 = 0.6;
 /// Steps past an end that must lie in the band for that end to count as carrying on.
-const LINE_MIN_STEPS: usize = 8;
+const STRAIGHT_MIN_STEPS: usize = 8;
 
 /// 16 directions, as unit vectors.
 fn directions() -> [(f32, f32); 16] {
@@ -878,7 +903,7 @@ fn find_full(px: &[f32], w: usize, h: usize, origin: (i64, i64), p: &Params) -> 
         extend_marks(&mut mask, &g, seen, blind.as_deref(), w, h);
     }
     if p.bw && p.polarity == Polarity::Darker && !p.wide && knob("LINES", 1.0) > 0.5 {
-        drop_lines(&mut mask, &g, w, h);
+        drop_lines(&mut mask, &g, w, h, crowded);
     }
     #[cfg(feature = "tuning")]
     prof.lap("grow");
@@ -1077,29 +1102,33 @@ pub(crate) fn extend_marks(mask: &mut [u8], g: &[f32], seen: &[f32], blind: Opti
     }
 }
 
-/// Black-and-white film only: unmarks the long thin marks that are part of a longer line.
+/// Black-and-white film only: unmarks the marks that sit on a longer line of the picture.
 ///
-/// On colour film a thin dense line of the picture (a wire against the sky, a lit thread, strands
-/// of fur) usually has some colour, and the detail check keeps it; on black-and-white film it is
+/// On colour film a thin dense line of the picture (a wire against the sky, a lit thread, a cat's
+/// whisker) usually has some colour, and the detail check keeps it; on black-and-white film it is
 /// as grey as a hair, and the detector takes it for one, a piece at a time. A hair on the film
 /// ends: past its ends the density falls back to the background's. A line of the picture carries
-/// on. So from each end of every long thin mark this steps on along the mark's direction there
-/// (allowing a pixel and a half either way) and asks whether a ridge is still there: denser than
-/// the pixels [`LINE_SIDE`] away on both sides by [`LINE_K`] noise σ. Where at least
-/// [`LINE_SHARE`] of the steps find one past both ends, the mark is unmarked. (Past one end is
-/// not enough: a hair the detector found only part of carries on past that part.) The noise σ is
-/// the spread of the same difference (across x and across y) over a grid of pixels around the
-/// mark. Steps outside the band, or inside the mark, don't count, and an end with too few steps
-/// left doesn't carry on, so a hair cut by the band's edge stays marked. Measured on the "bw"
-/// release's scans, whose hair-like marks were labelled by eye: 13 of 34 lines of the picture
-/// unmarked (2 more in part), none of 6 hairs; and on black-and-white copies of the infrared
-/// frames, the hairs' pixels covered are the same with and without it.
+/// on. Two tests look for that, and a mark either finds to be part of a line is unmarked:
+///
+/// - [`straight_line`], for long thin marks: past each end, along the mark's own axis.
+/// - [`follows_ridge`], for any mark of some size, a short piece of a whisker included: it follows
+///   the ridge the mark lies on, bending with it.
+///
+/// Both need the line to carry on past *both* ends (a hair the detector found only part of carries
+/// on past that part), and neither counts what lies outside the band, so a hair cut by the band's
+/// edge stays marked. The marks are found once for both (one pass over the band costs the host's
+/// budget as much as the tests themselves). `crowded`: the band is more than [`MIRROR_CAP`] marked,
+/// and [`follows_ridge`] looks only at marks of [`LINE_MIN_AREA_CROWDED`] pixels or more.
+///
+/// Measured on the "bw" release's scans, whose hair-like marks were labelled by eye: 21 of 34 lines
+/// of the picture unmarked and 4 more in part (13 and 2 with the straight test alone), all 6 hairs
+/// still removed, 2 of 225 labelled specks of dust no longer removed; on black-and-white copies of
+/// the infrared frames, spot recall 77.3 → 76.9 %, the same precision.
 #[inline(never)]
-pub(crate) fn drop_lines(mask: &mut [u8], g: &[f32], w: usize, h: usize) {
+pub(crate) fn drop_lines(mask: &mut [u8], g: &[f32], w: usize, h: usize, crowded: bool) {
     let n = w * h;
-    let mean = |x: i64, y: i64| box3(clamp(y, h) * w + clamp(x, w), w, h, |k| g[k]);
-    let inside = |x: f32, y: f32, m: f32| x >= m && y >= m && x < w as f32 - m && y < h as f32 - m;
-    let (k_ridge, share) = (knob("LINE_K", LINE_K), knob("LINE_SHARE", LINE_SHARE));
+    let min_area = if crowded { LINE_MIN_AREA_CROWDED } else { LINE_MIN_AREA };
+    let mut ridges = Ridges::new(g, w, h);
     let mut id = vec![0u32; n];
     let mut members: Vec<usize> = Vec::new();
     let mut r: Vec<f32> = Vec::new();
@@ -1112,13 +1141,18 @@ pub(crate) fn drop_lines(mask: &mut [u8], g: &[f32], w: usize, h: usize) {
         members.clear();
         members.push(start);
         id[start] = next_id;
+        // the mark, its box and its densest pixel
         let (mut x0, mut x1, mut y0, mut y1) = (usize::MAX, 0, usize::MAX, 0);
+        let mut top = start;
         let mut k = 0;
         while k < members.len() {
             let i = members[k];
             k += 1;
             let (x, y) = (i % w, i / w);
             (x0, x1, y0, y1) = (x0.min(x), x1.max(x), y0.min(y), y1.max(y));
+            if g[i] > g[top] {
+                top = i;
+            }
             for (dx, dy) in NEIGHBOURS {
                 let (qx, qy) = (x as i64 + dx, y as i64 + dy);
                 if qx >= 0 && qy >= 0 && (qx as usize) < w && (qy as usize) < h {
@@ -1131,97 +1165,305 @@ pub(crate) fn drop_lines(mask: &mut [u8], g: &[f32], w: usize, h: usize) {
             }
         }
         let (ext, area) = ((x1 - x0).max(y1 - y0) + 1, members.len());
-        if ext < LINE_MIN_EXT || ((ext * ext) as f32) <= LINE_SHAPE * area as f32 {
-            continue;
-        }
-        // the main axis
-        let (mut sx, mut sy) = (0f64, 0f64);
-        for &i in &members {
-            sx += (i % w) as f64;
-            sy += (i / w) as f64;
-        }
-        let (cx, cy) = (sx / area as f64, sy / area as f64);
-        let (mut a, mut b, mut c) = (0f64, 0f64, 0f64);
-        for &i in &members {
-            let (dx, dy) = ((i % w) as f64 - cx, (i / w) as f64 - cy);
-            a += dx * dx;
-            b += dx * dy;
-            c += dy * dy;
-        }
-        let theta = 0.5 * (2.0 * b).atan2(a - c);
-        let (ax, ay) = (theta.cos(), theta.sin());
-        let proj = |i: usize| ((i % w) as f64 - cx) * ax + ((i / w) as f64 - cy) * ay;
-        let (lo, hi) = members.iter().fold((f64::MAX, f64::MIN), |(l, u), &i| (l.min(proj(i)), u.max(proj(i))));
-        // the noise σ around the mark
-        r.clear();
-        let side = LINE_SIDE as i64;
-        for y in ((y0 as i64 - 32).max(side)..(y1 as i64 + 32).min(h as i64 - side)).step_by(4) {
-            for x in ((x0 as i64 - 32).max(side)..(x1 as i64 + 32).min(w as i64 - side)).step_by(4) {
-                let v = mean(x, y);
-                r.push(v - 0.5 * (mean(x - side, y) + mean(x + side, y)));
-                r.push(v - 0.5 * (mean(x, y - side) + mean(x, y + side)));
-            }
-        }
-        if r.len() < 16 {
-            continue;
-        }
-        let half = r.len() / 2;
-        let med = nth(&mut r, half);
-        let mut dev: Vec<f32> = r.iter().map(|v| (v - med).abs()).collect();
-        let sigma = (1.4826 * nth(&mut dev, half)).max(1e-4);
-        let mut ends = 0;
-        for sign in [1.0f64, -1.0] {
-            let end = if sign > 0.0 { hi } else { lo };
-            // the end, and the mark's direction there (from the stretch before it)
-            let (mut ex, mut ey, mut en, mut bx, mut by, mut bn) = (0f64, 0f64, 0f64, 0f64, 0f64, 0f64);
-            for &i in &members {
-                let t = sign * (proj(i) - end);
-                let (x, y) = ((i % w) as f64, (i / w) as f64);
-                if t >= -4.0 {
-                    (ex, ey, en) = (ex + x, ey + y, en + 1.0);
-                } else if t >= -16.0 {
-                    (bx, by, bn) = (bx + x, by + y, bn + 1.0);
-                }
-            }
-            let (ex, ey) = (ex / en, ey / en);
-            let (mut dx, mut dy) = if bn > 0.0 { (ex - bx / bn, ey - by / bn) } else { (sign * ax, sign * ay) };
-            let len = (dx * dx + dy * dy).sqrt();
-            (dx, dy) = if len < 1e-6 { (sign * ax, sign * ay) } else { (dx / len, dy / len) };
-            let (dx, dy, ex, ey) = (dx as f32, dy as f32, ex as f32, ey as f32);
-            let (nx, ny) = (-dy, dx);
-            let (mut steps, mut ridge) = (0usize, 0usize);
-            for s in (4..=LINE_REACH).step_by(2) {
-                let mut best: Option<f32> = None;
-                for off in [-1.5f32, 0.0, 1.5] {
-                    let (qx, qy) = (ex + s as f32 * dx + off * nx, ey + s as f32 * dy + off * ny);
-                    if !inside(qx, qy, LINE_SIDE + 2.0) {
-                        continue;
-                    }
-                    let (ix, iy) = (qx.round() as i64, qy.round() as i64);
-                    if id[iy as usize * w + ix as usize] == next_id {
-                        continue;
-                    }
-                    let v = mean(ix, iy);
-                    let l = mean((qx - LINE_SIDE * nx).round() as i64, (qy - LINE_SIDE * ny).round() as i64);
-                    let u = mean((qx + LINE_SIDE * nx).round() as i64, (qy + LINE_SIDE * ny).round() as i64);
-                    let d = (v - l).min(v - u) / sigma;
-                    best = Some(best.map_or(d, |e: f32| e.max(d)));
-                }
-                if let Some(d) = best {
-                    steps += 1;
-                    ridge += usize::from(d > k_ridge);
-                }
-            }
-            if steps >= LINE_MIN_STEPS && ridge as f32 >= share * steps as f32 {
-                ends += 1;
-            }
-        }
-        if ends == 2 {
+        let long = ext >= STRAIGHT_MIN_EXT && ((ext * ext) as f32) > STRAIGHT_SHAPE * area as f32;
+        let line = (long && straight_line(&members, (x0, x1, y0, y1), g, w, h, &id, next_id, &mut r))
+            || (area >= min_area && ridges.carries_on(top, &id, next_id, &mut r));
+        if line {
             for &i in &members {
                 mask[i] = 0;
             }
         }
     }
+}
+
+/// [`drop_lines`]' straight test, for a long thin mark (`members`, inside the box `x0, x1, y0, y1`,
+/// numbered `me` in `id`): from each end it looks on along the mark's direction there (allowing a
+/// pixel and a half either way), out to [`STRAIGHT_REACH`] pixels, and asks whether a ridge is
+/// still there: denser than the pixels [`STRAIGHT_SIDE`] away on both sides by [`STRAIGHT_K`] noise
+/// σ. The mark is part of a line when at least [`STRAIGHT_SHARE`] of the steps find one past both
+/// ends. The noise σ is the spread of the same difference (across x and across y) over a grid of
+/// pixels around the mark. Steps outside the band, or inside the mark, don't count, and an end with
+/// fewer than [`STRAIGHT_MIN_STEPS`] steps left doesn't carry on.
+#[allow(clippy::too_many_arguments)]
+fn straight_line(
+    members: &[usize],
+    (x0, x1, y0, y1): (usize, usize, usize, usize),
+    g: &[f32],
+    w: usize,
+    h: usize,
+    id: &[u32],
+    me: u32,
+    r: &mut Vec<f32>,
+) -> bool {
+    let mean = |x: i64, y: i64| box3(clamp(y, h) * w + clamp(x, w), w, h, |k| g[k]);
+    let inside = |x: f32, y: f32, m: f32| x >= m && y >= m && x < w as f32 - m && y < h as f32 - m;
+    let (k_ridge, share) = (knob("STRAIGHT_K", STRAIGHT_K), knob("STRAIGHT_SHARE", STRAIGHT_SHARE));
+    let area = members.len();
+    // the main axis
+    let (mut sx, mut sy) = (0f64, 0f64);
+    for &i in members {
+        sx += (i % w) as f64;
+        sy += (i / w) as f64;
+    }
+    let (cx, cy) = (sx / area as f64, sy / area as f64);
+    let (mut a, mut b, mut c) = (0f64, 0f64, 0f64);
+    for &i in members {
+        let (dx, dy) = ((i % w) as f64 - cx, (i / w) as f64 - cy);
+        a += dx * dx;
+        b += dx * dy;
+        c += dy * dy;
+    }
+    let theta = 0.5 * (2.0 * b).atan2(a - c);
+    let (ax, ay) = (theta.cos(), theta.sin());
+    let proj = |i: usize| ((i % w) as f64 - cx) * ax + ((i / w) as f64 - cy) * ay;
+    let (lo, hi) = members.iter().fold((f64::MAX, f64::MIN), |(l, u), &i| (l.min(proj(i)), u.max(proj(i))));
+    // the noise σ around the mark
+    r.clear();
+    let side = STRAIGHT_SIDE as i64;
+    for y in ((y0 as i64 - 32).max(side)..(y1 as i64 + 32).min(h as i64 - side)).step_by(4) {
+        for x in ((x0 as i64 - 32).max(side)..(x1 as i64 + 32).min(w as i64 - side)).step_by(4) {
+            let v = mean(x, y);
+            r.push(v - 0.5 * (mean(x - side, y) + mean(x + side, y)));
+            r.push(v - 0.5 * (mean(x, y - side) + mean(x, y + side)));
+        }
+    }
+    if r.len() < 16 {
+        return false;
+    }
+    let half = r.len() / 2;
+    let med = nth(r, half);
+    for v in r.iter_mut() {
+        *v = (*v - med).abs();
+    }
+    let sigma = (1.4826 * nth(r, half)).max(1e-4);
+    for sign in [1.0f64, -1.0] {
+        let end = if sign > 0.0 { hi } else { lo };
+        // the end, and the mark's direction there (from the stretch before it)
+        let (mut ex, mut ey, mut en, mut bx, mut by, mut bn) = (0f64, 0f64, 0f64, 0f64, 0f64, 0f64);
+        for &i in members {
+            let t = sign * (proj(i) - end);
+            let (x, y) = ((i % w) as f64, (i / w) as f64);
+            if t >= -4.0 {
+                (ex, ey, en) = (ex + x, ey + y, en + 1.0);
+            } else if t >= -16.0 {
+                (bx, by, bn) = (bx + x, by + y, bn + 1.0);
+            }
+        }
+        let (ex, ey) = (ex / en, ey / en);
+        let (mut dx, mut dy) = if bn > 0.0 { (ex - bx / bn, ey - by / bn) } else { (sign * ax, sign * ay) };
+        let len = (dx * dx + dy * dy).sqrt();
+        (dx, dy) = if len < 1e-6 { (sign * ax, sign * ay) } else { (dx / len, dy / len) };
+        let (dx, dy, ex, ey) = (dx as f32, dy as f32, ex as f32, ey as f32);
+        let (nx, ny) = (-dy, dx);
+        let (mut steps, mut ridge) = (0usize, 0usize);
+        for s in (4..=STRAIGHT_REACH).step_by(2) {
+            let mut best: Option<f32> = None;
+            for off in [-1.5f32, 0.0, 1.5] {
+                let (qx, qy) = (ex + s as f32 * dx + off * nx, ey + s as f32 * dy + off * ny);
+                if !inside(qx, qy, STRAIGHT_SIDE + 2.0) {
+                    continue;
+                }
+                let (ix, iy) = (qx.round() as i64, qy.round() as i64);
+                if id[iy as usize * w + ix as usize] == me {
+                    continue;
+                }
+                let v = mean(ix, iy);
+                let l = mean((qx - STRAIGHT_SIDE * nx).round() as i64, (qy - STRAIGHT_SIDE * ny).round() as i64);
+                let u = mean((qx + STRAIGHT_SIDE * nx).round() as i64, (qy + STRAIGHT_SIDE * ny).round() as i64);
+                let d = (v - l).min(v - u) / sigma;
+                best = Some(best.map_or(d, |e: f32| e.max(d)));
+            }
+            if let Some(d) = best {
+                steps += 1;
+                ridge += usize::from(d > k_ridge);
+            }
+        }
+        if steps < STRAIGHT_MIN_STEPS || (ridge as f32) < share * steps as f32 {
+            return false;
+        }
+    }
+    true
+}
+
+/// [`drop_lines`]' ridge test, for a band: the ridge strength at a point is the mean density along
+/// a short segment ([`LINE_SEG`] px either side) over the mean of the parallel segments
+/// [`LINE_SIDE`] px to either side (the weaker of the two), in noise σ ([`line_noise`], worked out
+/// per block of [`LINE_BLOCK`] px when a mark there first needs it).
+struct Ridges<'a> {
+    g: &'a [f32],
+    w: usize,
+    h: usize,
+    dirs: [(f32, f32); LINE_DIRS],
+    taps: RidgeTaps,
+    blocks_x: usize,
+    noise: Vec<Option<Option<(f32, f32)>>>,
+    k: f32,
+    reach: f32,
+}
+
+impl<'a> Ridges<'a> {
+    fn new(g: &'a [f32], w: usize, h: usize) -> Ridges<'a> {
+        let dirs = line_directions();
+        let blocks_x = w.div_ceil(LINE_BLOCK);
+        Ridges {
+            g,
+            w,
+            h,
+            taps: ridge_taps(&dirs, w),
+            dirs,
+            blocks_x,
+            noise: vec![None; blocks_x * h.div_ceil(LINE_BLOCK)],
+            k: knob("LINE_K", LINE_K),
+            reach: knob("LINE_REACH", LINE_REACH as f32),
+        }
+    }
+
+    fn inside(&self, x: i64, y: i64) -> bool {
+        let m = LINE_MARGIN as i64;
+        x >= m && y >= m && x < self.w as i64 - m && y < self.h as i64 - m
+    }
+
+    /// Whether the ridge through the mark's densest pixel `top` (the mark is numbered `me` in `id`)
+    /// carries on for [`LINE_REACH`] px outside the mark past both ends. It starts in the ridge's
+    /// strongest direction there and steps [`LINE_STEP`] px at a time, each step taking the
+    /// strongest of the three directions nearest the last, each straight ahead and a pixel to
+    /// either side (so it bends with the line). A step under [`LINE_K`] σ is a miss; more
+    /// than [`LINE_MISSES`] in a row end the ridge, and so does leaving the band, or [`LINE_TRAVEL`]
+    /// px.
+    fn carries_on(&mut self, top: usize, id: &[u32], me: u32, r: &mut Vec<f32>) -> bool {
+        let (g, w) = (self.g, self.w);
+        let (tx, ty) = ((top % w) as i64, (top / w) as i64);
+        if !self.inside(tx, ty) {
+            return false;
+        }
+        let Some((v0, k0)) = self.taps.iter().enumerate().map(|(kd, t)| (ridge(g, top, t), kd)).max_by(|a, b| a.0.total_cmp(&b.0)) else {
+            return false;
+        };
+        let block = (ty as usize / LINE_BLOCK) * self.blocks_x + tx as usize / LINE_BLOCK;
+        let Some(slot) = self.noise.get_mut(block) else { return false };
+        if slot.is_none() {
+            let (bx, by) = (block % self.blocks_x * LINE_BLOCK + LINE_BLOCK / 2, block / self.blocks_x * LINE_BLOCK + LINE_BLOCK / 2);
+            *slot = Some(line_noise(g, w, self.h, (bx as i64, by as i64), &self.taps, r));
+        }
+        let Some(Some((med, sigma))) = *slot else { return false };
+        let z = |v: f32| (v - med) / sigma;
+        if z(v0) < self.k {
+            return false;
+        }
+        for sign0 in [1.0f32, -1.0] {
+            let (mut x, mut y, mut kd, mut sign) = (tx as f32, ty as f32, k0 as i64, sign0);
+            let (mut outside, mut travelled, mut misses) = (0.0f32, 0.0f32, 0usize);
+            while outside < self.reach && travelled < LINE_TRAVEL {
+                let mut step: Option<(f32, f32, f32, i64, f32)> = None;
+                let look = |k2: i64, s2: f32, off: f32, step: &mut Option<(f32, f32, f32, i64, f32)>| {
+                    let (sx, sy) = (self.dirs[k2 as usize].0 * s2, self.dirs[k2 as usize].1 * s2);
+                    let (qx, qy) = (x + LINE_STEP * sx - off * sy, y + LINE_STEP * sy + off * sx);
+                    let (ix, iy) = (qx.round() as i64, qy.round() as i64);
+                    if self.inside(ix, iy) {
+                        let v = z(ridge(g, iy as usize * w + ix as usize, &self.taps[k2 as usize]));
+                        if step.is_none_or(|s| v > s.0) {
+                            *step = Some((v, qx, qy, k2, s2));
+                        }
+                    }
+                };
+                for dk in -1..=1i64 {
+                    let raw = kd + dk;
+                    let k2 = raw.rem_euclid(LINE_DIRS as i64);
+                    // (past either end of the half circle the direction comes round the other way)
+                    let s2 = if raw == k2 { sign } else { -sign };
+                    for off in [-1.0, 0.0, 1.0] {
+                        look(k2, s2, off, &mut step);
+                    }
+                }
+                // (left the band: this end can't be seen out)
+                let Some((v, qx, qy, k2, s2)) = step else { break };
+                (x, y, kd, sign) = (qx, qy, k2, s2);
+                travelled += LINE_STEP;
+                if id[qy.round() as usize * w + qx.round() as usize] != me {
+                    outside += LINE_STEP;
+                }
+                if v < self.k {
+                    misses += 1;
+                    if misses > LINE_MISSES {
+                        break;
+                    }
+                } else {
+                    misses = 0;
+                }
+            }
+            if outside < self.reach {
+                return false;
+            }
+        }
+        true
+    }
+}
+
+/// [`LINE_DIRS`] directions over a half circle, as unit vectors.
+fn line_directions() -> [(f32, f32); LINE_DIRS] {
+    std::array::from_fn(|k| {
+        let a = k as f32 * std::f32::consts::PI / LINE_DIRS as f32;
+        (a.cos(), a.sin())
+    })
+}
+
+/// The sample offsets of [`ridge`] in each of the [`LINE_DIRS`] directions, for a band `w` wide:
+/// the segment through the point, then the parallel segments to either side.
+type RidgeTaps = [[isize; 3 * (2 * LINE_SEG + 1)]; LINE_DIRS];
+
+fn ridge_taps(dirs: &[(f32, f32); LINE_DIRS], w: usize) -> RidgeTaps {
+    std::array::from_fn(|k| {
+        let (dx, dy) = dirs[k];
+        let (nx, ny) = (-dy, dx);
+        let n = 2 * LINE_SEG + 1;
+        std::array::from_fn(|j| {
+            let (line, t) = (j / n, (j % n) as f32 - LINE_SEG as f32);
+            let side = [0.0, LINE_SIDE, -LINE_SIDE][line];
+            let (ox, oy) = ((t * dx + side * nx).round() as isize, (t * dy + side * ny).round() as isize);
+            oy * w as isize + ox
+        })
+    })
+}
+
+/// The ridge strength of [`drop_lines`] at pixel `i` with the taps of one direction: the mean of
+/// `g` along a segment [`LINE_SEG`] px either side, over the means along the parallel segments
+/// [`LINE_SIDE`] px to either side (the weaker of the two). The caller keeps the pixel that far
+/// inside the band.
+#[inline(always)]
+fn ridge(g: &[f32], i: usize, taps: &[isize; 3 * (2 * LINE_SEG + 1)]) -> f32 {
+    const N: usize = 2 * LINE_SEG + 1;
+    let (centre, sides) = taps.split_at(N);
+    let (left, right) = sides.split_at(N);
+    let sum = |t: &[isize]| t.iter().map(|&off| g.get(i.wrapping_add_signed(off)).copied().unwrap_or(0.0)).sum::<f32>();
+    let c = sum(centre);
+    (c - sum(left)).min(c - sum(right)) / N as f32
+}
+
+/// The median and noise σ (from the median absolute deviation) of [`ridge`] around (`cx`, `cy`):
+/// on a lattice every [`LINE_NOISE_STEP`] px out to [`LINE_NOISE_REACH`] px, each point in one of the directions in
+/// turn, so mostly grain and texture. `None` with too few points inside the band.
+fn line_noise(g: &[f32], w: usize, h: usize, (cx, cy): (i64, i64), taps: &RidgeTaps, r: &mut Vec<f32>) -> Option<(f32, f32)> {
+    let margin = LINE_MARGIN as i64;
+    r.clear();
+    let reach = LINE_NOISE_REACH as i64;
+    for (a, oy) in (-reach..=reach).step_by(LINE_NOISE_STEP).enumerate() {
+        for (b, ox) in (-reach..=reach).step_by(LINE_NOISE_STEP).enumerate() {
+            let (x, y) = (cx + ox, cy + oy);
+            if x < margin || y < margin || x >= w as i64 - margin || y >= h as i64 - margin {
+                continue;
+            }
+            r.push(ridge(g, y as usize * w + x as usize, &taps[(a * 5 + b * 3) % LINE_DIRS]));
+        }
+    }
+    if r.len() < 32 {
+        return None;
+    }
+    let half = r.len() / 2;
+    let med = nth(r, half);
+    for v in r.iter_mut() {
+        *v = (*v - med).abs();
+    }
+    Some((med, (1.4826 * nth(r, half)).max(1e-4)))
 }
 
 /// `plane`'s mean over the 3 × 3 around pixel `i` (edges clamped).
